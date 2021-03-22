@@ -1,0 +1,51 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Build properties. -->
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <GenerateDependencyFile>false</GenerateDependencyFile>
+	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IsShippingPackage>true</IsShippingPackage>
+    <HasReferenceAssembly>false</HasReferenceAssembly>
+    <IncludeWebExtensionAssets>false</IncludeWebExtensionAssets>
+    <BuildBlazorToBrowserExtension>false</BuildBlazorToBrowserExtension>
+  </PropertyGroup>
+
+  <!-- Package properties. -->
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <PackageOutputPath>..\PackageOutput</PackageOutputPath>
+    <Authors>mingyaulee</Authors>
+    <Description>Build a browser extension with Blazor.</Description>
+    <RepositoryUrl>https://github.com/mingyaulee/Blazor.BrowserExtension</RepositoryUrl>
+    <PackageTags>Blazor Browser Chrome Firefox Edge Extension Addons .Net</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="build\**">
+      <Pack>true</Pack>
+      <PackagePath>build</PackagePath>
+	</Content>
+    <Content Include="content\**">
+      <Pack>true</Pack>
+      <PackagePath>content</PackagePath>
+	</Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components" Version="5.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.0" />
+    <PackageReference Include="Microsoft.JSInterop" Version="5.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
+    <PackageReference Include="WebExtension.Net" Version="0.1.2" IncludeAssets="all" PrivateAssets="none" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Blazor.BrowserExtension.Build\Blazor.BrowserExtension.Build.csproj">
+      <IncludeAssets>all</IncludeAssets>
+      <PrivateAssets>none</PrivateAssets>
+    </ProjectReference>
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Build properties. -->
+  <PropertyGroup>
+    <LangVersion>8.0</LangVersion>
+    <TargetFrameworks>net5.0;net472</TargetFrameworks>
+    <GenerateDependencyFile>false</GenerateDependencyFile>
+	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IsShippingPackage>true</IsShippingPackage>
+    <HasReferenceAssembly>false</HasReferenceAssembly>
+  </PropertyGroup>
+
+  <!-- Package properties. -->
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <PackageOutputPath>..\PackageOutput</PackageOutputPath>
+    <!-- Suppresses the warnings about the package not having assemblies in lib/*/.dll. -->
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+    <BuildOutputTargetFolder>tasks</BuildOutputTargetFolder>
+    <Authors>mingyaulee</Authors>
+    <Description>A package for building a Blazor WebAssembly application to a browser extension.</Description>
+    <RepositoryUrl>https://github.com/mingyaulee/Blazor.BrowserExtension</RepositoryUrl>
+    <PackageTags>Blazor Browser Chrome Firefox Edge Extension Addons .Net</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="build\**">
+      <Pack>true</Pack>
+      <PackagePath>build</PackagePath>
+	</Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Build.Framework" Version="16.9.0" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.9.0" />
+    <!-- marks all packages as 'local only' so they don't end up in the nuspec -->
+    <PackageReference Update="@(PackageReference)" PrivateAssets="All" />
+  </ItemGroup>
+
+</Project>

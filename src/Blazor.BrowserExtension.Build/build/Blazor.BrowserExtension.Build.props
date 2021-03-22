@@ -1,0 +1,18 @@
+﻿<!-- build/Blazor.BrowserExtension.Build.props -->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <BrowserExtensionAssetsPath Condition="'$(BrowserExtensionAssetsPath)' == ''">wwwroot</BrowserExtensionAssetsPath>
+    <BuildBlazorToBrowserExtension Condition="'$(BuildBlazorToBrowserExtension)' == ''">true</BuildBlazorToBrowserExtension>
+    <!-- get the binary file based on the runtime type, net5.0 for dotnet build and net472 for VS build -->
+    <BrowserExtensionBuildTaskFolder Condition="'$(MSBuildRuntimeType)' == 'Core'">net5.0</BrowserExtensionBuildTaskFolder>
+    <BrowserExtensionBuildTaskFolder Condition="'$(MSBuildRuntimeType)' != 'Core'">net472</BrowserExtensionBuildTaskFolder>
+    <BrowserExtensionBuildTaskAssembly>$(MSBuildThisFileDirectory)..\tasks\$(BrowserExtensionBuildTaskFolder)\Blazor.BrowserExtension.Build.dll</BrowserExtensionBuildTaskAssembly>
+  </PropertyGroup>
+
+  <!-- register the tasks from this assembly -->
+  <UsingTask TaskName="Blazor.BrowserExtension.Build.Tasks.BlazorToBrowserExtensionReplaceContent" AssemblyFile="$(BrowserExtensionBuildTaskAssembly)" />
+  <UsingTask TaskName="Blazor.BrowserExtension.Build.Tasks.BlazorToBrowserExtensionSafeNamespace" AssemblyFile="$(BrowserExtensionBuildTaskAssembly)" />
+  <UsingTask TaskName="Blazor.BrowserExtension.Build.Tasks.BlazorToBrowserExtensionValidateManifest" AssemblyFile="$(BrowserExtensionBuildTaskAssembly)" />
+
+</Project>
