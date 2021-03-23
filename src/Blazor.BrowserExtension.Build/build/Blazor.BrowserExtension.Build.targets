@@ -5,6 +5,7 @@
     <OriginalBlazorProjectOutputFrameworkPath>$(TargetDir)$(BrowserExtensionAssetsPath)\_framework</OriginalBlazorProjectOutputFrameworkPath>
     <BlazorProjectOutputFrameworkPath>$(TargetDir)$(BrowserExtensionAssetsPath)\framework</BlazorProjectOutputFrameworkPath>
     <BlazorProjectOutputManifestJsonFile>$(TargetDir)$(BrowserExtensionAssetsPath)\manifest.json</BlazorProjectOutputManifestJsonFile>
+    <BlazorProjectOutputTargetPath>$(TargetDir)$(BrowserExtensionAssetsPath)</BlazorProjectOutputTargetPath>
   </PropertyGroup>
 
   <!-- this will automatically run after the 'AfterBuild' target -->
@@ -83,6 +84,9 @@
     </ItemGroup>
     <BlazorToBrowserExtensionReplaceContent Files="@(BlazorProjectBlazorJsFile)" Replace="@(BlazorProjectReplaceBlazorJsFileContents)" />
     <BlazorToBrowserExtensionReplaceContent Files="@(BlazorProjectDotnetJsFile)" Replace="@(BlazorProjectReplaceDotnetJsFileContents)" />
+
+    <Message Importance="high" Text="Copying bundled scoped CSS file from '$(_ScopedCssOutputFullPath)'" />
+	<Copy SourceFiles="$(_ScopedCssOutputFullPath)" DestinationFolder="$(BlazorProjectOutputTargetPath)" />
 
     <Message Importance="high" Text="Conversion completed from Blazor application to Browser Extension" />
 
