@@ -8,7 +8,7 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddBrowserExtensionServices(this IServiceCollection services, Action<BrowserExtensionOption> optionSetup = null)
         {
-            services.AddTransient<IWebExtensionAPI, WebExtensionAPI>();
+            services.AddTransient<IWebExtensionApi, WebExtensionApi>();
             services.AddTransient<WebExtensionJSRuntime>();
 
             var option = new BrowserExtensionOption();

@@ -10,7 +10,7 @@ namespace Blazor.BrowserExtension.Pages
     public class BasePage : ComponentBase
     {
         [Inject]
-        public IWebExtensionAPI WebExtension { get; set; }
+        public IWebExtensionApi WebExtension { get; set; }
 
         [Inject]
         public NavigationManager Navigation { get; set; }
