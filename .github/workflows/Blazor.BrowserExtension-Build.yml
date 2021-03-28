@@ -5,25 +5,11 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  version:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./src
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 5.0.x
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore --configuration Release
-
-  tag:
-    runs-on: ubuntu-latest
+    outputs:
+      SemVer: ${{ steps.gitversion.outputs.SemVer }}
+      FullSemVer: ${{ steps.gitversion.outputs.FullSemVer }}
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -38,8 +24,67 @@ jobs:
       uses: gittools/actions/gitversion/execute@v0.9.7
       with:
         useConfigFile: true
+
+  build:
+    needs: version
+    runs-on: windows-latest
+    steps:
+    - name: Set up JDK 11
+      uses: actions/setup-java@v1
+      with:
+        java-version: 1.11
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Cache SonarCloud packages
+      uses: actions/cache@v1
+      with:
+        path: ~\sonar\cache
+        key: ${{ runner.os }}-sonar
+        restore-keys: ${{ runner.os }}-sonar
+    - name: Cache SonarCloud scanner
+      id: cache-sonar-scanner
+      uses: actions/cache@v1
+      with:
+        path: .\.sonar\scanner
+        key: ${{ runner.os }}-sonar-scanner
+        restore-keys: ${{ runner.os }}-sonar-scanner
+    - name: Install SonarCloud scanner
+      if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
+      shell: powershell
+      run: |
+        New-Item -Path .\.sonar\scanner -ItemType Directory
+        dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
+    - name: Restore dependencies
+      run: dotnet restore ./src
+    - name: Build and analyze
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      shell: powershell
+      run: |
+        .\.sonar\scanner\dotnet-sonarscanner begin /k:"mingyaulee_Blazor.BrowserExtension" /o:"mingyaulee" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /v:"v${{ needs.version.outputs.FullSemVer }}"
+        dotnet build ./src --no-restore --configuration Release
+        .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+
+  tag:
+    needs: [version, build]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Check if tag exists
+      id: tagExistsCheck
+      shell: bash
+      run: git show-ref --tags --verify --quiet -- "refs/tags/v${{ needs.version.outputs.SemVer }}" && echo "::set-output name=tagExists::1" || echo "::set-output name=tagExists::0"
     - name: Create tag
+      if: steps.tagExistsCheck.outputs.tagExists == 0
       uses: negz/create-tag@v1
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        version: v${{ steps.gitversion.outputs.SemVer }}
+        version: v${{ needs.version.outputs.SemVer }}
