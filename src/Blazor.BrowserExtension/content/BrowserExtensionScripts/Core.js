@@ -1,53 +1,56 @@
-﻿(async function (global, name) {
-    // import browser extension API polyfill
-    await import("./lib/browser-polyfill.min.js");
-
+﻿(function (global, projectName) {
     const browserExtensionModes = {
         Standard: "Standard",
         ContentScript: "ContentScript"
     };
 
-    // each extension's definition is stored in BlazorBrowserExtension[name]
-    if (!global.hasOwnProperty("BlazorBrowserExtension")) {
-        global.BlazorBrowserExtension = {
-            Modes: browserExtensionModes
-        };
-    }
+    class BrowserExtension {
+        /** @type {string} */ Url;
+        /** @type {string} */ Mode;
 
-    const url = browser.runtime.getURL("");
-    const getUrl = path => {
-        return path.indexOf("://") > -1 ? path : url + path;
-    };
-    const browserExtension = {
-        Mode: "",
-        URL: url,
-        FetchAsync: function (input, init) {
-            // Intercept fetch requests from blazor.webassembly.js and dotnet.*.js
+        /**
+         * Create a new instance of BrowserExtension.
+         * @param {string} url The browser extension URL.
+         * @param {string} mode The browser extension mode.
+         */
+        constructor(url, mode) {
+            this.Url = url;
+            this.Mode = mode;
+        }
+
+        /**
+         * Intercept fetch requests from blazor.webassembly.js and dotnet.*.js
+         * @param {RequestInfo|string} input
+         * @param {RequestInit} init?
+         * @returns {Promise<Response>}
+         */
+        FetchAsync(input, init) {
             if (typeof (input) === "string") {
                 if (input === "dotnet.wasm") {
                     input = "framework/" + input;
                 }
-                input = getUrl(input);
+                input = this._getUrl(input);
             }
             return fetch(input, init);
-        },
-        ImportAsync: async function (script) {
-            // Import called from BasePage.cs
-            await import(`${url}${script}`);
-        },
-        AppendElementToDocumentAsync: async function (element) {
-            // Intercept document.body.appendChild from blazor.webassembly.js and dotnet.*.js
+        }
+
+        /**
+         * Intercept document.body.appendChild from blazor.webassembly.js and dotnet.*.js
+         * @param {Element} element
+         */
+        async AppendElementToDocumentAsync(element) {
             if (this.Mode !== browserExtensionModes.ContentScript) {
-                element.integrity = "";
+                /** @type {any} */(element).integrity = "";
                 document.body.appendChild(element);
                 return;
             }
             if (element.tagName === "SCRIPT") {
-                if (element.innerText.indexOf("__wasmmodulecallback__") > -1) {
+                const scriptElement = /** @type {HTMLScriptElement} */(element);
+                if (scriptElement.innerText.indexOf("__wasmmodulecallback__") > -1) {
                     global.__wasmmodulecallback__();
                     delete global.__wasmmodulecallback__;
-                } else if (element.src) {
-                    const src = getUrl(element.src);
+                } else if (scriptElement.src) {
+                    const src = this._getUrl(scriptElement.src);
                     await import(src);
                 } else {
                     console.error("Unknown script requested", element);
@@ -57,42 +60,99 @@
                 document.body.appendChild(element);
             }
         }
-    };
-    global.BlazorBrowserExtension[name] = browserExtension;
 
-    // import WebExtension.Net JS
-    await import(`${url}WebExtensionScripts/WebExtensionNet.js`);
+        /**
+         * Import called from BasePage.cs
+         * @param {string} script The script name to import
+         * @returns {Promise}
+         */
+        async ImportAsync(script) {
+            await import(`${this.Url}${script}`);
+        }
 
-    // Set browser extension mode to ContentScript for URL that does not match the browser extension URL
-    if (url.startsWith(global.location.origin)) {
-        browserExtension.Mode = browserExtensionModes.Standard;
-    } else {
-        browserExtension.Mode = browserExtensionModes.ContentScript;
+        /**
+         * Gets the URL for the path requested.
+         * @param {any} path The path requested.
+         * @returns {string} The absolute extension path if it is not a full URL with scheme, otherwise the original path.
+         */
+        _getUrl(path) {
+            return path.indexOf("://") > -1 ? path : this.Url + path;
+        }
     }
 
-    // Import and execute blazor.webassembly.js
-    const blazorScript = document.createElement("script");
-    blazorScript.src = `${url}framework/blazor.webassembly.js`;
-    blazorScript.defer = true;
-    blazorScript.setAttribute("autostart", "false");
-    await browserExtension.AppendElementToDocumentAsync(blazorScript);
+    /**
+     * Gets the browser extension mode.
+     * @param {string} extensionUrl The extension URL.
+     */
+    function getBrowserExtensionMode(extensionUrl) {
+        // Set browser extension mode to ContentScript for URL that does not match the browser extension URL
+        if (extensionUrl.startsWith(global.location.origin)) {
+            return browserExtensionModes.Standard;
+        } else {
+            return browserExtensionModes.ContentScript;
+        }
+    }
 
-    // Blazor is set to not auto start, so that we can start it with different environment name
-    if (browserExtension.Mode === browserExtensionModes.Standard) {
-        blazorScript.onload = () => {
-            Blazor.start({
-                environment: browserExtension.Mode
+    /**
+     * Initializes the Blazor Browser Extension application
+     * @returns {Promise}
+     */
+    async function initialize() {
+        // import browser extension API polyfill
+        // @ts-ignore JS is not a module
+        await import("./lib/browser-polyfill.min.js");
+
+        // each extension's definition is stored in BlazorBrowserExtension[name]
+        const url = global.browser.runtime.getURL("");
+        const browserExtension = new BrowserExtension(url, getBrowserExtensionMode(url));
+        global.BlazorBrowserExtension[projectName] = browserExtension;
+
+        // import WebExtension.Net JS
+        await import(`${url}WebExtensionScripts/WebExtensionNet.js`);
+
+        // import blazor.webassembly.js
+        const blazorScript = document.createElement("script");
+        blazorScript.src = `${url}framework/blazor.webassembly.js`;
+        blazorScript.defer = true;
+        // Blazor is set to not auto start, so that we can start it with different environment name
+        blazorScript.setAttribute("autostart", "false");
+        await browserExtension.AppendElementToDocumentAsync(blazorScript);
+
+        // Start Blazor
+        if (browserExtension.Mode === browserExtensionModes.Standard) {
+            // Blazor script tag is injected, run start after the script is loaded
+            blazorScript.onload = () => {
+                global.Blazor.start({
+                    environment: browserExtension.Mode
+                });
+            }
+        } else {
+            // Blazor is imported, we can start it rigt away
+            global.Blazor.start({
+                environment: browserExtension.Mode,
+                loadBootResource: function (resourceType, resourceName, defaultUri, integrity) {
+                    if (resourceType === "dotnetjs") {
+                        return `${url}framework/${resourceName}`;
+                    }
+                    return defaultUri;
+                }
             });
         }
-    } else {
-        Blazor.start({
-            environment: browserExtension.Mode,
-            loadBootResource: function (resourceType, name, defaultUri, integrity) {
-                if (resourceType === "dotnetjs") {
-                    return `${url}framework/${name}`;
-                }
-                return defaultUri;
-            }
-        });
-    };
+    }
+
+    // initialize global property BlazorBrowserExtension
+    if (!global.hasOwnProperty("BlazorBrowserExtension")) {
+        global.BlazorBrowserExtension = {
+        };
+    }
+
+    if (!global.BlazorBrowserExtension.hasOwnProperty("")) {
+        global.BlazorBrowserExtension.Modes = browserExtensionModes;
+    }
+
+    global.BlazorBrowserExtension.Initialize = initialize;
+
+    if (global.StartBlazorBrowserExtension !== false) {
+        initialize();
+    }
 })(globalThis, "__ProjectName__");

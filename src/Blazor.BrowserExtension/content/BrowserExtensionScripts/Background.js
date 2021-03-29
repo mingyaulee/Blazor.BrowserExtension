@@ -1,5 +1,5 @@
-﻿(function (browserExtension) {
-    const prefixUri = browserExtension.URL;
+﻿(function (global, browserExtension) {
+    const prefixUri = browserExtension.Url;
     const listener = details => {
         if (details.url.startsWith(prefixUri) && !isStaticFile(details.url)) {
             const newUrl = prefixUri + "index.html?path=" + encodeURIComponent(details.url.substr(prefixUri.length));
@@ -11,6 +11,6 @@
     const isStaticFile = url => {
         return /\.\w{2,5}(\?.+)?$/.test(url);
     };
-    browser.webRequest.onBeforeRequest.addListener(listener, { urls: [prefixUri + "*"] }, ["blocking"]);
+    global.browser.webRequest.onBeforeRequest.addListener(listener, { urls: [prefixUri + "*"] }, ["blocking"]);
 
-})(globalThis.BlazorBrowserExtension["__ProjectName__"]);
+})(globalThis, globalThis.BlazorBrowserExtension["__ProjectName__"]);
