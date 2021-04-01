@@ -22,6 +22,9 @@ bld/
 [Bb]uild[Oo]utput/
 [Pp]ackage[Oo]utput/
 
+# Test results
+[Tt]est[Rr]esults/
+
 # Visual Studio 2015/2017 cache/options directory
 .vs/
 

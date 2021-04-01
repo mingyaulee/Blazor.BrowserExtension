@@ -1,0 +1,17 @@
+﻿@page "/background"
+@inherits Blazor.BrowserExtension.Pages.BackgroundPage
+<h3>Background</h3>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        // Navigate to extension index page on load
+        var extensionUrl = await WebExtension.Runtime.GetURL("");
+        await WebExtension.Tabs.Create(new
+        {
+            url = extensionUrl
+        });
+    }
+}

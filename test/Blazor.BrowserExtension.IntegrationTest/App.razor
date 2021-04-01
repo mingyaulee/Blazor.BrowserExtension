@@ -1,0 +1,20 @@
+@using Blazor.BrowserExtension.IntegrationTest.Pages
+@inject NavigationManager Navigation
+
+@if (Navigation.Uri.StartsWith("chrome-extension://"))
+{
+    <Router AppAssembly="@typeof(Program).Assembly" PreferExactMatches="@true">
+        <Found Context="routeData">
+            <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+        </Found>
+        <NotFound>
+            <LayoutView Layout="@typeof(MainLayout)">
+                <p>Sorry, there's nothing at this address.</p>
+            </LayoutView>
+        </NotFound>
+    </Router>
+}
+else
+{
+    <ContentScript></ContentScript>
+}

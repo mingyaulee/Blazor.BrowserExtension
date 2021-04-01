@@ -25,7 +25,7 @@ jobs:
       with:
         useConfigFile: true
 
-  build:
+  buildAndTest:
     needs: version
     runs-on: windows-latest
     steps:
@@ -37,6 +37,8 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.x
+    - name: Setup Chrome and Chrome Driver
+      uses: nanasess/setup-chromedriver@master
     - name: Checkout
       uses: actions/checkout@v2
       with:
@@ -68,8 +70,9 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       shell: powershell
       run: |
-        .\.sonar\scanner\dotnet-sonarscanner begin /k:"mingyaulee_Blazor.BrowserExtension" /o:"mingyaulee" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /v:"v${{ needs.version.outputs.FullSemVer }}"
-        dotnet build ./src --no-restore --configuration Release
+        .\.sonar\scanner\dotnet-sonarscanner begin /k:"mingyaulee_Blazor.BrowserExtension" /o:"mingyaulee" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /v:"v${{ needs.version.outputs.FullSemVer }}"/d:sonar.cs.vstest.reportsPaths="test/TestResults/*.trx" /d:sonar.cs.opencover.reportsPaths="test/TestResults/**/*.opencover.xml"
+        dotnet build . --no-restore --configuration Release
+        dotnet test . --no-restore --no-build --configuration Release --results-directory ./test/TestResults --logger "console;verbosity=detailed" --logger xunit --collect "XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
         .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
   tag:

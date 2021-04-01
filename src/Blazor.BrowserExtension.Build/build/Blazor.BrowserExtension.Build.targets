@@ -1,15 +1,16 @@
 ﻿<!-- build/Blazor.BrowserExtension.Build.targets -->
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-  <PropertyGroup>
-    <OriginalBlazorProjectOutputFrameworkPath>$(TargetDir)$(BrowserExtensionAssetsPath)\_framework</OriginalBlazorProjectOutputFrameworkPath>
-    <BlazorProjectOutputFrameworkPath>$(TargetDir)$(BrowserExtensionAssetsPath)\framework</BlazorProjectOutputFrameworkPath>
-    <BlazorProjectOutputManifestJsonFile>$(TargetDir)$(BrowserExtensionAssetsPath)\manifest.json</BlazorProjectOutputManifestJsonFile>
-    <BlazorProjectOutputTargetPath>$(TargetDir)$(BrowserExtensionAssetsPath)</BlazorProjectOutputTargetPath>
-  </PropertyGroup>
-
   <!-- this will automatically run after the 'AfterBuild' target -->
   <Target Name="RunBuildBlazorToBrowserExtension" AfterTargets="AfterBuild" Condition="'$(BuildBlazorToBrowserExtension)' == 'true'">
+
+    <PropertyGroup>
+      <OriginalBlazorProjectOutputFrameworkPath>$(TargetDir)$(BrowserExtensionAssetsPath)\_framework</OriginalBlazorProjectOutputFrameworkPath>
+      <BlazorProjectOutputFrameworkPath>$(TargetDir)$(BrowserExtensionAssetsPath)\framework</BlazorProjectOutputFrameworkPath>
+      <BlazorProjectOutputManifestJsonFile>$(TargetDir)$(BrowserExtensionAssetsPath)\manifest.json</BlazorProjectOutputManifestJsonFile>
+      <BlazorProjectOutputTargetPath>$(TargetDir)$(BrowserExtensionAssetsPath)</BlazorProjectOutputTargetPath>
+    </PropertyGroup>
+
     <Message Importance="high" Text="Converting Blazor application to Browser Extension" />
 
     <Message Importance="high" Text="Validating Browser Extension manifest.json" />
