@@ -6,7 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{36C5C454-9F2E-4505-B08D-452DED9D18F0}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		CONTRIBUTING.md = CONTRIBUTING.md
 		GitVersion.yml = GitVersion.yml
+		LICENSE = LICENSE
 		README.md = README.md
 	EndProjectSection
 EndProject
@@ -24,9 +26,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{6D3207F4-E
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E8E8EF7A-5CC1-4EE3-88D3-39CB2149988E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blazor.BrowserExtension.IntegrationTest", "test\Blazor.BrowserExtension.IntegrationTest\Blazor.BrowserExtension.IntegrationTest.csproj", "{9EF2458F-9575-483F-819F-98B0E9158D3E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.BrowserExtension.IntegrationTest", "test\Blazor.BrowserExtension.IntegrationTest\Blazor.BrowserExtension.IntegrationTest.csproj", "{9EF2458F-9575-483F-819F-98B0E9158D3E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blazor.BrowserExtension.IntegrationTestRunner", "test\Blazor.BrowserExtension.IntegrationTestRunner\Blazor.BrowserExtension.IntegrationTestRunner.csproj", "{8FAFFB83-6E41-4AB9-AFD5-5B390E551656}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.BrowserExtension.IntegrationTestRunner", "test\Blazor.BrowserExtension.IntegrationTestRunner\Blazor.BrowserExtension.IntegrationTestRunner.csproj", "{8FAFFB83-6E41-4AB9-AFD5-5B390E551656}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
