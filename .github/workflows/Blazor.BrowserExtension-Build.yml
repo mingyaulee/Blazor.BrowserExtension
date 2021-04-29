@@ -36,7 +36,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.x
+        dotnet-version: 5.0.200
     - name: Setup Chrome and Chrome Driver
       uses: nanasess/setup-chromedriver@master
     - name: Checkout
@@ -61,7 +61,7 @@ jobs:
       shell: powershell
       run: |
         New-Item -Path .\.sonar\scanner -ItemType Directory
-        dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
+        dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner --version 5.2.0
     - name: Restore dependencies
       run: dotnet restore ./src
     - name: Build and analyze
@@ -70,13 +70,13 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       shell: powershell
       run: |
-        .\.sonar\scanner\dotnet-sonarscanner begin /k:"mingyaulee_Blazor.BrowserExtension" /o:"mingyaulee" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /v:"v${{ needs.version.outputs.FullSemVer }}"/d:sonar.cs.vstest.reportsPaths="test/TestResults/*.trx" /d:sonar.cs.opencover.reportsPaths="test/TestResults/**/*.opencover.xml"
+        .\.sonar\scanner\dotnet-sonarscanner begin /k:"Blazor.BrowserExtension" /o:"mingyaulee" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /v:"v${{ needs.version.outputs.FullSemVer }}"/d:sonar.cs.vstest.reportsPaths="test/TestResults/*.trx" /d:sonar.cs.opencover.reportsPaths="test/TestResults/**/*.opencover.xml"
         dotnet build . --no-restore --configuration Release
         dotnet test . --no-restore --no-build --configuration Release --results-directory ./test/TestResults --logger "console;verbosity=detailed" --logger xunit --collect "XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
         .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
   tag:
-    needs: [version, build]
+    needs: [version, buildAndTest]
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
