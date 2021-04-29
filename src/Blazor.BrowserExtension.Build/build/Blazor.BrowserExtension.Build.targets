@@ -82,6 +82,10 @@
         <From>this.mono_wasm_assembly_already_added</From>
         <To>globalThis.mono_wasm_assembly_already_added</To>
       </BlazorProjectReplaceDotnetJsFileContents>
+      <BlazorProjectReplaceDotnetJsFileContents Include="accessing mono_set_timeout_exec">
+	      <From>this.mono_set_timeout_exec</From>
+	      <To>globalThis.mono_set_timeout_exec</To>
+      </BlazorProjectReplaceDotnetJsFileContents>
     </ItemGroup>
     <BlazorToBrowserExtensionReplaceContent Files="@(BlazorProjectBlazorJsFile)" Replace="@(BlazorProjectReplaceBlazorJsFileContents)" />
     <BlazorToBrowserExtensionReplaceContent Files="@(BlazorProjectDotnetJsFile)" Replace="@(BlazorProjectReplaceDotnetJsFileContents)" />
