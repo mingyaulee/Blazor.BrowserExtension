@@ -7,9 +7,6 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./src
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -33,6 +30,6 @@ jobs:
     - name: Build
       run: 'dotnet build --no-restore --configuration Release -p:"AssemblyVersion=${{ steps.gitversion.outputs.MajorMinorPatch }};Version=${{ steps.gitversion.outputs.SemVer }}"'
     - name: Push generated package to NuGet
-      run: dotnet nuget push ./PackageOutput/*.nupkg --api-key ${NUGET_AUTH_TOKEN} --source https://api.nuget.org/v3/index.json
+      run: dotnet nuget push ./src/PackageOutput/*.nupkg --api-key ${NUGET_AUTH_TOKEN} --source https://api.nuget.org/v3/index.json
       env:
         NUGET_AUTH_TOKEN: ${{ secrets.NUGET_KEY }}

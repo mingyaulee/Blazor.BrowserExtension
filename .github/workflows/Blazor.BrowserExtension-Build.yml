@@ -63,7 +63,7 @@ jobs:
         New-Item -Path .\.sonar\scanner -ItemType Directory
         dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner --version 5.2.0
     - name: Restore dependencies
-      run: dotnet restore ./src
+      run: dotnet restore
     - name: Build and analyze
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -71,8 +71,8 @@ jobs:
       shell: powershell
       run: |
         .\.sonar\scanner\dotnet-sonarscanner begin /k:"Blazor.BrowserExtension" /o:"mingyaulee" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /v:"v${{ needs.version.outputs.FullSemVer }}"/d:sonar.cs.vstest.reportsPaths="test/TestResults/*.trx" /d:sonar.cs.opencover.reportsPaths="test/TestResults/**/*.opencover.xml"
-        dotnet build . --no-restore --configuration Release
-        dotnet test . --no-restore --no-build --configuration Release --results-directory ./test/TestResults --logger "console;verbosity=detailed" --logger xunit --collect "XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+        dotnet build --no-restore --configuration Release
+        dotnet test --no-restore --no-build --configuration Release --results-directory ./test/TestResults --logger "console;verbosity=detailed" --logger xunit --collect "XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
         .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
   tag:
