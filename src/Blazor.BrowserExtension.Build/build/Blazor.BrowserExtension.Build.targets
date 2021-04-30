@@ -1,100 +1,100 @@
 ﻿<!-- build/Blazor.BrowserExtension.Build.targets -->
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-  <!-- this will automatically run after the 'AfterBuild' target -->
-  <Target Name="RunBuildBlazorToBrowserExtension" AfterTargets="AfterBuild" Condition="'$(BuildBlazorToBrowserExtension)' == 'true'">
+    <!-- this will automatically run after the 'AfterBuild' target -->
+    <Target Name="RunBuildBlazorToBrowserExtension" AfterTargets="AfterBuild" Condition="'$(BuildBlazorToBrowserExtension)' == 'true'">
 
-    <PropertyGroup>
-      <OriginalBlazorProjectOutputFrameworkPath>$(TargetDir)$(BrowserExtensionAssetsPath)\_framework</OriginalBlazorProjectOutputFrameworkPath>
-      <BlazorProjectOutputFrameworkPath>$(TargetDir)$(BrowserExtensionAssetsPath)\framework</BlazorProjectOutputFrameworkPath>
-      <BlazorProjectOutputManifestJsonFile>$(TargetDir)$(BrowserExtensionAssetsPath)\manifest.json</BlazorProjectOutputManifestJsonFile>
-      <BlazorProjectOutputTargetPath>$(TargetDir)$(BrowserExtensionAssetsPath)</BlazorProjectOutputTargetPath>
-    </PropertyGroup>
+        <PropertyGroup>
+            <OriginalBlazorProjectOutputFrameworkPath>$(TargetDir)$(BrowserExtensionAssetsPath)\_framework</OriginalBlazorProjectOutputFrameworkPath>
+            <BlazorProjectOutputFrameworkPath>$(TargetDir)$(BrowserExtensionAssetsPath)\framework</BlazorProjectOutputFrameworkPath>
+            <BlazorProjectOutputManifestJsonFile>$(TargetDir)$(BrowserExtensionAssetsPath)\manifest.json</BlazorProjectOutputManifestJsonFile>
+            <BlazorProjectOutputTargetPath>$(TargetDir)$(BrowserExtensionAssetsPath)</BlazorProjectOutputTargetPath>
+        </PropertyGroup>
 
-    <Message Importance="high" Text="Converting Blazor application to Browser Extension" />
+        <Message Importance="high" Text="Converting Blazor application to Browser Extension" />
 
-    <Message Importance="high" Text="Validating Browser Extension manifest.json" />
-    <BlazorToBrowserExtensionValidateManifest FileName="$(BlazorProjectOutputManifestJsonFile)" />
+        <Message Importance="high" Text="Validating Browser Extension manifest.json" />
+        <BlazorToBrowserExtensionValidateManifest FileName="$(BlazorProjectOutputManifestJsonFile)" />
 
-    <Message Importance="high" Text="Removing all existing files in '$(BlazorProjectOutputFrameworkPath)'" />
-    <ItemGroup>
-      <BlazorProjectFilesToDelete Include="$(BlazorProjectOutputFrameworkPath)\**\*.*" />
-    </ItemGroup>
-	<Delete Files="@(BlazorProjectFilesToDelete)" TreatErrorsAsWarnings="true" />
+        <Message Importance="high" Text="Removing all existing files in '$(BlazorProjectOutputFrameworkPath)'" />
+        <ItemGroup>
+            <BlazorProjectFilesToDelete Include="$(BlazorProjectOutputFrameworkPath)\**\*.*" />
+        </ItemGroup>
+        <Delete Files="@(BlazorProjectFilesToDelete)" TreatErrorsAsWarnings="true" />
 
-    <Message Importance="high" Text="Moving all files from '$(OriginalBlazorProjectOutputFrameworkPath)' to '$(BlazorProjectOutputFrameworkPath)'" />
-    <ItemGroup>
-      <BlazorProjectFilesToMove Include="$(OriginalBlazorProjectOutputFrameworkPath)\**\*.*" />
-    </ItemGroup>
-	<Move SourceFiles="@(BlazorProjectFilesToMove)" DestinationFolder="$(BlazorProjectOutputFrameworkPath)" />
+        <Message Importance="high" Text="Moving all files from '$(OriginalBlazorProjectOutputFrameworkPath)' to '$(BlazorProjectOutputFrameworkPath)'" />
+        <ItemGroup>
+            <BlazorProjectFilesToMove Include="$(OriginalBlazorProjectOutputFrameworkPath)\**\*.*" />
+        </ItemGroup>
+        <Move SourceFiles="@(BlazorProjectFilesToMove)" DestinationFolder="$(BlazorProjectOutputFrameworkPath)" />
 
-    <Message Importance="high" Text="Removing directory '$(OriginalBlazorProjectOutputFrameworkPath)'" />
-    <RemoveDir Directories="$(OriginalBlazorProjectOutputFrameworkPath)" />
+        <Message Importance="high" Text="Removing directory '$(OriginalBlazorProjectOutputFrameworkPath)'" />
+        <RemoveDir Directories="$(OriginalBlazorProjectOutputFrameworkPath)" />
 
-    <Message Importance="high" Text="Replacing content of 'blazor.webassembly.js' and 'dotnet.*.js'" />
-	<BlazorToBrowserExtensionSafeNamespace Input="$(ProjectName)" Replacement="_">
-      <Output TaskParameter="Output" PropertyName="BlazorProjectSafeProjectName" />
-	</BlazorToBrowserExtensionSafeNamespace>
-    <ItemGroup>
-      <BlazorProjectBlazorJsFile Include="$(BlazorProjectOutputFrameworkPath)\blazor.webassembly.js" />
-      <BlazorProjectReplaceBlazorJsFileContents Include="append element to document body">
-        <From>document.body.appendChild</From>
-        <To>globalThis.BlazorBrowserExtension.$(BlazorProjectSafeProjectName).AppendElementToDocumentAsync</To>
-      </BlazorProjectReplaceBlazorJsFileContents>
-      <BlazorProjectReplaceBlazorJsFileContents Include="framework path">
-        <From>_framework</From>
-        <To>framework</To>
-      </BlazorProjectReplaceBlazorJsFileContents>
-      <BlazorProjectReplaceBlazorJsFileContents Include="fetch url">
-        <From>fetch(</From>
-        <To>globalThis.BlazorBrowserExtension.$(BlazorProjectSafeProjectName).FetchAsync(</To>
-      </BlazorProjectReplaceBlazorJsFileContents>
-      <BlazorProjectReplaceBlazorJsFileContents Include="Module cwrap">
-        <From>cwrap(</From>
-        <To>globalThis.Module.cwrap(</To>
-      </BlazorProjectReplaceBlazorJsFileContents>
-      <BlazorProjectReplaceBlazorJsFileContents Include="Module addRunDependency">
-        <From>addRunDependency(</From>
-        <To>globalThis.Module.addRunDependency(</To>
-      </BlazorProjectReplaceBlazorJsFileContents>
-      <BlazorProjectReplaceBlazorJsFileContents Include="Module removeRunDependency">
-        <From>removeRunDependency(</From>
-        <To>globalThis.Module.removeRunDependency(</To>
-      </BlazorProjectReplaceBlazorJsFileContents>
-      <BlazorProjectDotnetJsFile Include="$(BlazorProjectOutputFrameworkPath)\dotnet.*.js" />
-      <BlazorProjectReplaceDotnetJsFileContents Include="fetch url">
-        <From>fetch(</From>
-        <To>globalThis.BlazorBrowserExtension.$(BlazorProjectSafeProjectName).FetchAsync(</To>
-      </BlazorProjectReplaceDotnetJsFileContents>
-      <BlazorProjectReplaceDotnetJsFileContents Include="module reference">
-        <From>Module!=="undefined"?Module</From>
-        <To>globalThis.Module!=="undefined"?globalThis.Module</To>
-      </BlazorProjectReplaceDotnetJsFileContents>
-      <BlazorProjectReplaceDotnetJsFileContents Include="MONO declaration">
-        <From>var MONO=</From>
-        <To>globalThis.MONO=</To>
-      </BlazorProjectReplaceDotnetJsFileContents>
-      <BlazorProjectReplaceDotnetJsFileContents Include="BINDING declaration">
-        <From>var BINDING=</From>
-        <To>globalThis.BINDING=</To>
-      </BlazorProjectReplaceDotnetJsFileContents>
-      <BlazorProjectReplaceDotnetJsFileContents Include="accessing mono_wasm_assembly_already_added">
-        <From>this.mono_wasm_assembly_already_added</From>
-        <To>globalThis.mono_wasm_assembly_already_added</To>
-      </BlazorProjectReplaceDotnetJsFileContents>
-      <BlazorProjectReplaceDotnetJsFileContents Include="accessing mono_set_timeout_exec">
-	      <From>this.mono_set_timeout_exec</From>
-	      <To>globalThis.mono_set_timeout_exec</To>
-      </BlazorProjectReplaceDotnetJsFileContents>
-    </ItemGroup>
-    <BlazorToBrowserExtensionReplaceContent Files="@(BlazorProjectBlazorJsFile)" Replace="@(BlazorProjectReplaceBlazorJsFileContents)" />
-    <BlazorToBrowserExtensionReplaceContent Files="@(BlazorProjectDotnetJsFile)" Replace="@(BlazorProjectReplaceDotnetJsFileContents)" />
+        <Message Importance="high" Text="Replacing content of 'blazor.webassembly.js' and 'dotnet.*.js'" />
+        <BlazorToBrowserExtensionSafeNamespace Input="$(ProjectName)" Replacement="_">
+            <Output TaskParameter="Output" PropertyName="BlazorProjectSafeProjectName" />
+        </BlazorToBrowserExtensionSafeNamespace>
+        <ItemGroup>
+            <BlazorProjectBlazorJsFile Include="$(BlazorProjectOutputFrameworkPath)\blazor.webassembly.js" />
+            <BlazorProjectReplaceBlazorJsFileContents Include="append element to document body">
+                <From>document.body.appendChild</From>
+                <To>globalThis.BlazorBrowserExtension.$(BlazorProjectSafeProjectName).AppendElementToDocumentAsync</To>
+            </BlazorProjectReplaceBlazorJsFileContents>
+            <BlazorProjectReplaceBlazorJsFileContents Include="framework path">
+                <From>_framework</From>
+                <To>framework</To>
+            </BlazorProjectReplaceBlazorJsFileContents>
+            <BlazorProjectReplaceBlazorJsFileContents Include="fetch url">
+                <From>fetch(</From>
+                <To>globalThis.BlazorBrowserExtension.$(BlazorProjectSafeProjectName).FetchAsync(</To>
+            </BlazorProjectReplaceBlazorJsFileContents>
+            <BlazorProjectReplaceBlazorJsFileContents Include="Module cwrap">
+                <From>cwrap(</From>
+                <To>globalThis.Module.cwrap(</To>
+            </BlazorProjectReplaceBlazorJsFileContents>
+            <BlazorProjectReplaceBlazorJsFileContents Include="Module addRunDependency">
+                <From>addRunDependency(</From>
+                <To>globalThis.Module.addRunDependency(</To>
+            </BlazorProjectReplaceBlazorJsFileContents>
+            <BlazorProjectReplaceBlazorJsFileContents Include="Module removeRunDependency">
+                <From>removeRunDependency(</From>
+                <To>globalThis.Module.removeRunDependency(</To>
+            </BlazorProjectReplaceBlazorJsFileContents>
+            <BlazorProjectDotnetJsFile Include="$(BlazorProjectOutputFrameworkPath)\dotnet.*.js" />
+            <BlazorProjectReplaceDotnetJsFileContents Include="fetch url">
+                <From>fetch(</From>
+                <To>globalThis.BlazorBrowserExtension.$(BlazorProjectSafeProjectName).FetchAsync(</To>
+            </BlazorProjectReplaceDotnetJsFileContents>
+            <BlazorProjectReplaceDotnetJsFileContents Include="module reference">
+                <From>Module!=="undefined"?Module</From>
+                <To>globalThis.Module!=="undefined"?globalThis.Module</To>
+            </BlazorProjectReplaceDotnetJsFileContents>
+            <BlazorProjectReplaceDotnetJsFileContents Include="MONO declaration">
+                <From>var MONO=</From>
+                <To>globalThis.MONO=</To>
+            </BlazorProjectReplaceDotnetJsFileContents>
+            <BlazorProjectReplaceDotnetJsFileContents Include="BINDING declaration">
+                <From>var BINDING=</From>
+                <To>globalThis.BINDING=</To>
+            </BlazorProjectReplaceDotnetJsFileContents>
+            <BlazorProjectReplaceDotnetJsFileContents Include="accessing mono_wasm_assembly_already_added">
+                <From>this.mono_wasm_assembly_already_added</From>
+                <To>globalThis.mono_wasm_assembly_already_added</To>
+            </BlazorProjectReplaceDotnetJsFileContents>
+            <BlazorProjectReplaceDotnetJsFileContents Include="accessing mono_set_timeout_exec">
+                <From>this.mono_set_timeout_exec</From>
+                <To>globalThis.mono_set_timeout_exec</To>
+            </BlazorProjectReplaceDotnetJsFileContents>
+        </ItemGroup>
+        <BlazorToBrowserExtensionReplaceContent Files="@(BlazorProjectBlazorJsFile)" Replace="@(BlazorProjectReplaceBlazorJsFileContents)" />
+        <BlazorToBrowserExtensionReplaceContent Files="@(BlazorProjectDotnetJsFile)" Replace="@(BlazorProjectReplaceDotnetJsFileContents)" />
 
-    <Message Importance="high" Text="Copying bundled scoped CSS file from '$(_ScopedCssOutputFullPath)'" />
-	<Copy SourceFiles="$(_ScopedCssOutputFullPath)" DestinationFolder="$(BlazorProjectOutputTargetPath)" />
+        <Message Importance="high" Text="Copying bundled scoped CSS file from '$(_ScopedCssOutputFullPath)'" />
+        <Copy SourceFiles="$(_ScopedCssOutputFullPath)" DestinationFolder="$(BlazorProjectOutputTargetPath)" />
 
-    <Message Importance="high" Text="Conversion completed from Blazor application to Browser Extension" />
+        <Message Importance="high" Text="Conversion completed from Blazor application to Browser Extension" />
 
-  </Target>
+    </Target>
 
 </Project>
