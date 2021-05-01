@@ -20,21 +20,21 @@
     <ItemGroup>
       <BlazorProjectFilesToDelete Include="$(BlazorProjectOutputFrameworkPath)\**\*.*" />
     </ItemGroup>
-	<Delete Files="@(BlazorProjectFilesToDelete)" TreatErrorsAsWarnings="true" />
+    <Delete Files="@(BlazorProjectFilesToDelete)" TreatErrorsAsWarnings="true" />
 
     <Message Importance="high" Text="Moving all files from '$(OriginalBlazorProjectOutputFrameworkPath)' to '$(BlazorProjectOutputFrameworkPath)'" />
     <ItemGroup>
       <BlazorProjectFilesToMove Include="$(OriginalBlazorProjectOutputFrameworkPath)\**\*.*" />
     </ItemGroup>
-	<Move SourceFiles="@(BlazorProjectFilesToMove)" DestinationFolder="$(BlazorProjectOutputFrameworkPath)" />
+    <Move SourceFiles="@(BlazorProjectFilesToMove)" DestinationFolder="$(BlazorProjectOutputFrameworkPath)" />
 
     <Message Importance="high" Text="Removing directory '$(OriginalBlazorProjectOutputFrameworkPath)'" />
     <RemoveDir Directories="$(OriginalBlazorProjectOutputFrameworkPath)" />
 
     <Message Importance="high" Text="Replacing content of 'blazor.webassembly.js' and 'dotnet.*.js'" />
-	<BlazorToBrowserExtensionSafeNamespace Input="$(ProjectName)" Replacement="_">
+    <BlazorToBrowserExtensionSafeNamespace Input="$(ProjectName)" Replacement="_">
       <Output TaskParameter="Output" PropertyName="BlazorProjectSafeProjectName" />
-	</BlazorToBrowserExtensionSafeNamespace>
+    </BlazorToBrowserExtensionSafeNamespace>
     <ItemGroup>
       <BlazorProjectBlazorJsFile Include="$(BlazorProjectOutputFrameworkPath)\blazor.webassembly.js" />
       <BlazorProjectReplaceBlazorJsFileContents Include="append element to document body">
@@ -82,12 +82,16 @@
         <From>this.mono_wasm_assembly_already_added</From>
         <To>globalThis.mono_wasm_assembly_already_added</To>
       </BlazorProjectReplaceDotnetJsFileContents>
+      <BlazorProjectReplaceDotnetJsFileContents Include="accessing mono_set_timeout_exec">
+        <From>this.mono_set_timeout_exec</From>
+        <To>globalThis.mono_set_timeout_exec</To>
+      </BlazorProjectReplaceDotnetJsFileContents>
     </ItemGroup>
     <BlazorToBrowserExtensionReplaceContent Files="@(BlazorProjectBlazorJsFile)" Replace="@(BlazorProjectReplaceBlazorJsFileContents)" />
     <BlazorToBrowserExtensionReplaceContent Files="@(BlazorProjectDotnetJsFile)" Replace="@(BlazorProjectReplaceDotnetJsFileContents)" />
 
     <Message Importance="high" Text="Copying bundled scoped CSS file from '$(_ScopedCssOutputFullPath)'" />
-	<Copy SourceFiles="$(_ScopedCssOutputFullPath)" DestinationFolder="$(BlazorProjectOutputTargetPath)" />
+    <Copy SourceFiles="$(_ScopedCssOutputFullPath)" DestinationFolder="$(BlazorProjectOutputTargetPath)" />
 
     <Message Importance="high" Text="Conversion completed from Blazor application to Browser Extension" />
 
