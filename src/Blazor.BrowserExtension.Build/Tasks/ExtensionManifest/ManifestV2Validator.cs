@@ -34,16 +34,6 @@ namespace Blazor.BrowserExtension.Build.Tasks.ExtensionManifest
                             });
                         }
                         break;
-                    case ManifestItemKey.Permissions:
-                        if (!manifestItem.ContainsExact("webRequest") || !manifestItem.ContainsExact("webRequestBlocking"))
-                        {
-                            validationResults.Add(new ValidationResult()
-                            {
-                                Item = manifestItem,
-                                Error = "Manifest item 'permissions' must specify \"webRequest\" and \"webRequestBlocking\""
-                            });
-                        }
-                        break;
                 }
             }
             return validationResults;

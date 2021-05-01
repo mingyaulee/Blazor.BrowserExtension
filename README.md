@@ -168,8 +168,34 @@ The WebExtension API is provided by the package [WebExtension.Net](https://githu
 
 ## How does routing work
 You can use the `@page` directive to add route attribute to a Razor page, for example `@page "/options"`.
+
 Usually in a server hosted application, you can access the route by just going to `domain.com/options`.
-However in a browser extension, for example in Google Chrome, if you are try to access the route directly from the URL, e.g. `chrome-extension://extesion_id/options`, the background page will automatically intercept the request and redirect to `index.html?page=options`.  This is because the Blazor application is not hosted on a server, therefore only the static files are served in a browser extension.
+However in a browser extension, for example in Google Chrome, if you are try to access the route directly from the URL, e.g. `chrome-extension://extesion_id/options`, the background page will automatically intercept the request and redirect to `index.html?page=options`.
+
+This is because the Blazor application is not hosted on a server, therefore only the static files are served in a browser extension.
+
+### Required permissions
+The background page intercepting the requests need the permissions:
+- "\*://\*/\*"
+- "webRequest"
+- "webRequestBlocking"
+
+### Removing the permissions from the manifest
+The background will only intercept the calls if it detects the permissions are declared.
+When the permissions are not declared in the manifest, the only routing that works is the direct URL to the `index.html` file.
+If you need to use multiple route, the routes need to have a matching physical file, e.g.
+- Options page
+    - Route: chrome://<extension_id>/options.html
+    - File: wwwroot/options.html
+    - Options.razor: @page "/options.html"
+- Popup page
+    - Route: chrome://<extension_id>/popup.html
+    - File: wwwroot/popup.html
+    - Popup.razor: @page "/popup.html"
+
+Where the `options.html` and `popup.html` are duplicate files.
+
+If the routes does not match a physical file, when trying to reload the extension page you will see a page not found (404) error.
 
 ## Customize build
 
