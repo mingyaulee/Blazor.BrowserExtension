@@ -31,8 +31,20 @@ There are two packages that are shipped from the two repositories:
 1. Blazor.BrowserExtension
 0. Blazor.BrowserExtension.Build
 
+### Blazor.BrowserExtension
+This package provides the runtime functionalities, including:
+- Importing the browser polyfill
+- Importing WebExtension.Net and registering in dependency container
+- Handling the page reload in background
+
+### Blazor.BrowserExtension.Build
+This package facilitates the build process by defining and importing the build tasks, including:
+- Validating extension manifest
+- Replacing content of Blazor framework .js files
+- Converting project name to safe string to be used as ID in JavaScript
+
 ### Use a Consistent Coding Style
-- 4 spaces for indentation rather than tabs.
+- 4 spaces (C#) or 2 spaces (XML/JSON/JS) for indentation rather than tabs.
 - Every `if`, `else`, `for`, `foreach`, `while` etc should have its own opening and closing bracket, even if it is a single line statement.
 - Every code file changed should be formatted properly (CTRL+K, CTRL+D in VS or ALT+SHIFT+F in VS Code).
 
