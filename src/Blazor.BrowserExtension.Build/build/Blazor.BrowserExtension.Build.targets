@@ -27,7 +27,7 @@
     <ItemGroup>
       <BlazorProjectFilesToMove Include="$(OriginalBlazorProjectOutputFrameworkPath)\**\*.*" />
     </ItemGroup>
-    <Move SourceFiles="@(BlazorProjectFilesToMove)" DestinationFolder="$(BlazorProjectOutputFrameworkPath)" />
+    <Move SourceFiles="@(BlazorProjectFilesToMove)" DestinationFolder="$(BlazorProjectOutputFrameworkPath)\%(RecursiveDir)" />
 
     <Message Importance="high" Text="Removing directory '$(OriginalBlazorProjectOutputFrameworkPath)'" />
     <RemoveDir Directories="$(OriginalBlazorProjectOutputFrameworkPath)" />
@@ -98,7 +98,7 @@
     <BlazorToBrowserExtensionProcessStaticWebAssetsManifest Input="@(BlazorProjectStaticWebAssetsManifestFiles)" Exclude="$(BlazorProjectOutputTargetPath)">
       <Output TaskParameter="Output" ItemName="BlazorProjectStaticWebAssetFiles" />
     </BlazorToBrowserExtensionProcessStaticWebAssetsManifest>
-    
+
     <Message Importance="high" Text="Copying static web asset files from '$(BlazorProjectStaticWebAssetFiles)'" />
     <Copy SourceFiles="@(BlazorProjectStaticWebAssetFiles)" DestinationFolder="$(BlazorProjectOutputTargetPath)\%(BlazorProjectStaticWebAssetFiles.ContentRelativeDirectory)" SkipUnchangedFiles="true" />
 
