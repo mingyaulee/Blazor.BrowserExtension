@@ -37,14 +37,14 @@
     <PropertyGroup>
       <BrowserExtensionAssetsOutputPath>$(TargetDir)$(BrowserExtensionAssetsPath)\BrowserExtensionScripts</BrowserExtensionAssetsOutputPath>
     </PropertyGroup>
-	  
+
     <Message Importance="high" Text="Replacing content of core Blazor.BrowserExtension *.js files" />
     <ItemGroup>
       <BrowserExtensionAssetsOutputJsFiles Include="$(BrowserExtensionAssetsOutputPath)\*.js" />
     </ItemGroup>
-	<BlazorToBrowserExtensionSafeNamespace Input="$(ProjectName)" Replacement="_">
+    <BlazorToBrowserExtensionSafeNamespace Input="$(ProjectName)" Replacement="_">
       <Output TaskParameter="Output" PropertyName="BlazorProjectSafeProjectName" />
-	</BlazorToBrowserExtensionSafeNamespace>
+    </BlazorToBrowserExtensionSafeNamespace>
     <ItemGroup>
       <BrowserExtensionReplaceAssetsOutputJsFilesContents Include="Global variable BlazorBrowserExtension">
         <From>__ProjectName__</From>
