@@ -12,6 +12,7 @@
   </PropertyGroup>
 
   <!-- register the tasks from this assembly -->
+  <UsingTask TaskName="Blazor.BrowserExtension.Build.Tasks.BlazorToBrowserExtensionProcessStaticWebAssetsManifest" AssemblyFile="$(BrowserExtensionBuildTaskAssembly)" />
   <UsingTask TaskName="Blazor.BrowserExtension.Build.Tasks.BlazorToBrowserExtensionReplaceContent" AssemblyFile="$(BrowserExtensionBuildTaskAssembly)" />
   <UsingTask TaskName="Blazor.BrowserExtension.Build.Tasks.BlazorToBrowserExtensionSafeNamespace" AssemblyFile="$(BrowserExtensionBuildTaskAssembly)" />
   <UsingTask TaskName="Blazor.BrowserExtension.Build.Tasks.BlazorToBrowserExtensionValidateManifest" AssemblyFile="$(BrowserExtensionBuildTaskAssembly)" />

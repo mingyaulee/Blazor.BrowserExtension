@@ -9,6 +9,7 @@
       <BlazorProjectOutputFrameworkPath>$(TargetDir)$(BrowserExtensionAssetsPath)\framework</BlazorProjectOutputFrameworkPath>
       <BlazorProjectOutputManifestJsonFile>$(TargetDir)$(BrowserExtensionAssetsPath)\manifest.json</BlazorProjectOutputManifestJsonFile>
       <BlazorProjectOutputTargetPath>$(TargetDir)$(BrowserExtensionAssetsPath)</BlazorProjectOutputTargetPath>
+      <BlazorProjectStaticWebAssetsPath>$(IntermediateOutputPath)staticwebassets</BlazorProjectStaticWebAssetsPath>
     </PropertyGroup>
 
     <Message Importance="high" Text="Converting Blazor application to Browser Extension" />
@@ -90,8 +91,16 @@
     <BlazorToBrowserExtensionReplaceContent Files="@(BlazorProjectBlazorJsFile)" Replace="@(BlazorProjectReplaceBlazorJsFileContents)" />
     <BlazorToBrowserExtensionReplaceContent Files="@(BlazorProjectDotnetJsFile)" Replace="@(BlazorProjectReplaceDotnetJsFileContents)" />
 
-    <Message Importance="high" Text="Copying bundled scoped CSS file from '$(_ScopedCssOutputFullPath)'" />
-    <Copy SourceFiles="$(_ScopedCssOutputFullPath)" DestinationFolder="$(BlazorProjectOutputTargetPath)" />
+    <ItemGroup>
+      <BlazorProjectStaticWebAssetsManifestFiles Include="$(BlazorProjectStaticWebAssetsPath)\*.StaticWebAssets.xml" />
+    </ItemGroup>
+    <Message Importance="high" Text="Processing static web assets from manifest files '$(BlazorProjectStaticWebAssetsManifestFiles)'" />
+    <BlazorToBrowserExtensionProcessStaticWebAssetsManifest Input="@(BlazorProjectStaticWebAssetsManifestFiles)" Exclude="$(BlazorProjectOutputTargetPath)">
+      <Output TaskParameter="Output" ItemName="BlazorProjectStaticWebAssetFiles" />
+    </BlazorToBrowserExtensionProcessStaticWebAssetsManifest>
+    
+    <Message Importance="high" Text="Copying static web asset files from '$(BlazorProjectStaticWebAssetFiles)'" />
+    <Copy SourceFiles="@(BlazorProjectStaticWebAssetFiles)" DestinationFolder="$(BlazorProjectOutputTargetPath)\%(BlazorProjectStaticWebAssetFiles.ContentRelativeDirectory)" SkipUnchangedFiles="true" />
 
     <Message Importance="high" Text="Conversion completed from Blazor application to Browser Extension" />
 
