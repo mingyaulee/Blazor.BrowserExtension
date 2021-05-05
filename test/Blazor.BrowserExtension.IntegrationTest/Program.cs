@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+﻿using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Blazor.BrowserExtension.IntegrationTest
 {
-    public class Program
+    public static class Program
     {
         public static async Task Main(string[] args)
         {
