@@ -1,6 +1,6 @@
 ﻿(async () => {
-  const global = globalThis;
-  const browserExtension = globalThis.BlazorBrowserExtension["__ProjectName__"];
+  const projectName = "__ProjectName__";
+  const browserExtension = globalThis.BlazorBrowserExtension[projectName];
 
   const prefixUri = browserExtension.Url;
   const listener = details => {
@@ -14,8 +14,8 @@
   const isStaticFile = url => {
     return /\.\w{2,5}(\?.+)?$/.test(url);
   };
-  var hasPermission = await global.browser.permissions.contains({ permissions: ["webRequest", "webRequestBlocking"] });
+  var hasPermission = await globalThis.browser.permissions.contains({ permissions: ["webRequest", "webRequestBlocking"] });
   if (hasPermission) {
-    global.browser.webRequest.onBeforeRequest.addListener(listener, { urls: [prefixUri + "*"] }, ["blocking"]);
+    globalThis.browser.webRequest.onBeforeRequest.addListener(listener, { urls: [prefixUri + "*"] }, ["blocking"]);
   }
 })();
