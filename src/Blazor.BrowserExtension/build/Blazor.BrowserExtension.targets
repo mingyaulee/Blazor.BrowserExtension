@@ -8,25 +8,7 @@
 
   <!-- this will add the files to be copied to the output directory during build -->
   <ItemGroup Condition="'$(IncludeBrowserExtensionAssets)' == 'true'">
-    <None Include="$(BrowserExtensionAssetsContentsPath)\Core.js" Link="$(BrowserExtensionAssetsTargetPath)\Core.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="$(BrowserExtensionAssetsContentsPath)\Background.js" Link="$(BrowserExtensionAssetsTargetPath)\Background.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="$(BrowserExtensionAssetsContentsPath)\ContentScript.js" Link="$(BrowserExtensionAssetsTargetPath)\ContentScript.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="$(BrowserExtensionAssetsContentsPath)\lib\browser-polyfill.js" Link="$(BrowserExtensionAssetsTargetPath)\lib\browser-polyfill.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="$(BrowserExtensionAssetsContentsPath)\lib\browser-polyfill.js.map" Link="$(BrowserExtensionAssetsTargetPath)\lib\browser-polyfill.js.map">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="$(BrowserExtensionAssetsContentsPath)\lib\browser-polyfill.min.js" Link="$(BrowserExtensionAssetsTargetPath)\lib\browser-polyfill.min.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="$(BrowserExtensionAssetsContentsPath)\lib\browser-polyfill.min.js.map" Link="$(BrowserExtensionAssetsTargetPath)\lib\browser-polyfill.min.js.map">
+    <None Include="$(BrowserExtensionAssetsContentsPath)\**\*.*" Link="$(BrowserExtensionAssetsTargetPath)\%(RecursiveDir)%(Filename)%(Extension)">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
