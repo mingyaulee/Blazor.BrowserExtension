@@ -66,6 +66,26 @@ public static async Task Main(string[] args)
 }
 ```
 
+## Change initialization behaviour
+The following properties can be set to change the behaviour of the core scripts.
+
+| Variable Name               | Description                                                                                                                                        |
+| --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ImportBrowserPolyfill       | Set to `false` to disable importing of the browser polyfill script.<br />Default: `true`                                                           |
+| StartBlazorBrowserExtension | Set to `false` to prevent auto initialization of Blazor. Use `BlazorBrowserExtension.InitializeAsync` to initialize manually.<br />Default: `true` |
+
+**Example:**
+```html
+<script>
+  globalThis.ImportBrowserPolyfill = false;
+  globalThis.StartBlazorBrowserExtension = false;
+</script>
+<script src="BrowserExtensionScripts/Core.js"></script>
+<script>
+  globalThis.BlazorBrowserExtension.InitializeAsync("Project_Name");
+</script>
+```
+
 ## Build and load extension
 In Google Chrome, go to the Extensions page (Menu -> More tools -> Extensions) and switch on Developer mode.
 Click on `Load unpacked` button and navigate to `%ProjectDir%\bin\Debug\net5.0\` and select the foler `wwwroot`
@@ -123,12 +143,12 @@ Additional changes are required for content scripts to not have conflict of the 
 
 **Example:**
 
-| Project Name | Safe Project Name | Element Name     |
-| ------------ | ----------------- | ---------------- |
-| MyProject    | MyProject         | MyProject_app    |
-| My.Project   | My_Project        | My_Project_app   |
-| My Project   | My_Project        | My_Project_app   |
-| My-Project   | My_Project        | My_Project_app   |
+| Project Name | Safe Project Name | Element Name   |
+| ------------ | ----------------- | -------------- |
+| MyProject    | MyProject         | MyProject_app  |
+| My.Project   | My_Project        | My_Project_app |
+| My Project   | My_Project        | My_Project_app |
+| My-Project   | My_Project        | My_Project_app |
 
 In `App.razor`, add the following `if` statement to opt out of routing only for content scripts.
 ```razor
