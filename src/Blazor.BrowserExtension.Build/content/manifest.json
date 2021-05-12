@@ -1,0 +1,21 @@
+{
+  "manifest_version": 2,
+  "name": "My Blazor Extension",
+  "description": "My browser extension built with Blazor WebAssembly",
+  "version": "0.1",
+  "background": {
+    "page": "index.html?path=background",
+    "persistent": true
+  },
+  "content_security_policy": "script-src 'self' 'unsafe-eval' 'wasm-eval' 'sha256-v8v3RKRPmN4odZ1CWM5gw80QKPCCWMcpNeOmimNL2AA='; object-src 'self'",
+  "web_accessible_resources": [
+    "framework/*",
+    "BrowserExtensionScripts/*",
+    "WebExtensionScripts/*"
+  ],
+  "permissions": [
+    "*://*/*",
+    "webRequest",
+    "webRequestBlocking"
+  ]
+}

@@ -1,4 +1,7 @@
 # Blazor.BrowserExtension
+![Nuget](https://img.shields.io/nuget/v/Blazor.BrowserExtension?style=flat-square&color=blue)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/mingyaulee/Blazor.BrowserExtension/Build?style=flat-square&color=blue)
+
 Build a browser extension with Blazor.
 
 This package imports two other packages, which are:
@@ -7,64 +10,80 @@ This package imports two other packages, which are:
 
 ## How to use this package
 1. Create a new **Blazor WebAssembly App** project (skip to step 3 if you have an existing Blazor WebAssembly project).
-2. Target Framework should be at least .Net 5.0 and uncheck/deselect other options such as authentication, HTTPS support, ASP.Net Core hosting support and PWA.
-3. Install NuGet package `Blazor.BrowserExtension`
-4. Add a new file `manifest.json` under the `wwwroot` folder. An example of minimal `manifest.json` file:
-```json
-{
-  "manifest_version": 2,
-  "name": "My Blazor Extension",
-  "description": "My browser extension built with Blazor",
-  "version": "1.0",
-  "background": {
-    "page": "index.html?path=background",
-    "persistent": true
-  },
-  "content_security_policy": "script-src 'self' 'unsafe-eval' 'wasm-eval' 'sha256-v8v3RKRPmN4odZ1CWM5gw80QKPCCWMcpNeOmimNL2AA='; object-src 'self'",
-  "web_accessible_resources": [
-    "framework/*",
-    "BrowserExtensionScripts/*",
-    "WebExtensionScripts/*"
-  ],
-  "permissions": [
-    "*://*/*",
-    "webRequest",
-    "webRequestBlocking"
-  ]
-}
-```
-5. Add the following to the `.csproj` file to make sure that all the files under `wwwroot` will always be copied to the output.
-```xml
-  <ItemGroup>
-    <None Include="wwwroot\**\*" CopyToOutputDirectory="Always" />
-  </ItemGroup>
-```
-6. In `wwwroot/index.html` replace the script tag `<script src="_framework/blazor.webassembly.js"></script>` with `<script src="BrowserExtensionScripts/Core.js"></script>`
-7. In `Pages/Index.razor` replace the first line `@page "/"` with the following lines:
-```razor
-@page "/"
-@page "/index.html"
-@inherits Blazor.BrowserExtension.Pages.IndexPage
-```
-8. Add a `Background.razor` file under `Pages` folder (Right click on the `Pages` folder and select Add -> Razor Component), with the following content:
-```razor
-@page "/background"
-@inherits Blazor.BrowserExtension.Pages.BackgroundPage
-```
-9. Add the following into `Program.cs` file.
-```csharp
-using Blazor.BrowserExtension;
-...
-public static async Task Main(string[] args)
-{
-    ...
-    builder.Services.AddBrowserExtensionServices(options =>
-    {
-        options.ProjectNamespace = typeof(Program).Namespace;
-    });
-    ...
-}
-```
+0. Target Framework should be at least .Net 5.0 and uncheck/deselect other options such as authentication, HTTPS support, ASP.Net Core hosting support and PWA.
+0. Install NuGet package `Blazor.BrowserExtension`.
+0. Add `<BrowserExtensionBootstrap>true</BrowserExtensionBootstrap>` under the `<PropertyGroup>` node in your `.csproj` project file to automatically setup the project files to be compatible for building into browser extension.
+0. Build the project.
+
+### Manual Setting Up
+You can setup the project manually as well, if for some reason you encounter any problem with the bootstrapping step above.
+1. Add a new file `manifest.json` under the `wwwroot` folder. An example of minimal `manifest.json` file:
+   ```json
+   {
+     "manifest_version": 2,
+     "name": "My Blazor Extension",
+     "description": "My browser extension built with Blazor WebAssembly",
+     "version": "0.1",
+     "background": {
+       "page": "index.html?path=background",
+       "persistent": true
+     },
+     "content_security_policy": "script-src 'self' 'unsafe-eval' 'wasm-eval' 'sha256-v8v3RKRPmN4odZ1CWM5gw80QKPCCWMcpNeOmimNL2AA='; object-src 'self'",
+     "web_accessible_resources": [
+       "framework/*",
+       "BrowserExtensionScripts/*",
+       "WebExtensionScripts/*"
+     ],
+     "permissions": [
+       "*://*/*",
+       "webRequest",
+       "webRequestBlocking"
+     ]
+   }
+   ```
+0. Add the following to the `.csproj` file to make sure that all the files under `wwwroot` will always be copied to the output.
+   ```xml
+     <ItemGroup>
+       <None Include="wwwroot\**\*" CopyToOutputDirectory="Always" />
+     </ItemGroup>
+   ```
+0. In `wwwroot/index.html` replace the script tag `<script src="_framework/blazor.webassembly.js"></script>` with `<script src="BrowserExtensionScripts/Core.js"></script>`
+0. In `Pages/Index.razor` replace the first line `@page "/"` with the following lines:
+   ```razor
+   @page "/"
+   @page "/index.html"
+   @inherits Blazor.BrowserExtension.Pages.IndexPage
+   ```
+0. Add a `Background.razor` file under `Pages` folder (Right click on the `Pages` folder and select Add -> Razor Component), with the following content:
+   ```razor
+   @page "/background"
+   @inherits Blazor.BrowserExtension.Pages.BackgroundPage
+   
+   @code {
+       protected override async Task OnInitializedAsync()
+       {
+           await base.OnInitializedAsync();
+           // this opens index.html in the extension as a new tab when the background page is loaded
+           var extensionUrl = await WebExtension.Runtime.GetURL("index.html");
+           await WebExtension.Tabs.Create(new
+           {
+               url = extensionUrl
+           });
+       }
+   }
+   ```
+0. Add the following into `Program.cs` file.
+   ```csharp
+   public static async Task Main(string[] args)
+   {
+       ...
+       builder.Services.AddBrowserExtensionServices(options =>
+       {
+           options.ProjectNamespace = typeof(Program).Namespace;
+       });
+       ...
+   }
+   ```
 
 ## Change initialization behaviour
 The following properties can be set to change the behaviour of the core scripts.
@@ -226,6 +245,7 @@ The following MSBuild properties can be specified in your project file or when r
 | BrowserExtensionAssetsPath    | wwwroot       | The root folder where the JavaScript files should be added as link.            |
 | BuildBlazorToBrowserExtension | true          | If set to false, the Blazor to Browser Extension build target will be skipped. |
 | IncludeBrowserExtensionAssets | true          | If set to false, the JavaScript files will not be added as to the project.     |
+| BrowserExtensionBootstrap     | false         | If set to true, the project will be bootstrapped during the build.             |
 
 ## Additional Information
 Find out how to build a cross browser extension with the links below:

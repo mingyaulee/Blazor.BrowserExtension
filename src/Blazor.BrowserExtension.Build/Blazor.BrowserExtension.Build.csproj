@@ -29,6 +29,10 @@
       <Pack>true</Pack>
       <PackagePath>build</PackagePath>
 	</Content>
+    <Content Include="content\**">
+      <Pack>true</Pack>
+      <PackagePath>content</PackagePath>
+	</Content>
   </ItemGroup>
 
   <ItemGroup>

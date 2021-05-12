@@ -1,6 +1,59 @@
 ﻿<!-- build/Blazor.BrowserExtension.Build.targets -->
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
+  <!-- this will automatically run before the 'BeforeBuild' target -->
+  <Target Name="RunBootstrapBlazorToBrowserExtension" BeforeTargets="BeforeBuild" Condition="'$(BrowserExtensionBootstrap)' == 'true'">
+
+    <PropertyGroup>
+      <BrowserExtensionBuildContentsPath>$(MSBuildThisFileDirectory)..\content</BrowserExtensionBuildContentsPath>
+      <BrowserExtensionProjectFilePath>$(ProjectPath)</BrowserExtensionProjectFilePath>
+      <BrowserExtensionProjectPath>$(ProjectDir)</BrowserExtensionProjectPath>
+      <BrowserExtensionProjectAssetsPath>$(BrowserExtensionProjectPath)$(BrowserExtensionAssetsPath)</BrowserExtensionProjectAssetsPath>
+      <BrowserExtensionProjectPagesPath>$(BrowserExtensionProjectPath)Pages</BrowserExtensionProjectPagesPath>
+
+      <BrowserExtensionBuildManifestFilePath>$(BrowserExtensionBuildContentsPath)\manifest.json</BrowserExtensionBuildManifestFilePath>
+      <BrowserExtensionProjectAssetsManifestFilePath>$(BrowserExtensionProjectAssetsPath)\manifest.json</BrowserExtensionProjectAssetsManifestFilePath>
+      <BrowserExtensionProjectAssetsIndexHtmlFilePath>$(BrowserExtensionProjectAssetsPath)\index.html</BrowserExtensionProjectAssetsIndexHtmlFilePath>
+      <BrowserExtensionProjectPagesIndexRazorFilePath>$(BrowserExtensionProjectPagesPath)\Index.razor</BrowserExtensionProjectPagesIndexRazorFilePath>
+      <BrowserExtensionBuildBackgroundRazorFilePath>$(BrowserExtensionBuildContentsPath)\Background.razor</BrowserExtensionBuildBackgroundRazorFilePath>
+      <BrowserExtensionProjectPagesBackgroundRazorFilePath>$(BrowserExtensionProjectPagesPath)\Background.razor</BrowserExtensionProjectPagesBackgroundRazorFilePath>
+      <BrowserExtensionProjectProgramCsFilePath>$(BrowserExtensionProjectPath)Program.cs</BrowserExtensionProjectProgramCsFilePath>
+    </PropertyGroup>
+
+    <Message Importance="high" Text="Bootstrapping Blazor application as Browser Extension" />
+
+    <Message Importance="high" Text="Creating default manifest.json file in '$(BrowserExtensionProjectAssetsManifestFilePath)'" />
+    <Copy SourceFiles="$(BrowserExtensionBuildManifestFilePath)" DestinationFiles="$(BrowserExtensionProjectAssetsManifestFilePath)" ContinueOnError="true" SkipUnchangedFiles="true" />
+
+    <Message Importance="high" Text="Bootstrapping project file '$(ProjectPath)'" />
+    <BlazorToBrowserExtensionBootstrapFile FilePath="$(ProjectPath)" FileType="Project"></BlazorToBrowserExtensionBootstrapFile>
+
+    <!-- Make sure this build includes the wwwroot directory to copy to output directory -->
+    <ItemGroup>
+      <None Include="wwwroot\**\*" CopyToOutputDirectory="Always" />
+    </ItemGroup>
+    
+    <Message Importance="high" Text="Bootstrapping index.html file '$(BrowserExtensionProjectAssetsIndexHtmlFilePath)'" />
+    <BlazorToBrowserExtensionBootstrapFile FilePath="$(BrowserExtensionProjectAssetsIndexHtmlFilePath)" FileType="IndexHtml"></BlazorToBrowserExtensionBootstrapFile>
+
+    <Message Importance="high" Text="Bootstrapping Index.razor file '$(BrowserExtensionProjectPagesIndexRazorFilePath)'" />
+    <BlazorToBrowserExtensionBootstrapFile FilePath="$(BrowserExtensionProjectPagesIndexRazorFilePath)" FileType="IndexRazor"></BlazorToBrowserExtensionBootstrapFile>
+
+    <Message Importance="high" Text="Creating default Background.razor file in '$(BrowserExtensionProjectPagesBackgroundRazorFilePath)'" />
+    <Copy SourceFiles="$(BrowserExtensionBuildBackgroundRazorFilePath)" DestinationFiles="$(BrowserExtensionProjectPagesBackgroundRazorFilePath)" ContinueOnError="true" SkipUnchangedFiles="true" />
+
+    <!-- Make sure this build includes the newly created Background.razor -->
+    <ItemGroup>
+      <Content Include="Pages/Background.razor" CopyToOutputDirectory="Never" />
+    </ItemGroup>
+
+    <Message Importance="high" Text="Bootstrapping Program.cs file '$(BrowserExtensionProjectProgramCsFilePath)'" />
+    <BlazorToBrowserExtensionBootstrapFile FilePath="$(BrowserExtensionProjectProgramCsFilePath)" FileType="ProgramCs"></BlazorToBrowserExtensionBootstrapFile>
+
+    <Message Importance="high" Text="Bootstrapping completed from Blazor application to Blazor Browser Extension application" />
+
+  </Target>
+
   <!-- this will automatically run after the 'AfterBuild' target -->
   <Target Name="RunBuildBlazorToBrowserExtension" AfterTargets="AfterBuild" Condition="'$(BuildBlazorToBrowserExtension)' == 'true'">
 
