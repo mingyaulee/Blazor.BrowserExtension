@@ -6,7 +6,7 @@ import BrowserExtensionModes from "./BrowserExtensionModes.js";
  * Gets the browser extension mode.
  * @param {string} extensionUrl The extension URL.
  * @param {string} currentUrl The current URL.
- * @returns {string}
+ * @returns {import("./BrowserExtensionModes").BrowserExtensionMode}
  */
 function getBrowserExtensionMode(extensionUrl, currentUrl) {
   // Set browser extension mode to ContentScript for URL that does not match the browser extension URL
@@ -22,7 +22,7 @@ function getBrowserExtensionMode(extensionUrl, currentUrl) {
  * @param {string} projectName The project name.
  * @returns {Promise<BrowserExtension>}
  */
-async function initializeAsync(projectName) {
+export async function initializeAsync(projectName) {
   // each extension's definition is stored in BlazorBrowserExtension[name]
   const url = globalThis.browser.runtime.getURL("");
   const currentUrl = globalThis.location.origin;
@@ -77,5 +77,3 @@ if (!globalThis.hasOwnProperty("BlazorBrowserExtension")) {
 }
 
 blazorBrowserExtension.InitializeAsync = initializeAsync;
-
-export default initializeAsync;

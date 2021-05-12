@@ -1,13 +1,13 @@
-﻿import BrowserExtensionModes, * as BrowserExtensionModesExports from "./BrowserExtensionModes.js";
+﻿import BrowserExtensionModes from "./BrowserExtensionModes.js";
 
 export default class BrowserExtension {
   /** @type {string} */ Url;
-  /** @type {BrowserExtensionModesExports.BrowserExtensionMode} */ Mode;
+  /** @type {import("./BrowserExtensionModes").BrowserExtensionMode} */ Mode;
 
   /**
    * Create a new instance of BrowserExtension.
    * @param {string} url The browser extension URL.
-   * @param {BrowserExtensionModesExports.BrowserExtensionMode} mode The browser extension mode.
+   * @param {import("./BrowserExtensionModes").BrowserExtensionMode} mode The browser extension mode.
    */
   constructor(url, mode) {
     this.Url = url;

@@ -7,7 +7,7 @@
     await import("./lib/browser-polyfill.min.js");
   }
 
-  const initializeAsync = (await import("./Modules/CoreInternal.js")).default;
+  const initializeAsync = (await import("./Modules/CoreInternal.js")).initializeAsync;
 
   if (globalThis.StartBlazorBrowserExtension !== false) {
     await initializeAsync(projectName);

@@ -1,14 +1,13 @@
-﻿/** @typedef {string} BrowserExtensionMode */
+﻿/** @typedef {"Standard" | "ContentScript"} BrowserExtensionMode */
 
-/** 
+/**
  * @typedef BrowserExtensionModesEnum
- * @property {string} Standard "Standard"
- * @property {string} ContentScript "ContentScript"
+ * @property {BrowserExtensionMode} Standard
+ * @property {BrowserExtensionMode} ContentScript
  */
 
 /**
  * @type {BrowserExtensionModesEnum}
- * @enum {BrowserExtensionMode}
  */
 const BrowserExtensionModes = {
   Standard: "Standard",

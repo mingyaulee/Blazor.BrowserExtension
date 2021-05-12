@@ -1,14 +1,11 @@
-﻿import BrowserExtension from "./BrowserExtension.js";
-import * as BrowserExtensionModesExports from "./BrowserExtensionModes.js";
-
-/**
+﻿/**
  * @callback InitializeFunction
  * @param {string} projectName
- * @returns {Promise<BrowserExtension>}
+ * @returns {Promise<import("./BrowserExtension").default>}
  */
 
 export default class BlazorBrowserExtension {
   /** @type {string} */ Url;
-  /** @type {BrowserExtensionModesExports.BrowserExtensionModesEnum} */ Modes;
+  /** @type {import("./BrowserExtensionModes").BrowserExtensionModesEnum} */ Modes;
   /** @type {InitializeFunction} */ InitializeAsync;
 }
