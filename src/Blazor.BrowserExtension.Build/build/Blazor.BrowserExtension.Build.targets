@@ -133,7 +133,7 @@
         <From>var BINDING=</From>
         <To>globalThis.BINDING=</To>
       </BlazorProjectReplaceDotnetJsFileContents>
-      <BlazorProjectReplaceDotnetJsFileContents Include="accessing mono_wasm_assembly_already_added">
+      <BlazorProjectReplaceDotnetJsFileContents Include="accessing mono_wasm_assembly_already_added" Condition="'$(TargetFramework)' == 'net5.0'">
         <From>this.mono_wasm_assembly_already_added</From>
         <To>globalThis.mono_wasm_assembly_already_added</To>
       </BlazorProjectReplaceDotnetJsFileContents>
