@@ -6,7 +6,7 @@
 [*]
 indent_style = space
 # Code files
-[*.{js,json,xml,props,targets}]
+[*.{js,json,xml,props,targets,csproj}]
 indent_size = 2
 [*.{cs,razor}]
 indent_size = 4
