@@ -28,9 +28,13 @@
       <Output TaskParameter="Output" PropertyName="BlazorProjectSafeProjectName" />
     </BlazorToBrowserExtensionSafeNamespace>
     <ItemGroup>
-      <BrowserExtensionReplaceAssetsOutputJsFilesContents Include="Global variable BlazorBrowserExtension">
+      <BrowserExtensionReplaceAssetsOutputJsFilesContents Include="Safe project name">
         <From>__ProjectName__</From>
         <To>$(BlazorProjectSafeProjectName)</To>
+      </BrowserExtensionReplaceAssetsOutputJsFilesContents>
+      <BrowserExtensionReplaceAssetsOutputJsFilesContents Include="Environment name">
+        <From>__EnvironmentName__</From>
+        <To>$(BrowserExtensionEnvironment)</To>
       </BrowserExtensionReplaceAssetsOutputJsFilesContents>
     </ItemGroup>
     <BlazorToBrowserExtensionReplaceContent Files="@(BrowserExtensionAssetsOutputJsFiles)" Replace="@(BrowserExtensionReplaceAssetsOutputJsFilesContents)" FailOnWarning="true" FailMessage="Clean the project before build" />

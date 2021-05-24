@@ -100,6 +100,10 @@
         <From>_framework</From>
         <To>framework</To>
       </BlazorProjectReplaceBlazorJsFileContents>
+      <BlazorProjectReplaceBlazorJsFileContents Include="framework debug path">
+        <From>framework/debug</From>
+        <To>_framework/debug</To>
+      </BlazorProjectReplaceBlazorJsFileContents>
       <BlazorProjectReplaceBlazorJsFileContents Include="fetch url">
         <From>fetch(</From>
         <To>globalThis.BlazorBrowserExtension.$(BlazorProjectSafeProjectName).FetchAsync(</To>

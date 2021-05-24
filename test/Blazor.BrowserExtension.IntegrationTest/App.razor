@@ -1,7 +1,11 @@
-@using Blazor.BrowserExtension.IntegrationTest.Pages
-@inject NavigationManager Navigation
+﻿@using Blazor.BrowserExtension.IntegrationTest.Pages
+@inject IBrowserExtensionEnvironment BrowserExtensionEnvironment
 
-@if (Navigation.Uri.StartsWith("chrome-extension://"))
+@if (BrowserExtensionEnvironment.Mode == BrowserExtensionMode.ContentScript)
+{
+    <ContentScript></ContentScript>
+}
+else
 {
     <Router AppAssembly="@typeof(Program).Assembly" PreferExactMatches="@true">
         <Found Context="routeData">
@@ -13,8 +17,4 @@
             </LayoutView>
         </NotFound>
     </Router>
-}
-else
-{
-    <ContentScript></ContentScript>
 }

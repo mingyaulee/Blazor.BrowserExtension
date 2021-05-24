@@ -1,6 +1,6 @@
 ﻿/**
  * @callback InitializeFunction
- * @param {string} projectName
+ * @param {string} environmentName
  * @returns {Promise<import("./BrowserExtension").default>}
  */
 

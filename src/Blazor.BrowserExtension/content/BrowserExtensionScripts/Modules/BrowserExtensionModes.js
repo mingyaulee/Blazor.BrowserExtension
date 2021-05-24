@@ -1,9 +1,10 @@
-﻿/** @typedef {"Standard" | "ContentScript"} BrowserExtensionMode */
+﻿/** @typedef {"Standard" | "ContentScript" | "Debug"} BrowserExtensionMode */
 
 /**
  * @typedef BrowserExtensionModesEnum
  * @property {BrowserExtensionMode} Standard
  * @property {BrowserExtensionMode} ContentScript
+ * @property {BrowserExtensionMode} Debug
  */
 
 /**
@@ -11,7 +12,8 @@
  */
 const BrowserExtensionModes = {
   Standard: "Standard",
-  ContentScript: "ContentScript"
+  ContentScript: "ContentScript",
+  Debug: "Debug"
 };
 
 export default BrowserExtensionModes;

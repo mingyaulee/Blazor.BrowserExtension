@@ -1,6 +1,7 @@
 # Blazor.BrowserExtension
-![Nuget](https://img.shields.io/nuget/v/Blazor.BrowserExtension?style=flat-square&color=blue)
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/mingyaulee/Blazor.BrowserExtension/Build?style=flat-square&color=blue)
+[![Nuget](https://img.shields.io/nuget/v/Blazor.BrowserExtension?style=flat-square&color=blue)](https://www.nuget.org/packages/Blazor.BrowserExtension/)
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/mingyaulee/Blazor.BrowserExtension/Build?style=flat-square&color=blue)](https://github.com/mingyaulee/Blazor.BrowserExtension/actions/workflows/Blazor.BrowserExtension-Build.yml)
+[![Sonar Quality Gate](https://img.shields.io/sonar/quality_gate/Blazor.BrowserExtension?server=https%3A%2F%2Fsonarcloud.io&style=flat-square)](https://sonarcloud.io/dashboard?id=Blazor.BrowserExtension)
 
 Build a browser extension with Blazor.
 
@@ -94,6 +95,9 @@ The following properties can be set to change the behaviour of the core scripts.
 | StartBlazorBrowserExtension | Set to `false` to prevent auto initialization of Blazor. Use `BlazorBrowserExtension.InitializeAsync` to initialize manually.<br />Default: `true` |
 
 **Example:**
+
+In `wwwrot/index.html`
+
 ```html
 <script>
   globalThis.ImportBrowserPolyfill = false;
@@ -108,6 +112,12 @@ The following properties can be set to change the behaviour of the core scripts.
 ## Build and load extension
 In Google Chrome, go to the Extensions page (Menu -> More tools -> Extensions) and switch on Developer mode.
 Click on `Load unpacked` button and navigate to `%ProjectDir%\bin\Debug\net5.0\` and select the foler `wwwroot`
+
+## Debugging in IIS Express or Kestrel
+Update the script tag in `wwwroot/index.html` to load `CoreDebug.js` instead of `Core.js`.
+```html
+<script src="BrowserExtensionScripts/CoreDebug.js"></script>
+```
 
 ## Browser Extension features
 
@@ -172,17 +182,17 @@ Additional changes are required for content scripts to not have conflict of the 
 In `App.razor`, add the following `if` statement to opt out of routing only for content scripts.
 ```razor
 @using My.Project.Pages;
-@inject NavigationManager Navigation
+@inject IBrowserExtensionEnvironment BrowserExtensionEnvironment
 
-@if (Navigation.Uri.StartsWith("chrome-extension://"))
+@if (BrowserExtensionEnvironment.Mode == BrowserExtensionMode.ContentScript)
+{
+    <ContentScript></ContentScript>
+}
+else
 {
     <Router ...>
         ...
     </Router>
-}
-else
-{
-    <ContentScript></ContentScript>
 }
 ```
 
@@ -242,6 +252,7 @@ The following MSBuild properties can be specified in your project file or when r
 
 | Property                      | Default value | Description                                                                    |
 | ----------------------------- | ------------- | ------------------------------------------------------------------------------ |
+| BrowserExtensionEnvironment   |               | The environment name which the Blazor application will run in.                 |
 | BrowserExtensionAssetsPath    | wwwroot       | The root folder where the JavaScript files should be added as link.            |
 | BuildBlazorToBrowserExtension | true          | If set to false, the Blazor to Browser Extension build target will be skipped. |
 | IncludeBrowserExtensionAssets | true          | If set to false, the JavaScript files will not be added as to the project.     |

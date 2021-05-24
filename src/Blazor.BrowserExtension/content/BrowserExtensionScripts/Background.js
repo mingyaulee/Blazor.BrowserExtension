@@ -1,5 +1,6 @@
 ﻿(async () => {
   const projectName = "__ProjectName__";
+  const environmentName = "__EnvironmentName__";
   const browserExtension = globalThis.BlazorBrowserExtension[projectName];
 
   const prefixUri = browserExtension.Url;
