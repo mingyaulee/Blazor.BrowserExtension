@@ -3,6 +3,7 @@ using Microsoft.JSInterop;
 using System;
 using System.Linq;
 using WebExtension.Net;
+using WebExtension.Net.Mock;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -25,7 +26,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             if (browserExtensionEnvironment.Mode == BrowserExtensionMode.Debug)
             {
-                // register mock runtime
+                services.AddSingleton<IWebExtensionJSRuntime, MockWebExtensionJSRuntime>();
             }
             else
             {
