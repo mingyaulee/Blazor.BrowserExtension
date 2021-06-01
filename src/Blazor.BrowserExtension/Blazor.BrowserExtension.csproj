@@ -38,7 +38,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.0" />
     <PackageReference Include="Microsoft.JSInterop" Version="5.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
-    <PackageReference Include="WebExtension.Net" Version="0.3.3" IncludeAssets="all" PrivateAssets="none" />
+    <PackageReference Include="WebExtension.Net" Version="0.5.1" IncludeAssets="all" PrivateAssets="none" />
   </ItemGroup>
 
   <ItemGroup>

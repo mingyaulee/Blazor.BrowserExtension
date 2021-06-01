@@ -1,5 +1,6 @@
 ﻿@page "/background"
 @inherits Blazor.BrowserExtension.Pages.BackgroundPage
+@using WebExtension.Net.Tabs
 <h3>Background</h3>
 
 @code {
@@ -9,9 +10,9 @@
 
         // Navigate to extension index page on load
         var extensionUrl = await WebExtension.Runtime.GetURL("");
-        await WebExtension.Tabs.Create(new
+        await WebExtension.Tabs.Create(new CreateProperties
         {
-            url = extensionUrl
+            Url = extensionUrl
         });
     }
 }
