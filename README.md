@@ -96,7 +96,7 @@ The following properties can be set to change the behaviour of the core scripts.
 
 **Example:**
 
-In `wwwrot/index.html`
+In `wwwroot/index.html`
 
 ```html
 <script>
@@ -105,7 +105,7 @@ In `wwwrot/index.html`
 </script>
 <script src="BrowserExtensionScripts/Core.js"></script>
 <script>
-  globalThis.BlazorBrowserExtension.InitializeAsync("Project_Name");
+  globalThis.BlazorBrowserExtension.InitializeAsync("Production");
 </script>
 ```
 
