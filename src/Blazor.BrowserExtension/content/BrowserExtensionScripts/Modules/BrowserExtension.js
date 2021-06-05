@@ -8,10 +8,12 @@ export default class BrowserExtension {
    * Create a new instance of BrowserExtension.
    * @param {string} url The browser extension URL.
    * @param {import("./BrowserExtensionModes").BrowserExtensionMode} mode The browser extension mode.
+   * @param {boolean} compressionEnabled Indicate if compression is enabled.
    */
-  constructor(url, mode) {
+  constructor(url, mode, compressionEnabled) {
     this.Url = url;
     this.Mode = mode;
+    this.CompressionEnabled = compressionEnabled;
   }
 
   /**
@@ -22,6 +24,13 @@ export default class BrowserExtension {
   async InitializeAsync(environment) {
     // import WebExtension.Net JS
     await import(`${this.Url}WebExtensionScripts/WebExtensionNet.js`);
+
+    if (this.CompressionEnabled) {
+      // TODO: switch to decode.min.js when https://github.com/google/brotli/issues/881 is resolved
+      // import brotli decode.js
+      // @ts-ignore JS is not a module
+      await import("../lib/decode.js");
+    }
 
     // import blazor.webassembly.js
     const blazorScript = globalThis.document.createElement("script");
@@ -39,13 +48,8 @@ export default class BrowserExtension {
       startOption.environment = environment;
     }
 
-    if (this.Mode === BrowserExtensionModes.ContentScript) {
-      startOption.loadBootResource = (resourceType, resourceName, defaultUri, integrity) => {
-        if (resourceType === "dotnetjs") {
-          return `${this.Url}framework/${resourceName}`;
-        }
-        return defaultUri;
-      };
+    if (this.Mode === BrowserExtensionModes.ContentScript || this.CompressionEnabled) {
+      startOption.loadBootResource = this._loadBootResource.bind(this);
     }
     globalThis.Blazor.start(startOption);
 
@@ -115,7 +119,7 @@ export default class BrowserExtension {
   }
 
   /**
-   * Appends element fo document
+   * Appends element to document.
    * @param {Element} element
    * @returns {Promise}
    */
@@ -131,6 +135,35 @@ export default class BrowserExtension {
         resolve();
       }
     });
+  }
+
+  /**
+   * Loads boot resource for Blazor application.
+   * @param {any} resourceType
+   * @param {any} resourceName
+   * @param {any} defaultUri
+   * @param {any} integrity
+   */
+  _loadBootResource(resourceType, resourceName, defaultUri, integrity) {
+    if (resourceType === "dotnetjs") {
+      return `${this.Url}framework/${resourceName}`;
+    }
+
+    if (this.CompressionEnabled) {
+      return (async () => {
+        const response = await this.FetchAsync(defaultUri + '.br', { cache: 'no-cache' });
+        if (!response.ok) {
+          throw new Error(response.statusText);
+        }
+        const originalResponseBuffer = await response.arrayBuffer();
+        const originalResponseArray = new Int8Array(originalResponseBuffer);
+        const decompressedResponseArray = globalThis.BrotliDecode(originalResponseArray);
+        const contentType = resourceType === "dotnetwasm" ? "application/wasm" : "application/octet-stream";
+        return new Response(decompressedResponseArray, { headers: { "content-type": contentType } });
+      })();
+    }
+
+    return defaultUri;
   }
 
   _getBrowserExtensionMode() {

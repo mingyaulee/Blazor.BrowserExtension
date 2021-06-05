@@ -1,6 +1,9 @@
 ﻿(async () => {
-  const projectName = "__ProjectName__";
-  const environmentName = "__EnvironmentName__";
+  const options = {
+    ProjectName: "__ProjectName__",
+    EnvironmentName: "__EnvironmentName__",
+    CompressionEnabled: "__CompressionEnabled__"
+  };
 
   if (globalThis.ImportBrowserPolyfill !== false) {
     // import browser extension API polyfill
@@ -10,9 +13,9 @@
 
   const initializeInternal = (await import("./Modules/CoreInternal.js")).initializeInternal;
   const url = globalThis.browser.runtime.getURL("");
-  const browserExtension = initializeInternal(projectName, url, "Standard");
+  const browserExtension = initializeInternal(options, url, "Standard");
 
   if (globalThis.StartBlazorBrowserExtension !== false) {
-    await browserExtension.InitializeAsync(environmentName);
+    await browserExtension.InitializeAsync(options.EnvironmentName);
   }
 })();

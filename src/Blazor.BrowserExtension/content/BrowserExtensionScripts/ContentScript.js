@@ -1,9 +1,12 @@
 ﻿(async () => {
-  const projectName = "__ProjectName__";
-  const environmentName = "__EnvironmentName__";
+  const options = {
+    ProjectName: "__ProjectName__",
+    EnvironmentName: "__EnvironmentName__",
+    CompressionEnabled: "__CompressionEnabled__"
+  };
 
   const appDiv = document.createElement("div");
-  appDiv.id = `${projectName}_app`;
+  appDiv.id = `${options.ProjectName}_app`;
   document.body.appendChild(appDiv);
 
   if (globalThis.ImportBrowserPolyfill !== false) {
@@ -14,9 +17,9 @@
 
   const initializeInternal = (await import("./Modules/CoreInternal.js")).initializeInternal;
   const url = globalThis.browser.runtime.getURL("");
-  const browserExtension = initializeInternal(projectName, url, "ContentScript");
+  const browserExtension = initializeInternal(options, url, "ContentScript");
 
   if (globalThis.StartBlazorBrowserExtension !== false) {
-    await browserExtension.InitializeAsync(environmentName);
+    await browserExtension.InitializeAsync(options.EnvironmentName);
   }
 })();

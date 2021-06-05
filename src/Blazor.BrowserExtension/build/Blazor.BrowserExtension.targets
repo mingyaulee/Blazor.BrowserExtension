@@ -36,9 +36,45 @@
         <From>__EnvironmentName__</From>
         <To>$(BrowserExtensionEnvironment)</To>
       </BrowserExtensionReplaceAssetsOutputJsFilesContents>
+      <BrowserExtensionReplaceAssetsOutputJsFilesContents Include="Compression enabled">
+        <From>__CompressionEnabled__</From>
+        <To>false</To>
+      </BrowserExtensionReplaceAssetsOutputJsFilesContents>
     </ItemGroup>
     <BlazorToBrowserExtensionReplaceContent Files="@(BrowserExtensionAssetsOutputJsFiles)" Replace="@(BrowserExtensionReplaceAssetsOutputJsFilesContents)" FailOnWarning="true" FailMessage="Clean the project before build" />
 
   </Target>
 
+  <!-- this will automatically run after the 'RunPublishBlazorToBrowserExtension' target defined in Blazor.BrowserExtension.Build package -->
+  <Target Name="RunTokenReplacementToPublishedBrowserExtension" AfterTargets="RunPublishBlazorToBrowserExtension">
+
+    <PropertyGroup>
+      <BrowserExtensionAssetsPublishPath>$(PublishDir)$(BrowserExtensionAssetsPath)\BrowserExtensionScripts</BrowserExtensionAssetsPublishPath>
+    </PropertyGroup>
+
+    <Message Importance="high" Text="Replacing content of core Blazor.BrowserExtension *.js files" />
+    <ItemGroup>
+      <BrowserExtensionAssetsPublishedJsFiles Include="$(BrowserExtensionAssetsPublishPath)\*.js" />
+    </ItemGroup>
+    <BlazorToBrowserExtensionSafeNamespace Input="$(ProjectName)" Replacement="_">
+      <Output TaskParameter="Output" PropertyName="BlazorProjectSafeProjectName" />
+    </BlazorToBrowserExtensionSafeNamespace>
+    <ItemGroup>
+      <BrowserExtensionReplaceAssetsPublishedJsFilesContents Include="Safe project name">
+        <From>__ProjectName__</From>
+        <To>$(BlazorProjectSafeProjectName)</To>
+      </BrowserExtensionReplaceAssetsPublishedJsFilesContents>
+      <BrowserExtensionReplaceAssetsPublishedJsFilesContents Include="Environment name">
+        <From>__EnvironmentName__</From>
+        <To>$(BrowserExtensionEnvironment)</To>
+      </BrowserExtensionReplaceAssetsPublishedJsFilesContents>
+      <BrowserExtensionReplaceAssetsPublishedJsFilesContents Include="Compression enabled">
+        <From>__CompressionEnabled__</From>
+        <To>$(BrowserExtensionEnableCompression)</To>
+      </BrowserExtensionReplaceAssetsPublishedJsFilesContents>
+    </ItemGroup>
+    <BlazorToBrowserExtensionReplaceContent Files="@(BrowserExtensionAssetsPublishedJsFiles)" Replace="@(BrowserExtensionReplaceAssetsPublishedJsFilesContents)" FailOnWarning="true" FailMessage="Clean the project before build" />
+    
+  </Target>
+  
 </Project>

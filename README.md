@@ -248,15 +248,16 @@ If the routes does not match a physical file, when trying to reload the extensio
 
 ## Customize build
 
-The following MSBuild properties can be specified in your project file or when running `dotnet build` command.
+The following MSBuild properties can be specified in your project file or when running `dotnet run`, `dotnet build` and `dotnet publish` command.
 
-| Property                      | Default value | Description                                                                    |
-| ----------------------------- | ------------- | ------------------------------------------------------------------------------ |
-| BrowserExtensionEnvironment   |               | The environment name which the Blazor application will run in.                 |
-| BrowserExtensionAssetsPath    | wwwroot       | The root folder where the JavaScript files should be added as link.            |
-| BuildBlazorToBrowserExtension | true          | If set to false, the Blazor to Browser Extension build target will be skipped. |
-| IncludeBrowserExtensionAssets | true          | If set to false, the JavaScript files will not be added as to the project.     |
-| BrowserExtensionBootstrap     | false         | If set to true, the project will be bootstrapped during the build.             |
+| Property                          | Default value                                        | Description                                                                    |
+| --------------------------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------ |
+| BrowserExtensionEnvironment       | Blazor default: Production                           | The environment name which the Blazor application will run in.                 |
+| BrowserExtensionAssetsPath        | wwwroot                                              | The root folder where the JavaScript files should be added as link.            |
+| BuildBlazorToBrowserExtension     | true                                                 | If set to false, the Blazor to Browser Extension build target will be skipped. |
+| IncludeBrowserExtensionAssets     | true                                                 | If set to false, the JavaScript files will not be added as to the project.     |
+| BrowserExtensionBootstrap         | false                                                | If set to true, the project will be bootstrapped during the build.             |
+| BrowserExtensionEnableCompression | $(BlazorEnableCompression)<br />Blazor default: True | If set to true, the .br compressed files will be loaded instead of .dll.       |
 
 ## Additional Information
 Find out how to build a cross browser extension with the links below:
