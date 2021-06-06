@@ -4,10 +4,10 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <GenerateDependencyFile>false</GenerateDependencyFile>
-	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IsShippingPackage>true</IsShippingPackage>
     <HasReferenceAssembly>false</HasReferenceAssembly>
-    <IncludeWebExtensionAssets>false</IncludeWebExtensionAssets>
+    <IncludeWebExtensionsAssets>false</IncludeWebExtensionsAssets>
     <BuildBlazorToBrowserExtension>false</BuildBlazorToBrowserExtension>
   </PropertyGroup>
 
@@ -26,11 +26,11 @@
     <Content Include="build\**">
       <Pack>true</Pack>
       <PackagePath>build</PackagePath>
-	</Content>
+    </Content>
     <Content Include="content\**">
       <Pack>true</Pack>
       <PackagePath>content</PackagePath>
-	</Content>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -38,7 +38,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.0" />
     <PackageReference Include="Microsoft.JSInterop" Version="5.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
-    <PackageReference Include="WebExtension.Net" Version="0.5.1" IncludeAssets="all" PrivateAssets="none" />
+    <PackageReference Include="WebExtensions.Net" Version="0.6.0" IncludeAssets="all" PrivateAssets="none" />
   </ItemGroup>
 
   <ItemGroup>

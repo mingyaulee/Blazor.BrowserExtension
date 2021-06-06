@@ -6,7 +6,7 @@
 Build a browser extension with Blazor.
 
 This package imports two other packages, which are:
-1. [WebExtension.Net](https://github.com/mingyaulee/WebExtension.Net) - Provides interop for WebExtension standard API.
+1. [WebExtensions.Net](https://github.com/mingyaulee/WebExtensions.Net) - Provides interop for WebExtensions standard API.
 2. Blazor.BrowserExtension.Build (in this repository) - Adds build target and tasks to the project.
 
 ## How to use this package
@@ -33,7 +33,7 @@ You can setup the project manually as well, if for some reason you encounter any
      "web_accessible_resources": [
        "framework/*",
        "BrowserExtensionScripts/*",
-       "WebExtensionScripts/*"
+       "WebExtensionsScripts/*"
      ],
      "permissions": [
        "*://*/*",
@@ -59,14 +59,15 @@ You can setup the project manually as well, if for some reason you encounter any
    ```razor
    @page "/background"
    @inherits Blazor.BrowserExtension.Pages.BackgroundPage
+   @using WebExtensions.Net.Tabs
    
    @code {
        protected override async Task OnInitializedAsync()
        {
            await base.OnInitializedAsync();
            // this opens index.html in the extension as a new tab when the background page is loaded
-           var extensionUrl = await WebExtension.Runtime.GetURL("index.html");
-           await WebExtension.Tabs.Create(new
+           var extensionUrl = await WebExtensions.Runtime.GetURL("index.html");
+           await WebExtensions.Tabs.Create(new CreateProperties()
            {
                url = extensionUrl
            });
@@ -198,19 +199,19 @@ else
 
 ## Browser Extension API
 When you inherit from the `BasePage`, a few properties are injected for you to consume.
-This includes the WebExtension API, Logger, JavaScript interop, etc.
-The WebExtension API is provided by the package [WebExtension.Net](https://github.com/mingyaulee/WebExtension.Net), and you can consume the API in a page:
+This includes the WebExtensions API and Logger.
+The WebExtensions API is provided by the package [WebExtensions.Net](https://github.com/mingyaulee/WebExtensions.Net), and you can consume the API in a page:
 ```razor
 @inherits Blazor.BrowserExtension.Pages.BasePage;
 
-<button @onclick="GetPluginIndexUrl">Get plugin Index page URL</button>
-<p>@pluginIndexUrl</p>
+<button @onclick="GetIndexPageUrl">Get index page URL</button>
+<p>@indexPageUrl</p>
 
 @code {
-    string pluginIndexUrl = null;
-    async Task GetPluginIndexUrl()
+    string indexPageUrl = null;
+    async Task GetIndexPageUrl()
     {
-        pluginIndexUrl = await WebExtension.Runtime.GetURL("index.html");
+        indexPageUrl = await WebExtensions.Runtime.GetURL("index.html");
     }
 }
 ```

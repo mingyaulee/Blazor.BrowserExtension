@@ -3,9 +3,9 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using WebExtension.Net.Manifest;
-using WebExtension.Net.Permissions;
-using WebExtension.Net.WebRequest;
+using WebExtensions.Net.Manifest;
+using WebExtensions.Net.Permissions;
+using WebExtensions.Net.WebRequest;
 
 namespace Blazor.BrowserExtension.Pages
 {
@@ -20,7 +20,7 @@ namespace Blazor.BrowserExtension.Pages
         {
             await base.OnInitializedAsync();
             prefixUri = WebAssemblyHostEnvironment.BaseAddress;
-            if (await WebExtension.Permissions.Contains(new AnyPermissions()
+            if (await WebExtensions.Permissions.Contains(new AnyPermissions()
             {
                 Permissions = new Permission[]
                 {
@@ -29,7 +29,7 @@ namespace Blazor.BrowserExtension.Pages
                 }
             }))
             {
-                await WebExtension.WebRequest.OnBeforeRequest.AddListener(
+                await WebExtensions.WebRequest.OnBeforeRequest.AddListener(
                     HandleBeforeRequestChange,
                     new RequestFilter()
                     {

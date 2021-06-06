@@ -22,8 +22,8 @@ export default class BrowserExtension {
    * @returns {Promise<BrowserExtension>}
    */
   async InitializeAsync(environment) {
-    // import WebExtension.Net JS
-    await import(`${this.Url}WebExtensionScripts/WebExtensionNet.js`);
+    // import WebExtensions.Net JS
+    await import(`${this.Url}WebExtensionsScripts/WebExtensionsNet.js`);
 
     if (this.CompressionEnabled) {
       // TODO: switch to decode.min.js when https://github.com/google/brotli/issues/881 is resolved

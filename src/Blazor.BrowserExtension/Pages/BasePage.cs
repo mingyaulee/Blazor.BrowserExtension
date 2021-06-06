@@ -4,14 +4,14 @@ using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
 using System;
 using System.Threading.Tasks;
-using WebExtension.Net;
+using WebExtensions.Net;
 
 namespace Blazor.BrowserExtension.Pages
 {
     public class BasePage : ComponentBase
     {
         [Inject]
-        public IWebExtensionApi WebExtension { get; set; }
+        public IWebExtensionsApi WebExtensions { get; set; }
 
         [Obsolete("This property is deprecated and will be removed in the next minor version release. Add @inject NavigationManager Navigation to continue using it.")]
         [Inject]

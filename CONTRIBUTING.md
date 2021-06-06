@@ -34,7 +34,7 @@ There are two packages that are shipped from the two repositories:
 ### Blazor.BrowserExtension
 This package provides the runtime functionalities, including:
 - Importing the browser polyfill
-- Importing WebExtension.Net and registering in dependency container
+- Importing WebExtensions.Net and registering in dependency container
 - Handling the page reload in background
 
 ### Blazor.BrowserExtension.Build
