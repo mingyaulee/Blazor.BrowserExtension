@@ -13,15 +13,10 @@
   <!-- Package properties. -->
   <PropertyGroup>
     <IsPackable>true</IsPackable>
-    <PackageOutputPath>..\PackageOutput</PackageOutputPath>
     <!-- Suppresses the warnings about the package not having assemblies in lib/*/.dll. -->
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <BuildOutputTargetFolder>tasks</BuildOutputTargetFolder>
-    <Authors>mingyaulee</Authors>
     <Description>A package for building a Blazor WebAssembly application to a browser extension.</Description>
-    <RepositoryUrl>https://github.com/mingyaulee/Blazor.BrowserExtension</RepositoryUrl>
-    <PackageTags>Blazor Browser Chrome Firefox Edge Extension Addons .Net</PackageTags>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>

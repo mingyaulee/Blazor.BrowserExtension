@@ -10,11 +10,10 @@ This package imports two other packages, which are:
 2. Blazor.BrowserExtension.Build (in this repository) - Adds build target and tasks to the project.
 
 ## How to use this package
-1. Create a new **Blazor WebAssembly App** project (skip to step 3 if you have an existing Blazor WebAssembly project).
-0. Target Framework should be at least .Net 5.0 and uncheck/deselect other options such as authentication, HTTPS support, ASP.Net Core hosting support and PWA.
-0. Install NuGet package `Blazor.BrowserExtension`.
-0. Add `<BrowserExtensionBootstrap>true</BrowserExtensionBootstrap>` under the `<PropertyGroup>` node in your `.csproj` project file to automatically setup the project files to be compatible for building into browser extension.
-0. Build the project.
+1. Run `dotnet new -i Blazor.BrowserExtension.Template`
+2. Create a folder to store your code.
+3. Run command in the folder you just created `dotnet new browserext`
+4. Build the project.
 
 ### Manual Setting Up
 You can setup the project manually as well, if for some reason you encounter any problem with the bootstrapping step above.

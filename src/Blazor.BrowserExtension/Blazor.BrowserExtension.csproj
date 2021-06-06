@@ -14,12 +14,7 @@
   <!-- Package properties. -->
   <PropertyGroup>
     <IsPackable>true</IsPackable>
-    <PackageOutputPath>..\PackageOutput</PackageOutputPath>
-    <Authors>mingyaulee</Authors>
     <Description>Build a browser extension with Blazor.</Description>
-    <RepositoryUrl>https://github.com/mingyaulee/Blazor.BrowserExtension</RepositoryUrl>
-    <PackageTags>Blazor Browser Chrome Firefox Edge Extension Addons .Net</PackageTags>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>

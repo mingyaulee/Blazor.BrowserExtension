@@ -1,0 +1,10 @@
+<Project>
+    <PropertyGroup>
+        <Authors>mingyaulee</Authors>
+        <Description>Build a browser extension with Blazor.</Description>
+        <RepositoryUrl>https://github.com/mingyaulee/Blazor.BrowserExtension</RepositoryUrl>
+        <PackageTags>Blazor Browser Chrome Firefox Edge Extension Addons .Net</PackageTags>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageOutputPath>..\PackageOutput</PackageOutputPath>
+    </PropertyGroup>
+</Project>
