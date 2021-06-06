@@ -29,6 +29,8 @@ jobs:
       run: dotnet restore
     - name: Build
       run: 'dotnet build --no-restore --configuration Release -p:"AssemblyVersion=${{ steps.gitversion.outputs.MajorMinorPatch }};Version=${{ steps.gitversion.outputs.SemVer }}"'
+    - name: Pack
+      run: 'dotnet pack --no-restore --no-build --configuration Release -p:PackageVersion=${{ steps.gitversion.outputs.SemVer }}'
     - name: Push generated package to NuGet
       run: dotnet nuget push ./src/PackageOutput/*.nupkg --api-key ${NUGET_AUTH_TOKEN} --source https://api.nuget.org/v3/index.json
       env:
