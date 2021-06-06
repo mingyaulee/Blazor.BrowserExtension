@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Build properties. -->
+  <PropertyGroup>
+    <LangVersion>8.0</LangVersion>
+    <TargetFramework>net5.0</TargetFramework>
+    <GenerateDependencyFile>false</GenerateDependencyFile>
+    <IsShippingPackage>true</IsShippingPackage>
+    <HasReferenceAssembly>false</HasReferenceAssembly>
+  </PropertyGroup>
+
+  <!-- Package properties. -->
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <PackageType>Template</PackageType>
+    <PackageOutputPath>..\PackageOutput</PackageOutputPath>
+    <!-- Suppresses the warnings about the package not having assemblies in lib/*/.dll. -->
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+    <Authors>mingyaulee</Authors>
+    <Description>Template to create a browser extension with Blazor WebAssembly.</Description>
+    <RepositoryUrl>https://github.com/mingyaulee/Blazor.BrowserExtension</RepositoryUrl>
+    <PackageTags>Blazor Browser Chrome Firefox Edge Extension Addons .Net</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="HelloBlazorExtension\**\*" Exclude="HelloBlazorExtension\**\bin\**;HelloBlazorExtension\**\obj\**">
+      <Pack>true</Pack>
+      <PackagePath>content</PackagePath>
+    </Content>
+    <Compile Remove="**\*" />
+  </ItemGroup>
+
+</Project>

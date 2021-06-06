@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "mingyaulee",
+  "classifications": [
+    "Web",
+    "Blazor",
+    "WebAssembly",
+    "BrowserExtension"
+  ],
+  "name": "Browser extension with Blazor WebAssembly",
+  "identity": "browserextension.blazor.mingyaulee",
+  "shortName": "browserext",
+  "tags": {
+    "language": "C#",
+    "type": "project"
+  },
+  "sourceName": "HelloBlazorExtension",
+  "preferNameDirectory": true
+}
