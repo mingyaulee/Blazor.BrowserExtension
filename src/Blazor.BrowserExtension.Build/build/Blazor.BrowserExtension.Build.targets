@@ -55,7 +55,7 @@
   </Target>
 
   <Target Name="DefineBlazorToBrowserExtensionReplacements">
-    
+
     <BlazorToBrowserExtensionSafeNamespace Input="$(ProjectName)" Replacement="_">
       <Output TaskParameter="Output" PropertyName="BlazorProjectSafeProjectName" />
     </BlazorToBrowserExtensionSafeNamespace>
@@ -116,7 +116,7 @@
     </ItemGroup>
 
   </Target>
-  
+
   <!-- this will automatically run after the 'AfterBuild' target -->
   <Target Name="RunBuildBlazorToBrowserExtension" AfterTargets="AfterBuild" Condition="'$(BuildBlazorToBrowserExtension)' == 'true'" DependsOnTargets="DefineBlazorToBrowserExtensionReplacements">
 
@@ -165,7 +165,7 @@
       <Output TaskParameter="Output" ItemName="BlazorProjectStaticWebAssetFiles" />
     </BlazorToBrowserExtensionProcessStaticWebAssetsManifest>
 
-    <Message Importance="high" Text="Copying static web asset files from '@(BlazorProjectStaticWebAssetFiles, ', ')'" />
+    <Message Importance="high" Text="Copying static web asset files" />
     <Copy SourceFiles="@(BlazorProjectStaticWebAssetFiles)" DestinationFolder="$(BlazorProjectOutputTargetPath)\%(BlazorProjectStaticWebAssetFiles.ContentRelativeDirectory)" SkipUnchangedFiles="true" />
 
     <Message Importance="high" Text="Conversion completed from Blazor application to Browser Extension" />
@@ -193,15 +193,19 @@
     <PropertyGroup>
       <OriginalBlazorProjectPublishFrameworkPath>$(PublishDir)$(BrowserExtensionAssetsPath)\_framework</OriginalBlazorProjectPublishFrameworkPath>
       <BlazorProjectPublishFrameworkPath>$(PublishDir)$(BrowserExtensionAssetsPath)\framework</BlazorProjectPublishFrameworkPath>
+      <OriginalBlazorProjectPublishContentPath>$(PublishDir)$(BrowserExtensionAssetsPath)\_content</OriginalBlazorProjectPublishContentPath>
+      <BlazorProjectPublishHasContent>false</BlazorProjectPublishHasContent>
+      <BlazorProjectPublishHasContent Condition="Exists('$(OriginalBlazorProjectPublishContentPath)')">true</BlazorProjectPublishHasContent>
+      <BlazorProjectPublishContentPath>$(PublishDir)$(BrowserExtensionAssetsPath)\content</BlazorProjectPublishContentPath>
     </PropertyGroup>
 
     <Message Importance="high" Text="Converting published Blazor application to Browser Extension" />
 
     <Message Importance="high" Text="Moving all files from '$(OriginalBlazorProjectPublishFrameworkPath)' to '$(BlazorProjectPublishFrameworkPath)'" />
     <ItemGroup>
-      <BlazorProjectPublishedFilesToMove Include="$(OriginalBlazorProjectPublishFrameworkPath)\**\*.*" />
+      <BlazorProjectPublishedFrameworkFilesToMove Include="$(OriginalBlazorProjectPublishFrameworkPath)\**\*.*" />
     </ItemGroup>
-    <Move SourceFiles="@(BlazorProjectPublishedFilesToMove)" DestinationFolder="$(BlazorProjectPublishFrameworkPath)\%(RecursiveDir)" />
+    <Move SourceFiles="@(BlazorProjectPublishedFrameworkFilesToMove)" DestinationFolder="$(BlazorProjectPublishFrameworkPath)\%(RecursiveDir)" />
 
     <Message Importance="high" Text="Removing directory '$(OriginalBlazorProjectPublishFrameworkPath)'" />
     <RemoveDir Directories="$(OriginalBlazorProjectPublishFrameworkPath)" />
@@ -213,6 +217,15 @@
     </ItemGroup>
     <BlazorToBrowserExtensionReplaceContent Files="@(BlazorProjectPublishedBlazorJsFile)" Replace="@(BlazorProjectReplaceBlazorJsFileContents)" />
     <BlazorToBrowserExtensionReplaceContent Files="@(BlazorProjectPublishedDotnetJsFile)" Replace="@(BlazorProjectReplaceDotnetJsFileContents)" />
+
+    <Message Importance="high" Text="Moving all files from '$(OriginalBlazorProjectPublishContentPath)' to '$(BlazorProjectPublishContentPath)'" Condition="$(BlazorProjectPublishHasContent)" />
+    <ItemGroup Condition="$(BlazorProjectPublishHasContent)">
+      <BlazorProjectPublishedContentFilesToMove Include="$(OriginalBlazorProjectPublishContentPath)\**\*.*" />
+    </ItemGroup>
+    <Move SourceFiles="@(BlazorProjectPublishedContentFilesToMove)" DestinationFolder="$(BlazorProjectPublishContentPath)\%(RecursiveDir)" Condition="$(BlazorProjectPublishHasContent)" />
+
+    <Message Importance="high" Text="Removing directory '$(OriginalBlazorProjectPublishContentPath)'" Condition="$(BlazorProjectPublishHasContent)" />
+    <RemoveDir Directories="$(OriginalBlazorProjectPublishContentPath)" Condition="$(BlazorProjectPublishHasContent)" />
 
     <Message Importance="high" Text="Conversion completed from Blazor application to Browser Extension" />
 
