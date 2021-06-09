@@ -10,6 +10,10 @@ This package imports two other packages, which are:
 2. Blazor.BrowserExtension.Build (in this repository) - Adds build target and tasks to the project.
 
 ## How to use this package
+
+> **Important for v0.\*.\*:**<br />
+> This package is still in pre-release stage so the versioning does not comply with semantic versioning. Feature and bug fix increments the patch version and breaking change increments the minor version. So be sure to check the release note before upgrading between minor version.
+
 1. Run `dotnet new --install Blazor.BrowserExtension.Template`.
 0. Run `dotnet new browserext --name <ProjectName>` to initialize a new project with the template.
 0. Change the working directory into the newly created project directory.
