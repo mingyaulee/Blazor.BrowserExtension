@@ -30,6 +30,7 @@ Pull requests are the best way to propose changes to the codebase. We actively w
 There are two packages that are shipped from the two repositories:
 1. Blazor.BrowserExtension
 0. Blazor.BrowserExtension.Build
+0. Blazor.BrowserExtension.Template
 
 ### Blazor.BrowserExtension
 This package provides the runtime functionalities, including:
@@ -42,6 +43,9 @@ This package facilitates the build process by defining and importing the build t
 - Validating extension manifest
 - Replacing content of Blazor framework .js files
 - Converting project name to safe string to be used as ID in JavaScript
+
+### Blazor.BrowserExtension.Template
+This package serves as a template for initiating a new project using the `dotnet new` command.
 
 ### Use a Consistent Coding Style
 - 4 spaces (C#) or 2 spaces (XML/JSON/JS) for indentation rather than tabs.
