@@ -122,11 +122,9 @@ In `wwwroot/index.html`
 In Google Chrome, go to the Extensions page (Menu -> More tools -> Extensions) and switch on Developer mode.
 Click on `Load unpacked` button and navigate to `%ProjectDir%\bin\Debug\net5.0\` and select the foler `wwwroot`
 
-## Debugging in IIS Express or Kestrel
-Update the script tag in `wwwroot/index.html` to load `CoreDebug.js` instead of `Core.js`.
-```html
-<script src="BrowserExtensionScripts/CoreDebug.js"></script>
-```
+## Debugging locally in IIS Express or Kestrel
+1. Start the Blazor project directly from Visual Studio or `dotnet run`.
+0. Once the application is loaded, use the Blazor debugging hotkey Shift+Alt+D to launch the debugging console.
 
 ## Browser Extension features
 

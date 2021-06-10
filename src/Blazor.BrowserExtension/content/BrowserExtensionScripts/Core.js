@@ -5,15 +5,29 @@
     CompressionEnabled: "__CompressionEnabled__"
   };
 
-  if (globalThis.ImportBrowserPolyfill !== false) {
+  let debugMode = false;
+  if (typeof globalThis.chrome != "object" || !globalThis.chrome || !globalThis.chrome.runtime || !globalThis.chrome.runtime.id) {
+    debugMode = true;
+  }
+
+  if (globalThis.ImportBrowserPolyfill !== false && !debugMode) {
     // import browser extension API polyfill
     // @ts-ignore JS is not a module
     await import("./lib/browser-polyfill.min.js");
   }
 
   const initializeInternal = (await import("./Modules/CoreInternal.js")).initializeInternal;
-  const url = globalThis.browser.runtime.getURL("");
-  const browserExtension = initializeInternal(options, url, "Standard");
+  let url;
+  /** @type {import("./Modules/BrowserExtensionModes").BrowserExtensionMode} */
+  let browserExtensionMode;
+  if (!debugMode) {
+    url = globalThis.browser.runtime.getURL("");
+    browserExtensionMode = "Standard";
+  } else {
+    url = globalThis.location.origin + "/";
+    browserExtensionMode = "Debug";
+  }
+  const browserExtension = initializeInternal(options, url, browserExtensionMode);
 
   if (globalThis.StartBlazorBrowserExtension !== false) {
     await browserExtension.InitializeAsync(options.EnvironmentName);

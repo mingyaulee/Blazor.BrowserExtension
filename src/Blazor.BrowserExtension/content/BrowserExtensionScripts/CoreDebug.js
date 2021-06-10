@@ -13,3 +13,4 @@
     await browserExtension.InitializeAsync(options.EnvironmentName);
   }
 })();
+console.warn("This script is deprecated, debugging is now handled directly from the Core.js file to automatically detect if the application is running outside a browser extension context.");
