@@ -37,6 +37,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelloBlazorExtension", "src
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "template", "template", "{A1BAA96C-E81F-4483-AA93-299AA978E7E7}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Icon", "Icon", "{E47D8D0D-3AD6-45A6-8D21-96846101EDBB}"
+	ProjectSection(SolutionItems) = preProject
+		src\Icon\Blazor.png = src\Icon\Blazor.png
+		src\Icon\BlazorWithBackground.png = src\Icon\BlazorWithBackground.png
+		src\Icon\Icon.png = src\Icon\Icon.png
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -76,6 +83,7 @@ Global
 		{8FAFFB83-6E41-4AB9-AFD5-5B390E551656} = {6D3207F4-EC87-4CF6-A36A-F847D03F72DC}
 		{4609D4B7-7E5F-4F48-9191-6C0FD5A76FB0} = {A1BAA96C-E81F-4483-AA93-299AA978E7E7}
 		{20827E02-7C87-4FC5-BCE5-0E46CB597977} = {A1BAA96C-E81F-4483-AA93-299AA978E7E7}
+		{E47D8D0D-3AD6-45A6-8D21-96846101EDBB} = {E8E8EF7A-5CC1-4EE3-88D3-39CB2149988E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {500E229A-A512-45E3-B66E-46EB228929D3}

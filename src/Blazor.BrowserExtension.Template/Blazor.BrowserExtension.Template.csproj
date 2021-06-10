@@ -21,6 +21,7 @@
     <RepositoryUrl>https://github.com/mingyaulee/Blazor.BrowserExtension</RepositoryUrl>
     <PackageTags>Blazor Browser Chrome Firefox Edge Extension Addons .Net</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageIcon>Icon.png</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -29,6 +30,10 @@
       <PackagePath>content</PackagePath>
     </Content>
     <Compile Remove="**\*" />
+    <Content Include="..\Icon\Icon.png">
+      <Pack>true</Pack>
+      <PackagePath></PackagePath>
+    </Content>
   </ItemGroup>
 
 </Project>
