@@ -3,7 +3,7 @@
     internal enum ManifestItemKey
     {
         ManifestVersion,
-        OptionsPage,
+        OptionsUi,
         BrowserAction,
         Background,
         ContentSecurityPolicy,

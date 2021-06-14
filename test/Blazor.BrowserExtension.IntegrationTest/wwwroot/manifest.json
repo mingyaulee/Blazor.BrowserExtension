@@ -10,7 +10,10 @@
   "browser_action": {
     "default_popup": "index.html?path=popup"
   },
-  "options_page": "index.html?path=options",
+  "options_ui": {
+    "page": "index.html?path=options",
+    "open_in_tab": true
+  },
   "content_scripts": [
     {
       "matches": [ "*://*/*" ],

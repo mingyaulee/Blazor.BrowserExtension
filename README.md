@@ -146,7 +146,10 @@ Add a `Popup.razor` Razor component under `Pages` folder with the following cont
 ### Add an extension options page
 Add the following to the `manifest.json`
 ```json
-"options_page": "index.html?path=options"
+"options_ui": {
+  "page": "index.html?path=options",
+  "open_in_tab": true
+}
 ```
 Add a `Options.razor` Razor component under `Pages` folder with the following content.
 ```razor

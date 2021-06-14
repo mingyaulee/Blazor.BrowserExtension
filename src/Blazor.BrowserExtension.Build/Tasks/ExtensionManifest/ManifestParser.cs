@@ -61,7 +61,7 @@ namespace Blazor.BrowserExtension.Build.Tasks.ExtensionManifest
             return key switch
             {
                 "manifest_version" => ManifestItemKey.ManifestVersion,
-                "options_page" => ManifestItemKey.OptionsPage,
+                "options_ui" => ManifestItemKey.OptionsUi,
                 "browser_action" => ManifestItemKey.BrowserAction,
                 "background" => ManifestItemKey.Background,
                 "content_security_policy" => ManifestItemKey.ContentSecurityPolicy,
