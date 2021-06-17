@@ -11,7 +11,7 @@
   "web_accessible_resources": [
     "framework/*",
     "BrowserExtensionScripts/*",
-    "WebExtensionScripts/*"
+    "WebExtensionsScripts/*"
   ],
   "permissions": [
     "*://*/*",
