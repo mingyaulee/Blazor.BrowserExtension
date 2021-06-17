@@ -17,7 +17,7 @@ namespace Blazor.BrowserExtension.IntegrationTest
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#Blazor_BrowserExtension_IntegrationTest_app");
 
-            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            builder.Services.AddScoped<HttpClient>(sp => new JsHttpClient(sp) { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             builder.Services.AddBrowserExtensionServices(options =>
             {
                 options.ProjectNamespace = typeof(Program).Namespace;

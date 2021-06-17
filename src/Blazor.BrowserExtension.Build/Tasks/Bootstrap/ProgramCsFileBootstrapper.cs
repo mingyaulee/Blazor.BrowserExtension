@@ -9,6 +9,16 @@ namespace Blazor.BrowserExtension.Build.Tasks.Bootstrap
         {
             var isUpdated = false;
 
+            // Replace
+            // builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            // with
+            // builder.Services.AddScoped<HttpClient>(sp => new JsHttpClient(sp) { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            var registerHttpClientIndex = fileLines.FindIndex(fileLine => fileLine.Contains("HttpClient"));
+            if (registerHttpClientIndex > -1)
+            {
+                fileLines[registerHttpClientIndex] = "            builder.Services.AddScoped<HttpClient>(sp => new JsHttpClient(sp) { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });";
+            }
+
             // Insert
             // builder.Services.AddBrowserExtensionServices(options =>
             // {
