@@ -11,7 +11,7 @@ namespace Blazor.BrowserExtension.JsFetchHttpClient
     internal class JsHttpMessageHandler : HttpMessageHandler
     {
         private readonly Task<IJSObjectReference> jsModule;
-        internal Uri ValidBaseAddress = new("http://non-existent-url");
+        internal Uri ValidBaseAddress = new("https://non-existent-url");
 
         public JsHttpMessageHandler(IJSRuntime jsRuntime)
         {
