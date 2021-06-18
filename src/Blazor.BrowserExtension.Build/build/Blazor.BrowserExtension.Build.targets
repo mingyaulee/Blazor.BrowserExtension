@@ -121,10 +121,11 @@
   <Target Name="RunBuildBlazorToBrowserExtension" AfterTargets="AfterBuild" Condition="'$(BuildBlazorToBrowserExtension)' == 'true'" DependsOnTargets="DefineBlazorToBrowserExtensionReplacements">
 
     <PropertyGroup>
-      <OriginalBlazorProjectOutputFrameworkPath>$(TargetDir)$(BrowserExtensionAssetsPath)\_framework</OriginalBlazorProjectOutputFrameworkPath>
-      <BlazorProjectOutputFrameworkPath>$(TargetDir)$(BrowserExtensionAssetsPath)\framework</BlazorProjectOutputFrameworkPath>
-      <BlazorProjectOutputManifestJsonFile>$(TargetDir)$(BrowserExtensionAssetsPath)\manifest.json</BlazorProjectOutputManifestJsonFile>
+      <BrowserExtensionProjectAssetsPath>$(ProjectDir)$(BrowserExtensionAssetsPath)</BrowserExtensionProjectAssetsPath>
       <BlazorProjectOutputTargetPath>$(TargetDir)$(BrowserExtensionAssetsPath)</BlazorProjectOutputTargetPath>
+      <OriginalBlazorProjectOutputFrameworkPath>$(BlazorProjectOutputTargetPath)\_framework</OriginalBlazorProjectOutputFrameworkPath>
+      <BlazorProjectOutputFrameworkPath>$(BlazorProjectOutputTargetPath)\framework</BlazorProjectOutputFrameworkPath>
+      <BlazorProjectOutputManifestJsonFile>$(BlazorProjectOutputTargetPath)\manifest.json</BlazorProjectOutputManifestJsonFile>
       <BlazorProjectStaticWebAssetsPath>$(IntermediateOutputPath)staticwebassets</BlazorProjectStaticWebAssetsPath>
       <BlazorProjectStaticWebAssetsFile>$(ProjectName).StaticWebAssets.xml</BlazorProjectStaticWebAssetsFile>
     </PropertyGroup>
@@ -157,6 +158,14 @@
     <BlazorToBrowserExtensionReplaceContent Files="@(BlazorProjectBlazorJsFile)" Replace="@(BlazorProjectReplaceBlazorJsFileContents)" />
     <BlazorToBrowserExtensionReplaceContent Files="@(BlazorProjectDotnetJsFile)" Replace="@(BlazorProjectReplaceDotnetJsFileContents)" />
 
+    <Message Importance="high" Text="Processing routing files" />
+    <BlazorToBrowserExtensionProcessRoutingFiles Input="@(RazorComponent)" AssetsPath="$(BrowserExtensionProjectAssetsPath)" EntryFile="$(BlazorProjectOutputTargetPath)\$(BrowserExtensionRoutingEntryFile)">
+      <Output TaskParameter="Output" ItemName="BlazorProjectRoutingFiles" />
+    </BlazorToBrowserExtensionProcessRoutingFiles>
+
+    <Message Importance="high" Text="Copying routing files" />
+    <Copy SourceFiles="@(BlazorProjectRoutingFiles)" DestinationFiles="$(BlazorProjectOutputTargetPath)\%(BlazorProjectRoutingFiles.Route)" SkipUnchangedFiles="true" />
+
     <ItemGroup>
       <BlazorProjectStaticWebAssetsManifestFiles Include="$(BlazorProjectStaticWebAssetsPath)\$(BlazorProjectStaticWebAssetsFile)" />
     </ItemGroup>
@@ -172,7 +181,7 @@
 
   </Target>
 
-  <!-- this will automatically run before the '_BlazorCompressPublishFiles' target during Publish -->
+  <!-- this will automatically run after the '_BlazorCompressPublishFiles' target during Publish -->
   <Target Name="ProcessBlazorToBrowserExtensionPublishFiles" AfterTargets="_BlazorCompressPublishFiles">
 
     <Message Importance="high" Text="Processing files to publish Blazor application as Browser Extension" />
@@ -191,12 +200,14 @@
   <Target Name="RunPublishBlazorToBrowserExtension" AfterTargets="AfterPublish" DependsOnTargets="DefineBlazorToBrowserExtensionReplacements">
 
     <PropertyGroup>
-      <OriginalBlazorProjectPublishFrameworkPath>$(PublishDir)$(BrowserExtensionAssetsPath)\_framework</OriginalBlazorProjectPublishFrameworkPath>
-      <BlazorProjectPublishFrameworkPath>$(PublishDir)$(BrowserExtensionAssetsPath)\framework</BlazorProjectPublishFrameworkPath>
-      <OriginalBlazorProjectPublishContentPath>$(PublishDir)$(BrowserExtensionAssetsPath)\_content</OriginalBlazorProjectPublishContentPath>
+      <BrowserExtensionProjectAssetsPath>$(ProjectDir)$(BrowserExtensionAssetsPath)</BrowserExtensionProjectAssetsPath>
+      <BlazorProjectPublishTargetPath>$(PublishDir)$(BrowserExtensionAssetsPath)</BlazorProjectPublishTargetPath>
+      <OriginalBlazorProjectPublishFrameworkPath>$(BlazorProjectPublishTargetPath)\_framework</OriginalBlazorProjectPublishFrameworkPath>
+      <BlazorProjectPublishFrameworkPath>$(BlazorProjectPublishTargetPath)\framework</BlazorProjectPublishFrameworkPath>
+      <OriginalBlazorProjectPublishContentPath>$(BlazorProjectPublishTargetPath)\_content</OriginalBlazorProjectPublishContentPath>
       <BlazorProjectPublishHasContent>false</BlazorProjectPublishHasContent>
       <BlazorProjectPublishHasContent Condition="Exists('$(OriginalBlazorProjectPublishContentPath)')">true</BlazorProjectPublishHasContent>
-      <BlazorProjectPublishContentPath>$(PublishDir)$(BrowserExtensionAssetsPath)\content</BlazorProjectPublishContentPath>
+      <BlazorProjectPublishContentPath>$(BlazorProjectPublishTargetPath)\content</BlazorProjectPublishContentPath>
     </PropertyGroup>
 
     <Message Importance="high" Text="Converting published Blazor application to Browser Extension" />
@@ -217,6 +228,14 @@
     </ItemGroup>
     <BlazorToBrowserExtensionReplaceContent Files="@(BlazorProjectPublishedBlazorJsFile)" Replace="@(BlazorProjectReplaceBlazorJsFileContents)" />
     <BlazorToBrowserExtensionReplaceContent Files="@(BlazorProjectPublishedDotnetJsFile)" Replace="@(BlazorProjectReplaceDotnetJsFileContents)" />
+
+    <Message Importance="high" Text="Processing routing files" />
+    <BlazorToBrowserExtensionProcessRoutingFiles Input="@(RazorComponent)" AssetsPath="$(BrowserExtensionProjectAssetsPath)" EntryFile="$(BlazorProjectPublishTargetPath)\$(BrowserExtensionRoutingEntryFile)">
+      <Output TaskParameter="Output" ItemName="BlazorProjectPublishRoutingFiles" />
+    </BlazorToBrowserExtensionProcessRoutingFiles>
+
+    <Message Importance="high" Text="Copying routing files" />
+    <Copy SourceFiles="@(BlazorProjectPublishRoutingFiles)" DestinationFiles="$(BlazorProjectPublishTargetPath)\%(BlazorProjectPublishRoutingFiles.Route)" SkipUnchangedFiles="true" />
 
     <Message Importance="high" Text="Moving all files from '$(OriginalBlazorProjectPublishContentPath)' to '$(BlazorProjectPublishContentPath)'" Condition="$(BlazorProjectPublishHasContent)" />
     <ItemGroup Condition="$(BlazorProjectPublishHasContent)">

@@ -52,7 +52,9 @@ namespace Blazor.BrowserExtension.Build.Tasks
                 return bootstrapFileType;
             }
 
+#pragma warning disable S3928 // Parameter names used into ArgumentException constructors should match an existing one 
             throw new ArgumentOutOfRangeException(nameof(FileType), $"{nameof(FileType)} is not a recognized {nameof(BootstrapFileType)}.");
+#pragma warning restore S3928 // Parameter names used into ArgumentException constructors should match an existing one 
         }
     }
 }

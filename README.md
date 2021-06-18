@@ -277,10 +277,11 @@ The following MSBuild properties can be specified in your project file or when r
 | Property                          | Default value                                        | Description                                                                    |
 | --------------------------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------ |
 | BrowserExtensionEnvironment       | Blazor default: Production                           | The environment name which the Blazor application will run in.                 |
-| BrowserExtensionAssetsPath        | wwwroot                                              | The root folder where the JavaScript files should be added as link.            |
-| BuildBlazorToBrowserExtension     | True                                                 | If set to False, the Blazor to Browser Extension build target will be skipped. |
 | IncludeBrowserExtensionAssets     | True                                                 | If set to False, the JavaScript files will not be added as to the project.     |
 | BrowserExtensionBootstrap         | False                                                | If set to True, the project will be bootstrapped during the build.             |
+| BuildBlazorToBrowserExtension     | True                                                 | If set to False, the Blazor to Browser Extension build target will be skipped. |
+| BrowserExtensionAssetsPath        | wwwroot                                              | The root folder where the JavaScript files should be added as link.            |
+| BrowserExtensionRoutingEntryFile  | index.html                                           | The HTML entry file for the Blazor application.                                |
 | BrowserExtensionEnableCompression | $(BlazorEnableCompression)<br />Blazor default: True | If set to True, the .br compressed files will be loaded instead of .dll.       |
 
 ## Additional Information

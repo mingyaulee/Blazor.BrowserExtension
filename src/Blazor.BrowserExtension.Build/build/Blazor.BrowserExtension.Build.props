@@ -5,6 +5,7 @@
     <BrowserExtensionBootstrap Condition="'$(BrowserExtensionBootstrap)' == ''">false</BrowserExtensionBootstrap>
     <BrowserExtensionAssetsPath Condition="'$(BrowserExtensionAssetsPath)' == ''">wwwroot</BrowserExtensionAssetsPath>
     <BuildBlazorToBrowserExtension Condition="'$(BuildBlazorToBrowserExtension)' == ''">true</BuildBlazorToBrowserExtension>
+    <BrowserExtensionRoutingEntryFile Condition="'$(BrowserExtensionRoutingEntryFile)' == ''">index.html</BrowserExtensionRoutingEntryFile>
     <BrowserExtensionEnableCompression Condition="'$(BrowserExtensionEnableCompression)' == ''">$(BlazorEnableCompression)</BrowserExtensionEnableCompression>
     <BrowserExtensionEnableCompression Condition="'$(BrowserExtensionEnableCompression)' == ''">true</BrowserExtensionEnableCompression>
     <!-- get the binary file based on the runtime type, net5.0 for dotnet build and net472 for VS build -->
@@ -17,6 +18,7 @@
   <!-- register the tasks from this assembly -->
   <UsingTask TaskName="Blazor.BrowserExtension.Build.Tasks.BlazorToBrowserExtensionBootstrapFile" AssemblyFile="$(BrowserExtensionBuildTaskAssembly)" />
   <UsingTask TaskName="Blazor.BrowserExtension.Build.Tasks.BlazorToBrowserExtensionProcessPublishFiles" AssemblyFile="$(BrowserExtensionBuildTaskAssembly)" />
+  <UsingTask TaskName="Blazor.BrowserExtension.Build.Tasks.BlazorToBrowserExtensionProcessRoutingFiles" AssemblyFile="$(BrowserExtensionBuildTaskAssembly)" />
   <UsingTask TaskName="Blazor.BrowserExtension.Build.Tasks.BlazorToBrowserExtensionProcessStaticWebAssetsManifest" AssemblyFile="$(BrowserExtensionBuildTaskAssembly)" />
   <UsingTask TaskName="Blazor.BrowserExtension.Build.Tasks.BlazorToBrowserExtensionReplaceContent" AssemblyFile="$(BrowserExtensionBuildTaskAssembly)" />
   <UsingTask TaskName="Blazor.BrowserExtension.Build.Tasks.BlazorToBrowserExtensionSafeNamespace" AssemblyFile="$(BrowserExtensionBuildTaskAssembly)" />
