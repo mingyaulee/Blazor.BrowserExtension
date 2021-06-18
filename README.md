@@ -1,4 +1,4 @@
-# Blazor.BrowserExtension
+﻿# Blazor.BrowserExtension
 [![Nuget](https://img.shields.io/nuget/v/Blazor.BrowserExtension?style=flat-square&color=blue)](https://www.nuget.org/packages/Blazor.BrowserExtension/)
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/mingyaulee/Blazor.BrowserExtension/Build?style=flat-square&color=blue)](https://github.com/mingyaulee/Blazor.BrowserExtension/actions/workflows/Blazor.BrowserExtension-Build.yml)
 [![Sonar Quality Gate](https://img.shields.io/sonar/quality_gate/Blazor.BrowserExtension?server=https%3A%2F%2Fsonarcloud.io&style=flat-square)](https://sonarcloud.io/dashboard?id=Blazor.BrowserExtension)
@@ -87,6 +87,9 @@ You can setup the project manually as well, if for some reason you encounter any
    public static async Task Main(string[] args)
    {
        ...
+       // workaround to use JavaScript fetch to bypass url validation
+       // see: https://github.com/dotnet/runtime/issues/52836
+       builder.Services.AddScoped<HttpClient>(sp => new JsHttpClient(sp) { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
        builder.Services.AddBrowserExtensionServices(options =>
        {
            options.ProjectNamespace = typeof(Program).Namespace;
@@ -119,8 +122,19 @@ In `wwwroot/index.html`
 ```
 
 ## Build and load extension
-In Google Chrome, go to the Extensions page (Menu -> More tools -> Extensions) and switch on Developer mode.
-Click on `Load unpacked` button and navigate to `%ProjectDir%\bin\Debug\net5.0\` and select the foler `wwwroot`
+### Google Chrome
+1. Launch the Extensions page ( ⋮ → More tools → Extensions).
+2. Switch on `Developer mode`.
+3. Click on the `Load unpacked` button, then navigate to `%ProjectDir%\bin\Debug\net5.0\` and select the foler `wwwroot`.
+
+### Microsoft Edge
+1. Launch the Extensions page ( ⋮ → Extensions).
+2. Click on the ☰ and switch on `Developer mode`.
+3. Click on the button with the title `Load unpacked`, then navigate to `%ProjectDir%\bin\Debug\net5.0\` and select the foler `wwwroot`.
+
+### Mozilla Firefox
+1. Navigate to the URL [about:debugging#/runtime/this-firefox](about:debugging#/runtime/this-firefox)
+2. Click on `Load Temporary Add-on...`, then navigate to `%ProjectDir%\bin\Debug\net5.0\wwwroot` and select any file in the directory.
 
 ## Debugging locally in IIS Express or Kestrel
 1. Start the Blazor project directly from Visual Studio or `dotnet run`.
@@ -244,11 +258,11 @@ The background will only intercept the calls if it detects the permissions are d
 When the permissions are not declared in the manifest, the only routing that works is the direct URL to the `index.html` file.
 If you need to use multiple route, the routes need to have a matching physical file, e.g.
 - Options page
-    - Route: chrome://<extension_id>/options.html
+    - Route: chrome-extension://<extension_id>/options.html
     - File: wwwroot/options.html
     - Options.razor: @page "/options.html"
 - Popup page
-    - Route: chrome://<extension_id>/popup.html
+    - Route: chrome-extension://<extension_id>/popup.html
     - File: wwwroot/popup.html
     - Popup.razor: @page "/popup.html"
 
@@ -264,10 +278,10 @@ The following MSBuild properties can be specified in your project file or when r
 | --------------------------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------ |
 | BrowserExtensionEnvironment       | Blazor default: Production                           | The environment name which the Blazor application will run in.                 |
 | BrowserExtensionAssetsPath        | wwwroot                                              | The root folder where the JavaScript files should be added as link.            |
-| BuildBlazorToBrowserExtension     | true                                                 | If set to false, the Blazor to Browser Extension build target will be skipped. |
-| IncludeBrowserExtensionAssets     | true                                                 | If set to false, the JavaScript files will not be added as to the project.     |
-| BrowserExtensionBootstrap         | false                                                | If set to true, the project will be bootstrapped during the build.             |
-| BrowserExtensionEnableCompression | $(BlazorEnableCompression)<br />Blazor default: True | If set to true, the .br compressed files will be loaded instead of .dll.       |
+| BuildBlazorToBrowserExtension     | True                                                 | If set to False, the Blazor to Browser Extension build target will be skipped. |
+| IncludeBrowserExtensionAssets     | True                                                 | If set to False, the JavaScript files will not be added as to the project.     |
+| BrowserExtensionBootstrap         | False                                                | If set to True, the project will be bootstrapped during the build.             |
+| BrowserExtensionEnableCompression | $(BlazorEnableCompression)<br />Blazor default: True | If set to True, the .br compressed files will be loaded instead of .dll.       |
 
 ## Additional Information
 Find out how to build a cross browser extension with the links below:
