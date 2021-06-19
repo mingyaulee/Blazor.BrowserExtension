@@ -208,7 +208,7 @@
   </Target>
 
   <!-- this will automatically run after the 'AfterPublish' target -->
-  <Target Name="RunPublishBlazorToBrowserExtension" AfterTargets="AfterPublish" DependsOnTargets="$(_ConvertBlazorToBrowserExtensionDependsOn)">
+  <Target Name="RunPublishBlazorToBrowserExtension" AfterTargets="AfterPublish" Condition="'$(PublishBlazorToBrowserExtension)' == 'true'" DependsOnTargets="$(_ConvertBlazorToBrowserExtensionDependsOn)">
 
     <PropertyGroup>
       <BrowserExtensionProjectAssetsPath>$(ProjectDir)$(BrowserExtensionAssetsPath)</BrowserExtensionProjectAssetsPath>

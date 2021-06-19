@@ -5,6 +5,7 @@
     <BrowserExtensionBootstrap Condition="'$(BrowserExtensionBootstrap)' == ''">false</BrowserExtensionBootstrap>
     <BrowserExtensionAssetsPath Condition="'$(BrowserExtensionAssetsPath)' == ''">wwwroot</BrowserExtensionAssetsPath>
     <BuildBlazorToBrowserExtension Condition="'$(BuildBlazorToBrowserExtension)' == ''">true</BuildBlazorToBrowserExtension>
+    <PublishBlazorToBrowserExtension Condition="'$(PublishBlazorToBrowserExtension)' == ''">true</PublishBlazorToBrowserExtension>
     <BrowserExtensionRoutingEntryFile Condition="'$(BrowserExtensionRoutingEntryFile)' == ''">index.html</BrowserExtensionRoutingEntryFile>
     <BrowserExtensionEnableCompression Condition="'$(BrowserExtensionEnableCompression)' == ''">$(BlazorEnableCompression)</BrowserExtensionEnableCompression>
     <BrowserExtensionEnableCompression Condition="'$(BrowserExtensionEnableCompression)' == ''">true</BrowserExtensionEnableCompression>

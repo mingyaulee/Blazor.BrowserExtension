@@ -46,7 +46,7 @@
   </Target>
 
   <!-- this will automatically run after the 'RunPublishBlazorToBrowserExtension' target defined in Blazor.BrowserExtension.Build package -->
-  <Target Name="RunTokenReplacementToPublishedBrowserExtension" AfterTargets="RunPublishBlazorToBrowserExtension">
+  <Target Name="RunTokenReplacementToPublishedBrowserExtension" AfterTargets="RunPublishBlazorToBrowserExtension" Condition="'$(PublishBlazorToBrowserExtension)' == 'true'">
 
     <PropertyGroup>
       <BrowserExtensionAssetsPublishPath>$(PublishDir)$(BrowserExtensionAssetsPath)\BrowserExtensionScripts</BrowserExtensionAssetsPublishPath>
@@ -74,7 +74,7 @@
       </BrowserExtensionReplaceAssetsPublishedJsFilesContents>
     </ItemGroup>
     <BlazorToBrowserExtensionReplaceContent Files="@(BrowserExtensionAssetsPublishedJsFiles)" Replace="@(BrowserExtensionReplaceAssetsPublishedJsFilesContents)" FailOnWarning="true" FailMessage="Clean the project before build" />
-    
+
   </Target>
-  
+
 </Project>
