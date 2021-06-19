@@ -1,6 +1,17 @@
 ﻿<!-- build/Blazor.BrowserExtension.Build.targets -->
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
+  <PropertyGroup>
+    <!--
+      The target 'ResolveRazorComponentInputs' resolves the item group RazorComponent.
+      Source: https://github.com/dotnet/sdk/blob/main/src/RazorSdk/Targets/Sdk.Razor.CurrentVersion.targets
+    -->
+    <_ConvertBlazorToBrowserExtensionDependsOn>
+      DefineBlazorToBrowserExtensionReplacements;
+      ResolveRazorComponentInputs
+    </_ConvertBlazorToBrowserExtensionDependsOn>
+  </PropertyGroup>
+  
   <!-- this will automatically run before the 'BeforeBuild' target -->
   <Target Name="RunBootstrapBlazorToBrowserExtension" BeforeTargets="BeforeBuild" Condition="'$(BrowserExtensionBootstrap)' == 'true'">
 
@@ -118,7 +129,7 @@
   </Target>
 
   <!-- this will automatically run after the 'AfterBuild' target -->
-  <Target Name="RunBuildBlazorToBrowserExtension" AfterTargets="AfterBuild" Condition="'$(BuildBlazorToBrowserExtension)' == 'true'" DependsOnTargets="DefineBlazorToBrowserExtensionReplacements">
+  <Target Name="RunBuildBlazorToBrowserExtension" AfterTargets="AfterBuild" Condition="'$(BuildBlazorToBrowserExtension)' == 'true'" DependsOnTargets="$(_ConvertBlazorToBrowserExtensionDependsOn)">
 
     <PropertyGroup>
       <BrowserExtensionProjectAssetsPath>$(ProjectDir)$(BrowserExtensionAssetsPath)</BrowserExtensionProjectAssetsPath>
@@ -197,7 +208,7 @@
   </Target>
 
   <!-- this will automatically run after the 'AfterPublish' target -->
-  <Target Name="RunPublishBlazorToBrowserExtension" AfterTargets="AfterPublish" DependsOnTargets="DefineBlazorToBrowserExtensionReplacements">
+  <Target Name="RunPublishBlazorToBrowserExtension" AfterTargets="AfterPublish" DependsOnTargets="$(_ConvertBlazorToBrowserExtensionDependsOn)">
 
     <PropertyGroup>
       <BrowserExtensionProjectAssetsPath>$(ProjectDir)$(BrowserExtensionAssetsPath)</BrowserExtensionProjectAssetsPath>
