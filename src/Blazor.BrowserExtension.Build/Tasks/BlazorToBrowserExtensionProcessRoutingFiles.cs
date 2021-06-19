@@ -50,12 +50,14 @@ namespace Blazor.BrowserExtension.Build.Tasks
                 var routeHandlingFilePath = Path.Combine(AssetsPath, pageRoute);
                 if (File.Exists(routeHandlingFilePath))
                 {
+                    Log.LogMessage(MessageImportance.Normal, $"Excluded route '{pageRoute}'");
                     continue;
                 }
 
                 var taskItem = new TaskItem(EntryFile);
                 taskItem.SetMetadata("Route", pageRoute);
                 output.Add(taskItem);
+                Log.LogMessage(MessageImportance.Normal, $"Added route '{pageRoute}'");
             }
 
             Output = output.ToArray();
