@@ -1,79 +1,100 @@
 ﻿<!-- build/Blazor.BrowserExtension.targets -->
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
+  <!-- Region
+    Adds the content JavaScript files from the NuGet package to the project
+  -->
   <PropertyGroup>
-    <BrowserExtensionAssetsContentsPath>$(MSBuildThisFileDirectory)..\content\BrowserExtensionScripts</BrowserExtensionAssetsContentsPath>
-    <BrowserExtensionAssetsTargetPath>$(BrowserExtensionAssetsPath)\BrowserExtensionScripts</BrowserExtensionAssetsTargetPath>
+    <_BrowserExtension_Package_Contents_Scripts_Directory>$(MSBuildThisFileDirectory)..\content\BrowserExtensionScripts</_BrowserExtension_Package_Contents_Scripts_Directory>
+    <_BrowserExtension_Project_Assets_Scripts_Directory>$(BrowserExtensionAssetsPath)\BrowserExtensionScripts</_BrowserExtension_Project_Assets_Scripts_Directory>
   </PropertyGroup>
 
-  <!-- this will add the files to be copied to the output directory during build -->
   <ItemGroup Condition="'$(IncludeBrowserExtensionAssets)' == 'true'">
-    <None Include="$(BrowserExtensionAssetsContentsPath)\**\*.*" Link="$(BrowserExtensionAssetsTargetPath)\%(RecursiveDir)%(Filename)%(Extension)">
+    <None Include="$(_BrowserExtension_Package_Contents_Scripts_Directory)\**\*.*"
+          Link="$(_BrowserExtension_Project_Assets_Scripts_Directory)\%(RecursiveDir)%(Filename)%(Extension)">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  <!-- EndRegion -->
 
-  <!-- this will automatically run before the 'RunBuildBlazorToBrowserExtension' target defined in Blazor.BrowserExtension.Build package -->
-  <Target Name="RunTokenReplacementToBrowserExtension" BeforeTargets="RunBuildBlazorToBrowserExtension" Condition="'$(BuildBlazorToBrowserExtension)' == 'true'">
+  <!-- Target
+    Runs only when another target depends on this target.
+    Defines the properties required for replacing BrowserExtensionScripts/*.js.
+  -->
+  <Target Name="DefineBlazorToBrowserExtensionScriptsJsFileContentReplacements">
 
-    <PropertyGroup>
-      <BrowserExtensionAssetsOutputPath>$(TargetDir)$(BrowserExtensionAssetsPath)\BrowserExtensionScripts</BrowserExtensionAssetsOutputPath>
-    </PropertyGroup>
-
-    <Message Importance="high" Text="Replacing content of core Blazor.BrowserExtension *.js files" />
-    <ItemGroup>
-      <BrowserExtensionAssetsOutputJsFiles Include="$(BrowserExtensionAssetsOutputPath)\*.js" />
-    </ItemGroup>
     <BlazorToBrowserExtensionSafeNamespace Input="$(ProjectName)" Replacement="_">
-      <Output TaskParameter="Output" PropertyName="BlazorProjectSafeProjectName" />
+      <Output TaskParameter="Output" PropertyName="_BrowserExtension_Project_SafeProjectName" />
     </BlazorToBrowserExtensionSafeNamespace>
+    
     <ItemGroup>
-      <BrowserExtensionReplaceAssetsOutputJsFilesContents Include="Safe project name">
+      <_BrowserExtension_BrowserExtensionScriptsJs_FileContentReplacements Include="Safe project name">
         <From>__ProjectName__</From>
-        <To>$(BlazorProjectSafeProjectName)</To>
-      </BrowserExtensionReplaceAssetsOutputJsFilesContents>
-      <BrowserExtensionReplaceAssetsOutputJsFilesContents Include="Environment name">
+        <To>$(_BrowserExtension_Project_SafeProjectName)</To>
+      </_BrowserExtension_BrowserExtensionScriptsJs_FileContentReplacements>
+      <_BrowserExtension_BrowserExtensionScriptsJs_FileContentReplacements Include="Environment name">
         <From>__EnvironmentName__</From>
         <To>$(BrowserExtensionEnvironment)</To>
-      </BrowserExtensionReplaceAssetsOutputJsFilesContents>
-      <BrowserExtensionReplaceAssetsOutputJsFilesContents Include="Compression enabled">
+      </_BrowserExtension_BrowserExtensionScriptsJs_FileContentReplacements>
+      <_BrowserExtension_BrowserExtensionScriptsJs_FileContentReplacements Include="Compression enabled">
         <From>__CompressionEnabled__</From>
-        <To>false</To>
-      </BrowserExtensionReplaceAssetsOutputJsFilesContents>
+        <To>$(BrowserExtensionEnableCompression)</To>
+      </_BrowserExtension_BrowserExtensionScriptsJs_FileContentReplacements>
     </ItemGroup>
-    <BlazorToBrowserExtensionReplaceContent Files="@(BrowserExtensionAssetsOutputJsFiles)" Replace="@(BrowserExtensionReplaceAssetsOutputJsFilesContents)" FailOnWarning="true" FailMessage="Clean the project before build" />
 
   </Target>
 
-  <!-- this will automatically run after the 'RunPublishBlazorToBrowserExtension' target defined in Blazor.BrowserExtension.Build package -->
-  <Target Name="RunTokenReplacementToPublishedBrowserExtension" AfterTargets="RunPublishBlazorToBrowserExtension" Condition="'$(PublishBlazorToBrowserExtension)' == 'true'">
+  <!-- Target
+    Runs before the 'RunBuildBlazorToBrowserExtension' target defined in Blazor.BrowserExtension.Build package.
+    Replaces the tokens in the JavaScript files in the build output directory.
+  -->
+  <Target Name="RunTokenReplacementToBuildOutputBrowserExtensionScripts"
+          BeforeTargets="RunBuildBlazorToBrowserExtension"
+          Condition="'$(IncludeBrowserExtensionAssets)' == 'true' and '$(BuildBlazorToBrowserExtension)' == 'true'"
+          DependsOnTargets="DefineBlazorToBrowserExtensionScriptsJsFileContentReplacements">
 
     <PropertyGroup>
-      <BrowserExtensionAssetsPublishPath>$(PublishDir)$(BrowserExtensionAssetsPath)\BrowserExtensionScripts</BrowserExtensionAssetsPublishPath>
+      <_BrowserExtension_Project_BuildOutput_Scripts_Directory>$(TargetDir)$(BrowserExtensionAssetsPath)\BrowserExtensionScripts</_BrowserExtension_Project_BuildOutput_Scripts_Directory>
     </PropertyGroup>
+    <ItemGroup>
+      <_BrowserExtension_Project_BuildOutput_Scripts_JsFiles Include="$(_BrowserExtension_Project_BuildOutput_Scripts_Directory)\*.js" />
+      <_BrowserExtension_BrowserExtensionScriptsJs_FileContentReplacements Condition="'%(_BrowserExtension_BrowserExtensionScriptsJs_FileContentReplacements.From)' == '__CompressionEnabled__'">
+        <To>false</To>
+      </_BrowserExtension_BrowserExtensionScriptsJs_FileContentReplacements>
+    </ItemGroup>
 
     <Message Importance="high" Text="Replacing content of core Blazor.BrowserExtension *.js files" />
+    <BlazorToBrowserExtensionReplaceContent Files="@(_BrowserExtension_Project_BuildOutput_Scripts_JsFiles)"
+                                            Replace="@(_BrowserExtension_BrowserExtensionScriptsJs_FileContentReplacements)"
+                                            FailOnWarning="true"
+                                            FailMessage="Clean the project before build" />
+
+  </Target>
+
+  <!-- Target
+    Runs before the 'RunPublishBlazorToBrowserExtension' target defined in Blazor.BrowserExtension.Build package.
+    Replaces the tokens in the JavaScript files in the publish output directory.
+  -->
+  <Target Name="RunTokenReplacementToPublishOutputBrowserExtensionScripts"
+          AfterTargets="RunPublishBlazorToBrowserExtension"
+          Condition="'$(IncludeBrowserExtensionAssets)' == 'true' and '$(PublishBlazorToBrowserExtension)' == 'true'"
+          DependsOnTargets="DefineBlazorToBrowserExtensionScriptsJsFileContentReplacements">
+
+    <PropertyGroup>
+      <_BrowserExtension_Project_PublishOutput_Scripts_Directory>$(PublishDir)$(BrowserExtensionAssetsPath)\BrowserExtensionScripts</_BrowserExtension_Project_PublishOutput_Scripts_Directory>
+    </PropertyGroup>
     <ItemGroup>
-      <BrowserExtensionAssetsPublishedJsFiles Include="$(BrowserExtensionAssetsPublishPath)\*.js" />
-    </ItemGroup>
-    <BlazorToBrowserExtensionSafeNamespace Input="$(ProjectName)" Replacement="_">
-      <Output TaskParameter="Output" PropertyName="BlazorProjectSafeProjectName" />
-    </BlazorToBrowserExtensionSafeNamespace>
-    <ItemGroup>
-      <BrowserExtensionReplaceAssetsPublishedJsFilesContents Include="Safe project name">
-        <From>__ProjectName__</From>
-        <To>$(BlazorProjectSafeProjectName)</To>
-      </BrowserExtensionReplaceAssetsPublishedJsFilesContents>
-      <BrowserExtensionReplaceAssetsPublishedJsFilesContents Include="Environment name">
-        <From>__EnvironmentName__</From>
-        <To>$(BrowserExtensionEnvironment)</To>
-      </BrowserExtensionReplaceAssetsPublishedJsFilesContents>
-      <BrowserExtensionReplaceAssetsPublishedJsFilesContents Include="Compression enabled">
-        <From>__CompressionEnabled__</From>
+      <_BrowserExtension_Project_PublishOutput_Scripts_JsFiles Include="$(_BrowserExtension_Project_PublishOutput_Scripts_Directory)\*.js" />
+      <_BrowserExtension_BrowserExtensionScriptsJs_FileContentReplacements Condition="'%(_BrowserExtension_BrowserExtensionScriptsJs_FileContentReplacements.From)' == '__CompressionEnabled__'">
         <To>$(BrowserExtensionEnableCompression)</To>
-      </BrowserExtensionReplaceAssetsPublishedJsFilesContents>
+      </_BrowserExtension_BrowserExtensionScriptsJs_FileContentReplacements>
     </ItemGroup>
-    <BlazorToBrowserExtensionReplaceContent Files="@(BrowserExtensionAssetsPublishedJsFiles)" Replace="@(BrowserExtensionReplaceAssetsPublishedJsFilesContents)" FailOnWarning="true" FailMessage="Clean the project before build" />
+
+    <Message Importance="high" Text="Replacing content of core Blazor.BrowserExtension *.js files" />
+    <BlazorToBrowserExtensionReplaceContent Files="@(_BrowserExtension_Project_PublishOutput_Scripts_JsFiles)"
+                                            Replace="@(_BrowserExtension_BrowserExtensionScriptsJs_FileContentReplacements)"
+                                            FailOnWarning="true"
+                                            FailMessage="Clean the project before publish" />
 
   </Target>
 

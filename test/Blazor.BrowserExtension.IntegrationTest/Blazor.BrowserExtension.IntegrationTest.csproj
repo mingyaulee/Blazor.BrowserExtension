@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <BrowserExtensionBuildOutputFolder>bin\$(Configuration)</BrowserExtensionBuildOutputFolder>
+    <_BrowserExtensionBuildOutputFolder>bin\$(Configuration)</_BrowserExtensionBuildOutputFolder>
   </PropertyGroup>
 
   <ItemGroup>
