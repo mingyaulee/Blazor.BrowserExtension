@@ -44,6 +44,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Icon", "Icon", "{E47D8D0D-3
 		src\Icon\Icon.png = src\Icon\Icon.png
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tool", "tool", "{E1F2D250-4D68-4A9A-B556-714E4C57542B}"
+	ProjectSection(SolutionItems) = preProject
+		tool\_BrotliDecodeJsProcessor.ps1 = tool\_BrotliDecodeJsProcessor.ps1
+		tool\DependenciesUpdater.ps1 = tool\DependenciesUpdater.ps1
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
