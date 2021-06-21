@@ -9,6 +9,8 @@ namespace Blazor.BrowserExtension.Build.Tasks
 {
     public class BlazorToBrowserExtensionBootstrapFile : Task
     {
+        private const string LogPrefix = "    ";
+
         [Required]
         public string FilePath { get; set; }
 
@@ -21,25 +23,25 @@ namespace Blazor.BrowserExtension.Build.Tasks
             {
                 var bootstrapFileType = ParseFileType(FileType);
 
-                Log.LogMessage(MessageImportance.Normal, $"Reading content of {bootstrapFileType} file '{FilePath}'");
+                Log.LogMessage(MessageImportance.Normal, $"{LogPrefix}Reading content of {bootstrapFileType} file '{FilePath}'");
                 var fileLines = File.ReadAllLines(FilePath).ToList();
                 var bootstrapper = BootstrapperFactory.GetBootstrapper(bootstrapFileType);
 
                 if (bootstrapper.Bootstrap(fileLines))
                 {
                     File.WriteAllLines(FilePath, fileLines);
-                    Log.LogMessage(MessageImportance.Normal, $"Bootstrapping completed for {bootstrapFileType} file '{FilePath}'");
+                    Log.LogMessage(MessageImportance.Normal, $"{LogPrefix}Bootstrapping completed for {bootstrapFileType} file '{FilePath}'");
                 }
                 else
                 {
-                    Log.LogMessage(MessageImportance.Normal, $"Bootstrapping skipped for {bootstrapFileType} file '{FilePath}'");
+                    Log.LogMessage(MessageImportance.Normal, $"{LogPrefix}Bootstrapping skipped for {bootstrapFileType} file '{FilePath}'");
                 }
 
                 return true;
             }
             catch (Exception ex)
             {
-                Log.LogError($"An unexpected error occured when bootstrapping file '{FilePath}'");
+                Log.LogError($"{LogPrefix}An unexpected error occured when bootstrapping file '{FilePath}'");
                 Log.LogErrorFromException(ex);
                 return false;
             }

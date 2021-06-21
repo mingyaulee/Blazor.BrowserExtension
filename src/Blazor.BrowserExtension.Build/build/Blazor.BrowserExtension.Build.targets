@@ -38,13 +38,13 @@
 
     <Message Importance="high" Text="Bootstrapping Blazor application as Browser Extension" />
 
-    <Message Importance="high" Text="Creating default manifest.json file in '$(_BrowserExtension_Project_Assets_ManifestJson_FilePath)'" />
+    <Message Importance="high" Text="  Creating default manifest.json file in '$(_BrowserExtension_Project_Assets_ManifestJson_FilePath)'" />
     <Copy SourceFiles="$(_BrowserExtension_Package_Contents_ManifestJson_FilePath)"
           DestinationFiles="$(_BrowserExtension_Project_Assets_ManifestJson_FilePath)"
           ContinueOnError="true"
           SkipUnchangedFiles="true" />
 
-    <Message Importance="high" Text="Bootstrapping project file '$(_BrowserExtension_Project_FilePath)'" />
+    <Message Importance="high" Text="  Bootstrapping project file '$(_BrowserExtension_Project_FilePath)'" />
     <BlazorToBrowserExtensionBootstrapFile FilePath="$(_BrowserExtension_Project_FilePath)"
                                            FileType="Project" />
 
@@ -53,15 +53,15 @@
       <None Include="wwwroot\**\*" CopyToOutputDirectory="Always" />
     </ItemGroup>
 
-    <Message Importance="high" Text="Bootstrapping index.html file '$(_BrowserExtension_Project_Assets_IndexHtml_FilePath)'" />
+    <Message Importance="high" Text="  Bootstrapping index.html file '$(_BrowserExtension_Project_Assets_IndexHtml_FilePath)'" />
     <BlazorToBrowserExtensionBootstrapFile FilePath="$(_BrowserExtension_Project_Assets_IndexHtml_FilePath)"
                                            FileType="IndexHtml" />
 
-    <Message Importance="high" Text="Bootstrapping Index.razor file '$(_BrowserExtension_Project_RazorPages_IndexRazor_FilePath)'" />
+    <Message Importance="high" Text="  Bootstrapping Index.razor file '$(_BrowserExtension_Project_RazorPages_IndexRazor_FilePath)'" />
     <BlazorToBrowserExtensionBootstrapFile FilePath="$(_BrowserExtension_Project_RazorPages_IndexRazor_FilePath)"
                                            FileType="IndexRazor" />
 
-    <Message Importance="high" Text="Creating default Background.razor file in '$(_BrowserExtension_Project_RazorPages_BackgroundRazor_FilePath)'" />
+    <Message Importance="high" Text="  Creating default Background.razor file in '$(_BrowserExtension_Project_RazorPages_BackgroundRazor_FilePath)'" />
     <Copy SourceFiles="$(_BrowserExtension_Package_Contents_BackgroundRazor_FilePath)"
           DestinationFiles="$(_BrowserExtension_Project_RazorPages_BackgroundRazor_FilePath)"
           ContinueOnError="true"
@@ -72,7 +72,7 @@
       <Content Include="Pages/Background.razor" CopyToOutputDirectory="Never" />
     </ItemGroup>
 
-    <Message Importance="high" Text="Bootstrapping Program.cs file '$(_BrowserExtension_Project_ProgramCs_FilePath)'" />
+    <Message Importance="high" Text="  Bootstrapping Program.cs file '$(_BrowserExtension_Project_ProgramCs_FilePath)'" />
     <BlazorToBrowserExtensionBootstrapFile FilePath="$(_BrowserExtension_Project_ProgramCs_FilePath)"
                                            FileType="ProgramCs" />
 
@@ -173,23 +173,23 @@
 
     <Message Importance="high" Text="Converting Blazor application to Browser Extension" />
 
-    <Message Importance="high" Text="Removing all existing files in '$(_BrowserExtension_Project_BuildOutput_Assets_Framework_Directory)'" />
+    <Message Importance="high" Text="  Removing all existing files in '$(_BrowserExtension_Project_BuildOutput_Assets_Framework_Directory)'" />
     <ItemGroup>
       <_BrowserExtension_Project_BuildOutput_Assets_Framework_FilesToDelete Include="$(_BrowserExtension_Project_BuildOutput_Assets_Framework_Directory)\**\*.*" />
     </ItemGroup>
     <Delete Files="@(_BrowserExtension_Project_BuildOutput_Assets_Framework_FilesToDelete)" TreatErrorsAsWarnings="true" />
 
-    <Message Importance="high" Text="Moving all files from '$(_BrowserExtension_Project_BuildOutput_Assets_OriginalFramework_Directory)' to '$(_BrowserExtension_Project_BuildOutput_Assets_Framework_Directory)'" />
+    <Message Importance="high" Text="  Moving all files from '$(_BrowserExtension_Project_BuildOutput_Assets_OriginalFramework_Directory)' to '$(_BrowserExtension_Project_BuildOutput_Assets_Framework_Directory)'" />
     <ItemGroup>
       <_BrowserExtension_Project_BuildOutput_Assets_Framework_FilesToMove Include="$(_BrowserExtension_Project_BuildOutput_Assets_OriginalFramework_Directory)\**\*.*" />
     </ItemGroup>
     <Move SourceFiles="@(_BrowserExtension_Project_BuildOutput_Assets_Framework_FilesToMove)"
           DestinationFolder="$(_BrowserExtension_Project_BuildOutput_Assets_Framework_Directory)\%(RecursiveDir)" />
 
-    <Message Importance="high" Text="Removing directory '$(_BrowserExtension_Project_BuildOutput_Assets_OriginalFramework_Directory)'" />
+    <Message Importance="high" Text="  Removing directory '$(_BrowserExtension_Project_BuildOutput_Assets_OriginalFramework_Directory)'" />
     <RemoveDir Directories="$(_BrowserExtension_Project_BuildOutput_Assets_OriginalFramework_Directory)" />
 
-    <Message Importance="high" Text="Replacing content of 'blazor.webassembly.js' and 'dotnet.*.js'" />
+    <Message Importance="high" Text="  Replacing content of 'blazor.webassembly.js' and 'dotnet.*.js'" />
     <ItemGroup>
       <_BrowserExtension_Project_BuildOutput_Assets_Framework_BlazorJs_FilePath Include="$(_BrowserExtension_Project_BuildOutput_Assets_Framework_Directory)\blazor.webassembly.js" />
       <_BrowserExtension_Project_BuildOutput_Assets_Framework_DotNetJs_FilePath Include="$(_BrowserExtension_Project_BuildOutput_Assets_Framework_Directory)\dotnet.*.js" />
@@ -199,14 +199,14 @@
     <BlazorToBrowserExtensionReplaceContent Files="@(_BrowserExtension_Project_BuildOutput_Assets_Framework_DotNetJs_FilePath)"
                                             Replace="@(_BrowserExtension_DotNetJs_FileContentReplacements)" />
 
-    <Message Importance="high" Text="Processing routing files" />
+    <Message Importance="high" Text="  Processing routing files" />
     <BlazorToBrowserExtensionProcessRoutingFiles Input="@(RazorComponent)"
                                                  AssetsPath="$(_BrowserExtension_Project_Assets_Directory)"
                                                  EntryFile="$(_BrowserExtension_Project_BuildOutput_Assets_Directory)\$(BrowserExtensionRoutingEntryFile)">
       <Output TaskParameter="Output" ItemName="_BrowserExtension_Project_BuildOutput_Assets_RoutingFiles" />
     </BlazorToBrowserExtensionProcessRoutingFiles>
 
-    <Message Importance="high" Text="Copying routing file %(_BrowserExtension_Project_BuildOutput_Assets_RoutingFiles.Route)" />
+    <Message Importance="high" Text="  Copying routing file %(_BrowserExtension_Project_BuildOutput_Assets_RoutingFiles.Route)" />
     <Copy SourceFiles="@(_BrowserExtension_Project_BuildOutput_Assets_RoutingFiles)"
           DestinationFiles="$(_BrowserExtension_Project_BuildOutput_Assets_Directory)\%(_BrowserExtension_Project_BuildOutput_Assets_RoutingFiles.Route)"
           SkipUnchangedFiles="true" />
@@ -214,13 +214,13 @@
     <ItemGroup>
       <_BrowserExtension_Project_IntermediateOutput_StaticWebAssets_Manifest_FilePath Include="$(_BrowserExtension_Project_IntermediateOutput_StaticWebAssets_Directory)\$(_BrowserExtension_Project_StaticWebAssets_Manifest_FileName)" />
     </ItemGroup>
-    <Message Importance="high" Text="Processing static web assets from manifest files '@(_BrowserExtension_Project_IntermediateOutput_StaticWebAssets_Manifest_FilePath, ', ')'" />
+    <Message Importance="high" Text="  Processing static web assets from manifest files '@(_BrowserExtension_Project_IntermediateOutput_StaticWebAssets_Manifest_FilePath, ', ')'" />
     <BlazorToBrowserExtensionProcessStaticWebAssetsManifest Input="@(_BrowserExtension_Project_IntermediateOutput_StaticWebAssets_Manifest_FilePath)"
                                                             Exclude="$(_BrowserExtension_Project_BuildOutput_Assets_Directory)">
       <Output TaskParameter="Output" ItemName="_BrowserExtension_Project_IntermediateOutput_StaticWebAssets_Files" />
     </BlazorToBrowserExtensionProcessStaticWebAssetsManifest>
 
-    <Message Importance="high" Text="Copying static web asset files" />
+    <Message Importance="high" Text="  Copying static web asset files" />
     <Copy SourceFiles="@(_BrowserExtension_Project_IntermediateOutput_StaticWebAssets_Files)"
           DestinationFolder="$(_BrowserExtension_Project_BuildOutput_Assets_Directory)\%(_BrowserExtension_Project_IntermediateOutput_StaticWebAssets_Files.ContentRelativeDirectory)"
           SkipUnchangedFiles="true" />
@@ -280,17 +280,17 @@
 
     <Message Importance="high" Text="Converting published Blazor application to Browser Extension" />
 
-    <Message Importance="high" Text="Moving all files from '$(_BrowserExtension_Project_PublishOutput_Assets_OriginalFramework_Directory)' to '$(_BrowserExtension_Project_PublishOutput_Assets_Framework_Directory)'" />
+    <Message Importance="high" Text="  Moving all files from '$(_BrowserExtension_Project_PublishOutput_Assets_OriginalFramework_Directory)' to '$(_BrowserExtension_Project_PublishOutput_Assets_Framework_Directory)'" />
     <ItemGroup>
       <_BrowserExtension_Project_PublishOutput_Assets_Framework_FilesToMove Include="$(_BrowserExtension_Project_PublishOutput_Assets_OriginalFramework_Directory)\**\*.*" />
     </ItemGroup>
     <Move SourceFiles="@(_BrowserExtension_Project_PublishOutput_Assets_Framework_FilesToMove)"
           DestinationFolder="$(_BrowserExtension_Project_PublishOutput_Assets_Framework_Directory)\%(RecursiveDir)" />
 
-    <Message Importance="high" Text="Removing directory '$(_BrowserExtension_Project_PublishOutput_Assets_OriginalFramework_Directory)'" />
+    <Message Importance="high" Text="  Removing directory '$(_BrowserExtension_Project_PublishOutput_Assets_OriginalFramework_Directory)'" />
     <RemoveDir Directories="$(_BrowserExtension_Project_PublishOutput_Assets_OriginalFramework_Directory)" />
 
-    <Message Importance="high" Text="Replacing content of 'blazor.webassembly.js' and 'dotnet.*.js'" />
+    <Message Importance="high" Text="  Replacing content of 'blazor.webassembly.js' and 'dotnet.*.js'" />
     <ItemGroup>
       <_BrowserExtension_Project_PublishOutput_Assets_Framework_BlazorJs_FilePath Include="$(_BrowserExtension_Project_PublishOutput_Assets_Framework_Directory)\blazor.webassembly.js" />
       <_BrowserExtension_Project_PublishOutput_Assets_Framework_DotnetJs_FilePath Include="$(_BrowserExtension_Project_PublishOutput_Assets_Framework_Directory)\dotnet.*.js" />
@@ -298,19 +298,19 @@
     <BlazorToBrowserExtensionReplaceContent Files="@(_BrowserExtension_Project_PublishOutput_Assets_Framework_BlazorJs_FilePath)" Replace="@(_BrowserExtension_BlazorJs_FileContentReplacements)" />
     <BlazorToBrowserExtensionReplaceContent Files="@(_BrowserExtension_Project_PublishOutput_Assets_Framework_DotnetJs_FilePath)" Replace="@(_BrowserExtension_DotNetJs_FileContentReplacements)" />
 
-    <Message Importance="high" Text="Processing routing files" />
+    <Message Importance="high" Text="  Processing routing files" />
     <BlazorToBrowserExtensionProcessRoutingFiles Input="@(RazorComponent)"
                                                  AssetsPath="$(_BrowserExtension_Project_Assets_Directory)"
                                                  EntryFile="$(_BrowserExtension_Project_PublishOutput_Assets_Directory)\$(BrowserExtensionRoutingEntryFile)">
       <Output TaskParameter="Output" ItemName="_BrowserExtension_Project_PublishOutput_Assets_RoutingFiles" />
     </BlazorToBrowserExtensionProcessRoutingFiles>
 
-    <Message Importance="high" Text="Copying routing file %(_BrowserExtension_Project_BuildOutput_Assets_RoutingFiles.Route)" />
+    <Message Importance="high" Text="  Copying routing file %(_BrowserExtension_Project_BuildOutput_Assets_RoutingFiles.Route)" />
     <Copy SourceFiles="@(_BrowserExtension_Project_PublishOutput_Assets_RoutingFiles)"
           DestinationFiles="$(_BrowserExtension_Project_PublishOutput_Assets_Directory)\%(_BrowserExtension_Project_PublishOutput_Assets_RoutingFiles.Route)"
           SkipUnchangedFiles="true" />
 
-    <Message Importance="high" Text="Moving all files from '$(_BrowserExtension_Project_PublishOutput_Assets_OriginalRclContent_Directory)' to '$(_BrowserExtension_Project_PublishOutput_Assets_RclContent_Directory)'"
+    <Message Importance="high" Text="  Moving all files from '$(_BrowserExtension_Project_PublishOutput_Assets_OriginalRclContent_Directory)' to '$(_BrowserExtension_Project_PublishOutput_Assets_RclContent_Directory)'"
              Condition="$(_BrowserExtension_Project_PublishOutput_Assets_HasRclContentDirectory)" />
     <ItemGroup Condition="$(_BrowserExtension_Project_PublishOutput_Assets_HasRclContentDirectory)">
       <_BrowserExtension_Project_PublishOutput_Assets_RclContent_FilesToMove Include="$(_BrowserExtension_Project_PublishOutput_Assets_OriginalRclContent_Directory)\**\*.*" />
@@ -319,7 +319,7 @@
           DestinationFolder="$(_BrowserExtension_Project_PublishOutput_Assets_RclContent_Directory)\%(RecursiveDir)"
           Condition="$(_BrowserExtension_Project_PublishOutput_Assets_HasRclContentDirectory)" />
 
-    <Message Importance="high" Text="Removing directory '$(_BrowserExtension_Project_PublishOutput_Assets_OriginalRclContent_Directory)'"
+    <Message Importance="high" Text="  Removing directory '$(_BrowserExtension_Project_PublishOutput_Assets_OriginalRclContent_Directory)'"
              Condition="$(_BrowserExtension_Project_PublishOutput_Assets_HasRclContentDirectory)" />
     <RemoveDir Directories="$(_BrowserExtension_Project_PublishOutput_Assets_OriginalRclContent_Directory)"
                Condition="$(_BrowserExtension_Project_PublishOutput_Assets_HasRclContentDirectory)" />

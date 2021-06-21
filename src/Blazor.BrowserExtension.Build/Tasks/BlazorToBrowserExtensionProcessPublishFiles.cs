@@ -8,6 +8,8 @@ namespace Blazor.BrowserExtension.Build.Tasks
 {
     public class BlazorToBrowserExtensionProcessPublishFiles : Task
     {
+        private const string LogPrefix = "    ";
+
         [Required]
         public ITaskItem[] Input { get; set; }
         public string CompressionEnabled { get; set; }
@@ -82,7 +84,7 @@ namespace Blazor.BrowserExtension.Build.Tasks
 
         private void LogExcludeItem(string relativePath)
         {
-            Log.LogMessage(MessageImportance.Normal, $"    Excluding {relativePath}");
+            Log.LogMessage(MessageImportance.Normal, $"{LogPrefix}Excluding {relativePath}");
         }
 
         private void LogExcludeItems(IEnumerable<ITaskItem> items)

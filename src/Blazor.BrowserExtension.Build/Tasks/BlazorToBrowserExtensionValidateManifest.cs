@@ -10,6 +10,8 @@ namespace Blazor.BrowserExtension.Build.Tasks
 {
     public class BlazorToBrowserExtensionValidateManifest : Task
     {
+        private const string LogPrefix = "    ";
+
         [Required]
         public string FileName { get; set; }
 
@@ -17,7 +19,7 @@ namespace Blazor.BrowserExtension.Build.Tasks
         {
             try
             {
-                Log.LogMessage(MessageImportance.Normal, $"Reading content of file '{FileName}'");
+                Log.LogMessage(MessageImportance.Normal, $"{LogPrefix}Reading content of file '{FileName}'");
                 var fileLines = File.ReadAllLines(FileName);
 
                 if (!ValidateManifestFile(fileLines))
@@ -25,13 +27,13 @@ namespace Blazor.BrowserExtension.Build.Tasks
                     return false;
                 }
 
-                Log.LogMessage(MessageImportance.Normal, $"Validation completed for manifest file '{FileName}'");
+                Log.LogMessage(MessageImportance.Normal, $"{LogPrefix}Validation completed for manifest file '{FileName}'");
 
                 return true;
             }
             catch (Exception ex)
             {
-                Log.LogError($"An unexpected error occured when validating manifest file '{FileName}'");
+                Log.LogError($"{LogPrefix}An unexpected error occured when validating manifest file '{FileName}'");
                 Log.LogErrorFromException(ex);
                 return false;
             }

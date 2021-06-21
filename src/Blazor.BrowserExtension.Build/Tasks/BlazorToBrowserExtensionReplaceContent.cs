@@ -7,6 +7,8 @@ namespace Blazor.BrowserExtension.Build.Tasks
 {
     public class BlazorToBrowserExtensionReplaceContent : Task
     {
+        private const string LogPrefix = "    ";
+
         [Required]
         public ITaskItem[] Files { get; set; }
 
@@ -28,7 +30,7 @@ namespace Blazor.BrowserExtension.Build.Tasks
                 {
                     FileName = file.ItemSpec;
 
-                    Log.LogMessage(MessageImportance.Normal, $"Replacing content of file '{FileName}'");
+                    Log.LogMessage(MessageImportance.Normal, $"{LogPrefix}Replacing content of file '{FileName}'");
                     var fileContent = File.ReadAllText(FileName);
                     var fileChanged = false;
 
@@ -37,16 +39,16 @@ namespace Blazor.BrowserExtension.Build.Tasks
                         var from = replace.GetMetadata("From");
                         var to = replace.GetMetadata("To");
 
-                        Log.LogMessage(MessageImportance.Normal, $"Replacing {replace.ItemSpec}");
+                        Log.LogMessage(MessageImportance.Normal, $"{LogPrefix}Replacing {replace.ItemSpec}");
                         if (fileContent.Contains(from))
                         {
                             fileContent = fileContent.Replace(from, to);
                             fileChanged = true;
-                            Log.LogMessage(MessageImportance.Normal, $"Replaced from '{from}' to '{to}'");
+                            Log.LogMessage(MessageImportance.Normal, $"{LogPrefix}Replaced from '{from}' to '{to}'");
                         }
                         else
                         {
-                            Log.LogWarning($"Unable to find text to replace '{from}' in file '{FileName}'");
+                            Log.LogWarning($"{LogPrefix}Unable to find text to replace '{from}' in file '{FileName}'");
                             hasWarning = true;
                         }
                     }
@@ -54,7 +56,7 @@ namespace Blazor.BrowserExtension.Build.Tasks
                     if (fileChanged)
                     {
                         File.WriteAllText(FileName, fileContent);
-                        Log.LogMessage(MessageImportance.Normal, $"Replace content completed of file '{FileName}'");
+                        Log.LogMessage(MessageImportance.Normal, $"{LogPrefix}Replace content completed of file '{FileName}'");
                     }
                 }
 
@@ -62,7 +64,7 @@ namespace Blazor.BrowserExtension.Build.Tasks
                 {
                     if (!string.IsNullOrEmpty(FailMessage))
                     {
-                        Log.LogError(FailMessage);
+                        Log.LogError(LogPrefix + FailMessage);
                     }
                     return false;
                 }
@@ -71,7 +73,7 @@ namespace Blazor.BrowserExtension.Build.Tasks
             }
             catch (Exception ex)
             {
-                Log.LogError($"An unexpected error occured when replacing file content of file '{FileName}'");
+                Log.LogError($"{LogPrefix}An unexpected error occured when replacing file content of file '{FileName}'");
                 Log.LogErrorFromException(ex);
                 return false;
             }

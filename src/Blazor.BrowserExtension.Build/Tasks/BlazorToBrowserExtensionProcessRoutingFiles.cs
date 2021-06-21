@@ -10,6 +10,8 @@ namespace Blazor.BrowserExtension.Build.Tasks
 {
     public class BlazorToBrowserExtensionProcessRoutingFiles : Task
     {
+        private const string LogPrefix = "    ";
+
         [Required]
         public ITaskItem[] Input { get; set; }
 
@@ -50,14 +52,14 @@ namespace Blazor.BrowserExtension.Build.Tasks
                 var routeHandlingFilePath = Path.Combine(AssetsPath, pageRoute);
                 if (File.Exists(routeHandlingFilePath))
                 {
-                    Log.LogMessage(MessageImportance.Normal, $"Excluded route '{pageRoute}'");
+                    Log.LogMessage(MessageImportance.Normal, $"{LogPrefix}Excluded route '{pageRoute}'");
                     continue;
                 }
 
                 var taskItem = new TaskItem(EntryFile);
                 taskItem.SetMetadata("Route", pageRoute);
                 output.Add(taskItem);
-                Log.LogMessage(MessageImportance.Normal, $"Added route '{pageRoute}'");
+                Log.LogMessage(MessageImportance.Normal, $"{LogPrefix}Added route '{pageRoute}'");
             }
 
             Output = output.ToArray();
