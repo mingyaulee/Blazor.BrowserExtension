@@ -36,8 +36,6 @@ Function UpdateBrotliDecode {
     $baseUrl = "https://raw.githubusercontent.com/google/brotli/master/js"
     DownloadFile -baseUrl $baseUrl -fileName "decode.js"
     DownloadFile -baseUrl $baseUrl -fileName "decode.min.js"
-    & "$scriptPath/_BrotliDecodeJsProcessor.ps1" -jsPath "$libPath/decode.js"
-    & "$scriptPath/_BrotliDecodeJsProcessor.ps1" -jsPath "$libPath/decode.min.js"
 }
 
 UpdateBrowserPolyfill
