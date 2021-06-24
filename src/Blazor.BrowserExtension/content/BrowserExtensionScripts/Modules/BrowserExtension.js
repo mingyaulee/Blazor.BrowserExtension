@@ -26,10 +26,8 @@ export default class BrowserExtension {
     await import(`${this.Url}WebExtensionsScripts/WebExtensionsNet.js`);
 
     if (this.CompressionEnabled) {
-      // TODO: switch to decode.min.js when https://github.com/google/brotli/issues/881 is resolved
       // import brotli decode.js
-      // @ts-ignore JS is not a module
-      await import("../lib/decode.js");
+      this.BrotliDecode = (await import("../lib/decode.min.js")).BrotliDecode;
     }
 
     // import blazor.webassembly.js
@@ -157,7 +155,7 @@ export default class BrowserExtension {
         }
         const originalResponseBuffer = await response.arrayBuffer();
         const originalResponseArray = new Int8Array(originalResponseBuffer);
-        const decompressedResponseArray = globalThis.BrotliDecode(originalResponseArray);
+        const decompressedResponseArray = this.BrotliDecode(originalResponseArray);
         const contentType = resourceType === "dotnetwasm" ? "application/wasm" : "application/octet-stream";
         return new Response(decompressedResponseArray, { headers: { "content-type": contentType } });
       })();
