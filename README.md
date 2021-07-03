@@ -3,21 +3,27 @@
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/mingyaulee/Blazor.BrowserExtension/Build?style=flat-square&color=blue)](https://github.com/mingyaulee/Blazor.BrowserExtension/actions/workflows/Blazor.BrowserExtension-Build.yml)
 [![Sonar Quality Gate](https://img.shields.io/sonar/quality_gate/Blazor.BrowserExtension?server=https%3A%2F%2Fsonarcloud.io&style=flat-square)](https://sonarcloud.io/dashboard?id=Blazor.BrowserExtension)
 
-Build a browser extension with Blazor.
+You can now easily build a browser extension with Blazor!
 
-This package imports two other packages, which are:
-1. [WebExtensions.Net](https://github.com/mingyaulee/WebExtensions.Net) - Provides interop for WebExtensions standard API.
-2. Blazor.BrowserExtension.Build (in this repository) - Adds build target and tasks to the project.
+## Demo
+![Blazor Browser Extension Demo](Demo.gif)
 
 ## How to use this package
 
 > **Important for v0.\*.\*:**<br />
 > This package is still in pre-release stage so the versioning does not comply with semantic versioning. Feature and bug fix increments the patch version and breaking change increments the minor version. So be sure to check the release note before upgrading between minor version.
 
+This package imports two other packages, which are:
+1. [WebExtensions.Net](https://github.com/mingyaulee/WebExtensions.Net) - Provides interop for WebExtensions standard API.
+2. Blazor.BrowserExtension.Build (in this repository) - Adds build target and tasks to the project.
+
+### Create new project
 1. Run `dotnet new --install Blazor.BrowserExtension.Template`.
 0. Run `dotnet new browserext --name <ProjectName>` to initialize a new project with the template.
 0. Change the working directory into the newly created project directory.
 0. Run `dotnet build` to build the project.
+
+> If you are using Visual Studio, you can do all these from the UI, like how I did in the demo above (once you have enabled showing .Net Core templates in the New project dialog).
 
 ### Setup existing project
 1. Install NuGet package `Blazor.BrowserExtension`.
