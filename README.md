@@ -40,7 +40,7 @@ You can setup the project manually as well, if for some reason you encounter any
      "description": "My browser extension built with Blazor WebAssembly",
      "version": "0.1",
      "background": {
-       "page": "index.html?path=background",
+       "page": "background.html",
        "persistent": true
      },
      "content_security_policy": "script-src 'self' 'unsafe-eval' 'wasm-eval' 'sha256-v8v3RKRPmN4odZ1CWM5gw80QKPCCWMcpNeOmimNL2AA='; object-src 'self'",
@@ -48,11 +48,6 @@ You can setup the project manually as well, if for some reason you encounter any
        "framework/*",
        "BrowserExtensionScripts/*",
        "WebExtensionsScripts/*"
-     ],
-     "permissions": [
-       "*://*/*",
-       "webRequest",
-       "webRequestBlocking"
      ]
    }
    ```
@@ -65,13 +60,12 @@ You can setup the project manually as well, if for some reason you encounter any
 0. In `wwwroot/index.html` replace the script tag `<script src="_framework/blazor.webassembly.js"></script>` with `<script src="BrowserExtensionScripts/Core.js"></script>`
 0. In `Pages/Index.razor` replace the first line `@page "/"` with the following lines:
    ```razor
-   @page "/"
    @page "/index.html"
    @inherits Blazor.BrowserExtension.Pages.IndexPage
    ```
-0. Add a `Background.razor` file under `Pages` folder (Right click on the `Pages` folder and select Add -> Razor Component), with the following content:
+0. Add a `Background.razor` file under `Pages` folder (Right click on the `Pages` folder and select Add → Razor Component), with the following content:
    ```razor
-   @page "/background"
+   @page "/background.html"
    @inherits Blazor.BrowserExtension.Pages.BackgroundPage
    @using WebExtensions.Net.Tabs
    
@@ -152,12 +146,12 @@ In `wwwroot/index.html`
 Add the following to the `manifest.json`
 ```json
 "browser_action": {
-  "default_popup": "index.html?path=popup"
+  "default_popup": "popup.html"
 }
 ```
 Add a `Popup.razor` Razor component under `Pages` folder with the following content.
 ```razor
-@page "/popup"
+@page "/popup.html"
 @inherits Blazor.BrowserExtension.Pages.BasePage
 
 <h1>My popup page</h1>
@@ -167,13 +161,13 @@ Add a `Popup.razor` Razor component under `Pages` folder with the following cont
 Add the following to the `manifest.json`
 ```json
 "options_ui": {
-  "page": "index.html?path=options",
+  "page": "options.html",
   "open_in_tab": true
 }
 ```
 Add a `Options.razor` Razor component under `Pages` folder with the following content.
 ```razor
-@page "/options"
+@page "/options.html"
 @inherits Blazor.BrowserExtension.Pages.BasePage
 
 <h1>My options page</h1>
@@ -191,7 +185,7 @@ Add the following to the `manifest.json`
 ```
 Add a `ContentScript.razor` Razor component under `Pages` folder with the following content.
 ```razor
-@page "/contentscript"
+@page "/contentscript.html"
 @inherits Blazor.BrowserExtension.Pages.BasePage
 
 <h1>My content script</h1>
@@ -246,35 +240,45 @@ The WebExtensions API is provided by the package [WebExtensions.Net](https://git
 ```
 
 ## How does routing work
-You can use the `@page` directive to add route attribute to a Razor page, for example `@page "/options"`.
+### Default routing
+The default routing when using this package is physical file routing.
+When building the project,
+1. all the razor components are processed to get a list of all the physical file routes
+0. the routing entry file (default is `index.html`, see `BrowserExtensionRoutingEntryFile` below) is copied to the output directory based on the list of physical file routes
 
-Usually in a server hosted application, you can access the route by just going to `domain.com/options`.
-However in a browser extension, for example in Google Chrome, if you are try to access the route directly from the URL, e.g. `chrome-extension://extesion_id/options`, the background page will automatically intercept the request and redirect to `index.html?page=options`.
+For example, if the `Background.razor` contains `@page "/background.html"` and the `Options.razor` contains `@page "/options.html"`, when the project is built or published, the file `index.html` will be copied/duplicated to the output directory with the name `background.html` and `options.html`.
 
-This is because the Blazor application is not hosted on a server, therefore only the static files are served in a browser extension.
+This is especially useful for browser extensions because the browsers only serve static files, and the presence of these physical files supports the routing when the extension page is reloaded.
 
-### Required permissions
-The background page intercepting the requests need the permissions:
-- "\*://\*/\*"
-- "webRequest"
-- "webRequestBlocking"
+### Virtual path routing
+Routing with virtual path is also supported, however not encouraged due to the requirements.
 
-### Removing the permissions from the manifest
-The background will only intercept the calls if it detects the permissions are declared.
-When the permissions are not declared in the manifest, the only routing that works is the direct URL to the `index.html` file.
-If you need to use multiple route, the routes need to have a matching physical file, e.g.
-- Options page
-    - Route: chrome-extension://<extension_id>/options.html
-    - File: wwwroot/options.html
-    - Options.razor: @page "/options.html"
-- Popup page
-    - Route: chrome-extension://<extension_id>/popup.html
-    - File: wwwroot/popup.html
-    - Popup.razor: @page "/popup.html"
+Virtual path routing means that the routes do not have a corresponding physical file, for example `/background` or `/options`.
+What this means is that when the user tries to reload the page, the browser will return a page not found (404) error.
 
-Where the `options.html` and `popup.html` are duplicate files.
+To overcome this, the background page intercepts every requests that is made to the extension's path, and if any path does not have an extension, it will redirect the request to `index.html?path={original path}`.
+This forces the browser to load the `index.html` and the `IndexPage` class uses the `NavigationManager` in Blazor to redirect to the original path.
 
-If the routes does not match a physical file, when trying to reload the extension page you will see a page not found (404) error.
+You can use the `@page` directive to add route attribute with a virtual path to a Razor page, for example `@page "/options"`.
+
+**Requirements:**
+1. `Background.razor` must inherit from the `BackgroundPage` class.
+0. `Index.razor` must inherit from the `IndexPage` class.
+0. The `manifest.json` must declare the background page with `persistent: true` and the following permissions
+   - `*://*/*`
+   - `webRequest`
+   - `webRequestBlocking`
+   
+   Example:
+   ```json
+   "permissions": [
+     "*://*/*",
+     "webRequest",
+     "webRequestBlocking"
+   ]
+   ```
+> The background will only intercept the calls if it detects the permissions are declared.
+> When the permissions are not declared in the manifest, the only routing that works is the physical file routing.
 
 ## Customize build
 

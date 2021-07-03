@@ -4,14 +4,14 @@
   "description": "A browser extension for integration test of Blazor.BrowserExtension",
   "version": "1.0",
   "background": {
-    "page": "index.html?path=background",
+    "page": "background.html",
     "persistent": true
   },
   "browser_action": {
-    "default_popup": "index.html?path=popup"
+    "default_popup": "popup.html"
   },
   "options_ui": {
-    "page": "index.html?path=options",
+    "page": "options.html",
     "open_in_tab": true
   },
   "content_scripts": [

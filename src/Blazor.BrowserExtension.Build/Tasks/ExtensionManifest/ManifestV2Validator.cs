@@ -12,16 +12,6 @@ namespace Blazor.BrowserExtension.Build.Tasks.ExtensionManifest
                 var manifestItem = item.Value;
                 switch (item.Key)
                 {
-                    case ManifestItemKey.Background:
-                        if (!manifestItem.ContainsExactIgnoreCase("index.html?path=background"))
-                        {
-                            validationResults.Add(new ValidationResult()
-                            {
-                                Item = manifestItem,
-                                Error = "Manifest item 'background' must specify \"index.html?path=background\" as background page"
-                            });
-                        }
-                        break;
                     case ManifestItemKey.WebAccessibleResources:
                         if (!manifestItem.ContainsExactIgnoreCase("framework/*")
                             || !manifestItem.ContainsExactIgnoreCase("BrowserExtensionScripts/*")

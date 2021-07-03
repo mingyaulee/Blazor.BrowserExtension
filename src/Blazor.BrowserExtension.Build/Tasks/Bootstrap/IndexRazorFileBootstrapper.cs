@@ -8,15 +8,16 @@ namespace Blazor.BrowserExtension.Build.Tasks.Bootstrap
         {
             var isUpdated = false;
 
-            // Insert
+            // Replace
+            // @page "/"
+            // with
             // @page "/index.html"
             // @inherits Blazor.BrowserExtension.Pages.IndexPage
-            // after @page "/"
-            var pageDirectiveIndex = fileLines.FindIndex(fileLine => fileLine.Contains("@page \"/index.html\""));
-            if (pageDirectiveIndex == -1)
+            var pageDirectiveIndex = fileLines.FindIndex(fileLine => fileLine.Contains("@page \"/\""));
+            if (pageDirectiveIndex > -1)
             {
-                fileLines.Insert(1, "@page \"/index.html\"");
-                fileLines.Insert(2, "@inherits Blazor.BrowserExtension.Pages.IndexPage");
+                fileLines[pageDirectiveIndex] = "@page \"/index.html\"";
+                fileLines.Insert(pageDirectiveIndex + 1, "@inherits Blazor.BrowserExtension.Pages.IndexPage");
                 isUpdated = true;
             }
 
