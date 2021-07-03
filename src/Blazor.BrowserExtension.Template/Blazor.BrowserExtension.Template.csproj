@@ -14,6 +14,7 @@
     <IsPackable>true</IsPackable>
     <PackageType>Template</PackageType>
     <PackageOutputPath>..\PackageOutput</PackageOutputPath>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
     <!-- Suppresses the warnings about the package not having assemblies in lib/*/.dll. -->
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <Authors>mingyaulee</Authors>
@@ -25,7 +26,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="HelloBlazorExtension\**\*" Exclude="HelloBlazorExtension\**\bin\**;HelloBlazorExtension\**\obj\**">
+    <Content Include="HelloBlazorExtension\**\*" Exclude="**\bin\**;**\obj\**">
       <Pack>true</Pack>
       <PackagePath>content</PackagePath>
     </Content>
@@ -33,6 +34,10 @@
     <Content Include="..\Icon\Icon.png">
       <Pack>true</Pack>
       <PackagePath></PackagePath>
+    </Content>
+    <Content Include="..\Icon\Icon.png" Link="HelloBlazorExtension/.template.config/Icon.png">
+      <Pack>true</Pack>
+      <PackagePath>content/.template.config/Icon.png</PackagePath>
     </Content>
   </ItemGroup>
 

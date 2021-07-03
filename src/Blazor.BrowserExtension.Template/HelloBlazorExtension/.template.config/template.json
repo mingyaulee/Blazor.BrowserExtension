@@ -8,7 +8,8 @@
     "BrowserExtension"
   ],
   "name": "Browser extension with Blazor WebAssembly",
-  "identity": "browserextension.blazor.mingyaulee",
+  "description": "Template to create a browser extension with Blazor WebAssembly.",
+  "identity": "Blazor.BrowserExtension",
   "shortName": "browserext",
   "tags": {
     "language": "C#",
