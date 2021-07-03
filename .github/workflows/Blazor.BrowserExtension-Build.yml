@@ -36,7 +36,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.200
+        dotnet-version: 5.0.x
     - name: Setup Chrome and Chrome Driver
       uses: nanasess/setup-chromedriver@master
     - name: Checkout
@@ -61,7 +61,7 @@ jobs:
       shell: powershell
       run: |
         New-Item -Path .\.sonar\scanner -ItemType Directory
-        dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner --version 5.2.0
+        dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
     - name: Restore dependencies
       run: dotnet restore
     - name: Build and analyze
