@@ -15,5 +15,25 @@
     "type": "project"
   },
   "sourceName": "HelloBlazorExtension",
-  "preferNameDirectory": true
+  "defaultName": "BrowserExtension1",
+  "preferNameDirectory": true,
+  "symbols": {
+    "Framework": {
+      "type": "parameter",
+      "description": "The target framework for the project.",
+      "datatype": "choice",
+      "choices": [
+        {
+          "choice": "net5.0",
+          "description": "Target .NET 5.0"
+        },
+        {
+          "choice": "net6.0",
+          "description": "Target .NET 6.0"
+        }
+      ],
+      "defaultValue": "net5.0",
+      "replaces": "net5.0"
+    }
+  }
 }
