@@ -7,7 +7,6 @@
     <GenerateDependencyFile>false</GenerateDependencyFile>
     <IsShippingPackage>true</IsShippingPackage>
     <HasReferenceAssembly>false</HasReferenceAssembly>
-    <PackageVersion>1.0.0.1</PackageVersion>
   </PropertyGroup>
 
   <!-- Package properties. -->
