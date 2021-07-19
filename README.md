@@ -295,6 +295,13 @@ The following MSBuild properties can be specified in your project file or when r
 | BrowserExtensionRoutingEntryFile  | index.html                                           | The HTML entry file for the Blazor application.                                  |
 | BrowserExtensionEnableCompression | $(BlazorEnableCompression)<br />Blazor default: True | If set to True, the .br compressed files will be loaded instead of .dll.         |
 
+## Manifest V3 Support
+
+At the moment, Chromium based browsers (Chrome & Edge) has support for the manifest V3 specification while Firefox's implementation is [in progress](https://blog.mozilla.org/addons/2021/05/27/manifest-v3-update/).
+However, there is an [issue](https://bugs.chromium.org/p/chromium/issues/detail?id=1173354) in Chromium where extensions using manifest V3 is not able to run web assembly.
+
+Therefore, manifest V3 is currently not supported for Blazor browser extension projects.
+
 ## Additional Information
 Find out how to build a cross browser extension with the links below:
 1. [MDN - Building a cross-browser extension](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Build_a_cross_browser_extension)
