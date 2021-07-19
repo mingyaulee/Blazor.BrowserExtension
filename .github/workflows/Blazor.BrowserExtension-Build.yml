@@ -82,11 +82,14 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     - name: Check if tag exists
+      uses: mukunku/tag-exists-action@v1.0.0
       id: tagExistsCheck
-      shell: bash
-      run: git show-ref --tags --verify --quiet -- "refs/tags/v${{ needs.version.outputs.SemVer }}" && echo "::set-output name=tagExists::1" || echo "::set-output name=tagExists::0"
+      with: 
+        tag: 'v${{ needs.version.outputs.SemVer }}'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Create tag
-      if: steps.tagExistsCheck.outputs.tagExists == 0
+      if: steps.tagExistsCheck.outputs.exists == 'false'
       uses: negz/create-tag@v1
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
