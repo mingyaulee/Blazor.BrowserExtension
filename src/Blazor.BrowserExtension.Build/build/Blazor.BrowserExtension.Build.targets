@@ -4,7 +4,9 @@
   <PropertyGroup>
     <!--
       The target 'ResolveRazorComponentInputs' resolves the item group RazorComponent.
-      Source: https://github.com/dotnet/sdk/blob/main/src/RazorSdk/Targets/Sdk.Razor.CurrentVersion.targets
+      Source:
+      - Current/.Net 6 https://github.com/dotnet/sdk/blob/main/src/RazorSdk/Targets/Sdk.Razor.CurrentVersion.targets
+      - .Net 5 https://github.com/dotnet/aspnetcore/blob/v5.0.0/src/Razor/Microsoft.NET.Sdk.Razor/src/build/netstandard2.0/Sdk.Razor.CurrentVersion.targets
     -->
     <_ConvertBlazorToBrowserExtensionDependsOn>
       DefineBlazorToBrowserExtensionFrameworkJsFileContentReplacements;
@@ -161,10 +163,12 @@
     <PropertyGroup>
       <_BrowserExtension_Project_Assets_Directory>$(ProjectDir)$(BrowserExtensionAssetsPath)</_BrowserExtension_Project_Assets_Directory>
       <_BrowserExtension_Project_BuildOutput_Assets_Directory>$(TargetDir)$(BrowserExtensionAssetsPath)</_BrowserExtension_Project_BuildOutput_Assets_Directory>
-      <_BrowserExtension_Project_BuildOutput_Assets_OriginalFramework_Directory>$(_BrowserExtension_Project_BuildOutput_Assets_Directory)\_framework</_BrowserExtension_Project_BuildOutput_Assets_OriginalFramework_Directory>
-      <_BrowserExtension_Project_BuildOutput_Assets_Framework_Directory>$(_BrowserExtension_Project_BuildOutput_Assets_Directory)\framework</_BrowserExtension_Project_BuildOutput_Assets_Framework_Directory>
       <_BrowserExtension_Project_BuildOutput_Assets_ManifestJson_FilePath>$(_BrowserExtension_Project_BuildOutput_Assets_Directory)\manifest.json</_BrowserExtension_Project_BuildOutput_Assets_ManifestJson_FilePath>
+      <_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory>$(TargetDir)$(BrowserExtensionOutputPath)</_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory>
+      <_BrowserExtension_Project_BuildOutput_BrowserExtension_OriginalFramework_Directory>$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory)\_framework</_BrowserExtension_Project_BuildOutput_BrowserExtension_OriginalFramework_Directory>
+      <_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_Directory>$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory)\framework</_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_Directory>
       <_BrowserExtension_Project_IntermediateOutput_StaticWebAssets_Directory>$(IntermediateOutputPath)staticwebassets</_BrowserExtension_Project_IntermediateOutput_StaticWebAssets_Directory>
+      <_BrowserExtension_Project_IntermediateOutput_StaticWebAssets_Directory Condition="'$(TargetFramework)' == 'net6.0'">$(IntermediateOutputPath)</_BrowserExtension_Project_IntermediateOutput_StaticWebAssets_Directory>
       <_BrowserExtension_Project_StaticWebAssets_Manifest_FileName>$(ProjectName).StaticWebAssets.xml</_BrowserExtension_Project_StaticWebAssets_Manifest_FileName>
     </PropertyGroup>
 
@@ -173,42 +177,43 @@
 
     <Message Importance="high" Text="Converting Blazor application to Browser Extension" />
 
-    <Message Importance="high" Text="  Removing all existing files in '$(_BrowserExtension_Project_BuildOutput_Assets_Framework_Directory)'" />
+    <Message Importance="high" Text="  Copying all files from '$(_BrowserExtension_Project_BuildOutput_Assets_Directory)' to '$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory)'" />
     <ItemGroup>
-      <_BrowserExtension_Project_BuildOutput_Assets_Framework_FilesToDelete Include="$(_BrowserExtension_Project_BuildOutput_Assets_Framework_Directory)\**\*.*" />
+      <_BrowserExtension_Project_BuildOutput_Assets_FilesToCopy Include="$(_BrowserExtension_Project_BuildOutput_Assets_Directory)\**\*.*" Exclude="$(_BrowserExtension_Project_BuildOutput_Assets_Directory)\framework\**\*.*" />
     </ItemGroup>
-    <Delete Files="@(_BrowserExtension_Project_BuildOutput_Assets_Framework_FilesToDelete)" TreatErrorsAsWarnings="true" />
+    <Copy SourceFiles="@(_BrowserExtension_Project_BuildOutput_Assets_FilesToCopy)"
+          DestinationFolder="$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory)\%(RecursiveDir)" />
 
-    <Message Importance="high" Text="  Moving all files from '$(_BrowserExtension_Project_BuildOutput_Assets_OriginalFramework_Directory)' to '$(_BrowserExtension_Project_BuildOutput_Assets_Framework_Directory)'" />
+    <Message Importance="high" Text="  Moving all files from '$(_BrowserExtension_Project_BuildOutput_BrowserExtension_OriginalFramework_Directory)' to '$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_Directory)'" />
     <ItemGroup>
-      <_BrowserExtension_Project_BuildOutput_Assets_Framework_FilesToMove Include="$(_BrowserExtension_Project_BuildOutput_Assets_OriginalFramework_Directory)\**\*.*" />
+      <_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_FilesToMove Include="$(_BrowserExtension_Project_BuildOutput_BrowserExtension_OriginalFramework_Directory)\**\*.*" />
     </ItemGroup>
-    <Move SourceFiles="@(_BrowserExtension_Project_BuildOutput_Assets_Framework_FilesToMove)"
-          DestinationFolder="$(_BrowserExtension_Project_BuildOutput_Assets_Framework_Directory)\%(RecursiveDir)" />
+    <Move SourceFiles="@(_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_FilesToMove)"
+          DestinationFolder="$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_Directory)\%(RecursiveDir)" />
 
-    <Message Importance="high" Text="  Removing directory '$(_BrowserExtension_Project_BuildOutput_Assets_OriginalFramework_Directory)'" />
-    <RemoveDir Directories="$(_BrowserExtension_Project_BuildOutput_Assets_OriginalFramework_Directory)" />
+    <Message Importance="high" Text="  Removing directory '$(_BrowserExtension_Project_BuildOutput_BrowserExtension_OriginalFramework_Directory)'" />
+    <RemoveDir Directories="$(_BrowserExtension_Project_BuildOutput_BrowserExtension_OriginalFramework_Directory)" />
 
     <Message Importance="high" Text="  Replacing content of 'blazor.webassembly.js' and 'dotnet.*.js'" />
     <ItemGroup>
-      <_BrowserExtension_Project_BuildOutput_Assets_Framework_BlazorJs_FilePath Include="$(_BrowserExtension_Project_BuildOutput_Assets_Framework_Directory)\blazor.webassembly.js" />
-      <_BrowserExtension_Project_BuildOutput_Assets_Framework_DotNetJs_FilePath Include="$(_BrowserExtension_Project_BuildOutput_Assets_Framework_Directory)\dotnet.*.js" />
+      <_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_BlazorJs_FilePath Include="$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_Directory)\blazor.webassembly.js" />
+      <_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_DotNetJs_FilePath Include="$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_Directory)\dotnet.*.js" />
     </ItemGroup>
-    <BlazorToBrowserExtensionReplaceContent Files="@(_BrowserExtension_Project_BuildOutput_Assets_Framework_BlazorJs_FilePath)"
+    <BlazorToBrowserExtensionReplaceContent Files="@(_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_BlazorJs_FilePath)"
                                             Replace="@(_BrowserExtension_BlazorJs_FileContentReplacements)" />
-    <BlazorToBrowserExtensionReplaceContent Files="@(_BrowserExtension_Project_BuildOutput_Assets_Framework_DotNetJs_FilePath)"
+    <BlazorToBrowserExtensionReplaceContent Files="@(_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_DotNetJs_FilePath)"
                                             Replace="@(_BrowserExtension_DotNetJs_FileContentReplacements)" />
 
     <Message Importance="high" Text="  Processing routing files" />
     <BlazorToBrowserExtensionProcessRoutingFiles Input="@(RazorComponent)"
                                                  AssetsPath="$(_BrowserExtension_Project_Assets_Directory)"
-                                                 EntryFile="$(_BrowserExtension_Project_BuildOutput_Assets_Directory)\$(BrowserExtensionRoutingEntryFile)">
-      <Output TaskParameter="Output" ItemName="_BrowserExtension_Project_BuildOutput_Assets_RoutingFiles" />
+                                                 EntryFile="$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory)\$(BrowserExtensionRoutingEntryFile)">
+      <Output TaskParameter="Output" ItemName="_BrowserExtension_Project_BuildOutput_BrowserExtension_RoutingFiles" />
     </BlazorToBrowserExtensionProcessRoutingFiles>
 
-    <Message Importance="high" Text="  Copying routing file %(_BrowserExtension_Project_BuildOutput_Assets_RoutingFiles.Route)" />
-    <Copy SourceFiles="@(_BrowserExtension_Project_BuildOutput_Assets_RoutingFiles)"
-          DestinationFiles="$(_BrowserExtension_Project_BuildOutput_Assets_Directory)\%(_BrowserExtension_Project_BuildOutput_Assets_RoutingFiles.Route)"
+    <Message Importance="high" Text="  Copying routing file %(_BrowserExtension_Project_BuildOutput_BrowserExtension_RoutingFiles.Route)" />
+    <Copy SourceFiles="@(_BrowserExtension_Project_BuildOutput_BrowserExtension_RoutingFiles)"
+          DestinationFiles="$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory)\%(_BrowserExtension_Project_BuildOutput_BrowserExtension_RoutingFiles.Route)"
           SkipUnchangedFiles="true" />
 
     <ItemGroup>
@@ -222,7 +227,7 @@
 
     <Message Importance="high" Text="  Copying static web asset files" />
     <Copy SourceFiles="@(_BrowserExtension_Project_IntermediateOutput_StaticWebAssets_Files)"
-          DestinationFolder="$(_BrowserExtension_Project_BuildOutput_Assets_Directory)\%(_BrowserExtension_Project_IntermediateOutput_StaticWebAssets_Files.ContentRelativeDirectory)"
+          DestinationFolder="$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory)\%(_BrowserExtension_Project_IntermediateOutput_StaticWebAssets_Files.ContentRelativeDirectory)"
           SkipUnchangedFiles="true" />
 
     <Message Importance="high" Text="Conversion completed from Blazor application to Browser Extension" />
@@ -230,8 +235,10 @@
   </Target>
 
   <!--
+    Removes unnecessary compressed files from the resolved files to publish.
     Runs after the '_BlazorCompressPublishFiles' target defined in
-    https://github.com/dotnet/sdk/blob/main/src/BlazorWasmSdk/Targets/Microsoft.NET.Sdk.BlazorWebAssembly.Current.targets
+    - Current/.Net 6 https://github.com/dotnet/sdk/blob/main/src/BlazorWasmSdk/Targets/Microsoft.NET.Sdk.BlazorWebAssembly.6_0.targets
+    - .Net 5 https://github.com/dotnet/aspnetcore/blob/v5.0.0/src/Components/WebAssembly/Sdk/src/targets/Microsoft.NET.Sdk.BlazorWebAssembly.Current.targets
   -->
   <Target Name="ProcessBlazorToBrowserExtensionPublishFiles"
           AfterTargets="_BlazorCompressPublishFiles">
@@ -239,12 +246,23 @@
     <Message Importance="high" Text="Processing files to publish Blazor application as Browser Extension" />
 
     <BlazorToBrowserExtensionProcessPublishFiles Input="@(ResolvedFileToPublish)"
-                                                 CompressionEnabled="$(BrowserExtensionEnableCompression)">
+                                                 CompressionEnabled="$(BrowserExtensionEnableCompression)"
+                                                 Condition="'$(TargetFramework)' == 'net5.0'">
       <Output TaskParameter="Output" ItemName="_BrowserExtension_Project_PublishFiles_FilesToRemove" />
     </BlazorToBrowserExtensionProcessPublishFiles>
 
-    <ItemGroup>
+    <ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
       <ResolvedFileToPublish Remove="@(_BrowserExtension_Project_PublishFiles_FilesToRemove)" />
+    </ItemGroup>
+
+    <BlazorToBrowserExtensionProcessPublishFiles Input="@(StaticWebAsset)"
+                                                 CompressionEnabled="$(BrowserExtensionEnableCompression)"
+                                                 Condition="'$(TargetFramework)' == 'net6.0'">
+      <Output TaskParameter="Output" ItemName="_BrowserExtension_Project_PublishFiles_FilesToRemove" />
+    </BlazorToBrowserExtensionProcessPublishFiles>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
+      <StaticWebAsset Remove="@(_BrowserExtension_Project_PublishFiles_FilesToRemove)" />
     </ItemGroup>
 
   </Target>
@@ -260,72 +278,97 @@
 
     <PropertyGroup>
       <_BrowserExtension_Project_Assets_Directory>$(ProjectDir)$(BrowserExtensionAssetsPath)</_BrowserExtension_Project_Assets_Directory>
-      <_BrowserExtension_Project_BuildOutput_Assets_Directory>$(TargetDir)$(BrowserExtensionAssetsPath)</_BrowserExtension_Project_BuildOutput_Assets_Directory>
-      <_BrowserExtension_Project_BuildOutput_Assets_OriginalFramework_Directory>$(_BrowserExtension_Project_BuildOutput_Assets_Directory)\_framework</_BrowserExtension_Project_BuildOutput_Assets_OriginalFramework_Directory>
-      <_BrowserExtension_Project_BuildOutput_Assets_Framework_Directory>$(_BrowserExtension_Project_BuildOutput_Assets_Directory)\framework</_BrowserExtension_Project_BuildOutput_Assets_Framework_Directory>
-      <_BrowserExtension_Project_BuildOutput_Assets_ManifestJson_FilePath>$(_BrowserExtension_Project_BuildOutput_Assets_Directory)\manifest.json</_BrowserExtension_Project_BuildOutput_Assets_ManifestJson_FilePath>
-      <_BrowserExtension_Project_IntermediateOutput_StaticWebAssets_Directory>$(IntermediateOutputPath)staticwebassets</_BrowserExtension_Project_IntermediateOutput_StaticWebAssets_Directory>
-      <_BrowserExtension_Project_StaticWebAssets_Manifest_FileName>$(ProjectName).StaticWebAssets.xml</_BrowserExtension_Project_StaticWebAssets_Manifest_FileName>
-    </PropertyGroup>
-    <PropertyGroup>
-      <_BrowserExtension_Project_Assets_Directory>$(ProjectDir)$(BrowserExtensionAssetsPath)</_BrowserExtension_Project_Assets_Directory>
       <_BrowserExtension_Project_PublishOutput_Assets_Directory>$(PublishDir)$(BrowserExtensionAssetsPath)</_BrowserExtension_Project_PublishOutput_Assets_Directory>
-      <_BrowserExtension_Project_PublishOutput_Assets_OriginalFramework_Directory>$(_BrowserExtension_Project_PublishOutput_Assets_Directory)\_framework</_BrowserExtension_Project_PublishOutput_Assets_OriginalFramework_Directory>
-      <_BrowserExtension_Project_PublishOutput_Assets_Framework_Directory>$(_BrowserExtension_Project_PublishOutput_Assets_Directory)\framework</_BrowserExtension_Project_PublishOutput_Assets_Framework_Directory>
-      <_BrowserExtension_Project_PublishOutput_Assets_OriginalRclContent_Directory>$(_BrowserExtension_Project_PublishOutput_Assets_Directory)\_content</_BrowserExtension_Project_PublishOutput_Assets_OriginalRclContent_Directory>
-      <_BrowserExtension_Project_PublishOutput_Assets_HasRclContentDirectory>false</_BrowserExtension_Project_PublishOutput_Assets_HasRclContentDirectory>
-      <_BrowserExtension_Project_PublishOutput_Assets_HasRclContentDirectory Condition="Exists('$(_BrowserExtension_Project_PublishOutput_Assets_OriginalRclContent_Directory)')">true</_BrowserExtension_Project_PublishOutput_Assets_HasRclContentDirectory>
-      <_BrowserExtension_Project_PublishOutput_Assets_RclContent_Directory>$(_BrowserExtension_Project_PublishOutput_Assets_Directory)\content</_BrowserExtension_Project_PublishOutput_Assets_RclContent_Directory>
+      <_BrowserExtension_Project_PublishOutput_BrowserExtension_Directory>$(PublishDir)$(BrowserExtensionOutputPath)</_BrowserExtension_Project_PublishOutput_BrowserExtension_Directory>
+      <_BrowserExtension_Project_PublishOutput_BrowserExtension_OriginalFramework_Directory>$(_BrowserExtension_Project_PublishOutput_BrowserExtension_Directory)\_framework</_BrowserExtension_Project_PublishOutput_BrowserExtension_OriginalFramework_Directory>
+      <_BrowserExtension_Project_PublishOutput_BrowserExtension_Framework_Directory>$(_BrowserExtension_Project_PublishOutput_BrowserExtension_Directory)\framework</_BrowserExtension_Project_PublishOutput_BrowserExtension_Framework_Directory>
+      <_BrowserExtension_Project_PublishOutput_BrowserExtension_OriginalRclContent_Directory>$(_BrowserExtension_Project_PublishOutput_BrowserExtension_Directory)\_content</_BrowserExtension_Project_PublishOutput_BrowserExtension_OriginalRclContent_Directory>
+      <_BrowserExtension_Project_PublishOutput_BrowserExtension_HasRclContentDirectory>false</_BrowserExtension_Project_PublishOutput_BrowserExtension_HasRclContentDirectory>
+      <_BrowserExtension_Project_PublishOutput_BrowserExtension_RclContent_Directory>$(_BrowserExtension_Project_PublishOutput_BrowserExtension_Directory)\content</_BrowserExtension_Project_PublishOutput_BrowserExtension_RclContent_Directory>
     </PropertyGroup>
 
     <Message Importance="high" Text="Converting published Blazor application to Browser Extension" />
 
-    <Message Importance="high" Text="  Moving all files from '$(_BrowserExtension_Project_PublishOutput_Assets_OriginalFramework_Directory)' to '$(_BrowserExtension_Project_PublishOutput_Assets_Framework_Directory)'" />
+    <Message Importance="high" Text="  Copying all files from '$(_BrowserExtension_Project_PublishOutput_Assets_Directory)' to '$(_BrowserExtension_Project_PublishOutput_BrowserExtension_Directory)'" />
     <ItemGroup>
-      <_BrowserExtension_Project_PublishOutput_Assets_Framework_FilesToMove Include="$(_BrowserExtension_Project_PublishOutput_Assets_OriginalFramework_Directory)\**\*.*" />
+      <_BrowserExtension_Project_PublishOutput_Assets_FilesToCopy Include="$(_BrowserExtension_Project_PublishOutput_Assets_Directory)\**\*.*" Exclude="$(_BrowserExtension_Project_PublishOutput_Assets_Directory)\framework\**\*.*" />
     </ItemGroup>
-    <Move SourceFiles="@(_BrowserExtension_Project_PublishOutput_Assets_Framework_FilesToMove)"
-          DestinationFolder="$(_BrowserExtension_Project_PublishOutput_Assets_Framework_Directory)\%(RecursiveDir)" />
+    <Copy SourceFiles="@(_BrowserExtension_Project_PublishOutput_Assets_FilesToCopy)"
+          DestinationFolder="$(_BrowserExtension_Project_PublishOutput_BrowserExtension_Directory)\%(RecursiveDir)" />
 
-    <Message Importance="high" Text="  Removing directory '$(_BrowserExtension_Project_PublishOutput_Assets_OriginalFramework_Directory)'" />
-    <RemoveDir Directories="$(_BrowserExtension_Project_PublishOutput_Assets_OriginalFramework_Directory)" />
+    <Message Importance="high" Text="  Moving all files from '$(_BrowserExtension_Project_PublishOutput_BrowserExtension_OriginalFramework_Directory)' to '$(_BrowserExtension_Project_PublishOutput_BrowserExtension_Framework_Directory)'" />
+    <ItemGroup>
+      <_BrowserExtension_Project_PublishOutput_BrowserExtension_Framework_FilesToMove Include="$(_BrowserExtension_Project_PublishOutput_BrowserExtension_OriginalFramework_Directory)\**\*.*" />
+    </ItemGroup>
+    <Move SourceFiles="@(_BrowserExtension_Project_PublishOutput_BrowserExtension_Framework_FilesToMove)"
+          DestinationFolder="$(_BrowserExtension_Project_PublishOutput_BrowserExtension_Framework_Directory)\%(RecursiveDir)" />
+
+    <Message Importance="high" Text="  Removing directory '$(_BrowserExtension_Project_PublishOutput_BrowserExtension_OriginalFramework_Directory)'" />
+    <RemoveDir Directories="$(_BrowserExtension_Project_PublishOutput_BrowserExtension_OriginalFramework_Directory)" />
 
     <Message Importance="high" Text="  Replacing content of 'blazor.webassembly.js' and 'dotnet.*.js'" />
     <ItemGroup>
-      <_BrowserExtension_Project_PublishOutput_Assets_Framework_BlazorJs_FilePath Include="$(_BrowserExtension_Project_PublishOutput_Assets_Framework_Directory)\blazor.webassembly.js" />
-      <_BrowserExtension_Project_PublishOutput_Assets_Framework_DotnetJs_FilePath Include="$(_BrowserExtension_Project_PublishOutput_Assets_Framework_Directory)\dotnet.*.js" />
+      <_BrowserExtension_Project_PublishOutput_BrowserExtension_Framework_BlazorJs_FilePath Include="$(_BrowserExtension_Project_PublishOutput_BrowserExtension_Framework_Directory)\blazor.webassembly.js" />
+      <_BrowserExtension_Project_PublishOutput_BrowserExtension_Framework_DotnetJs_FilePath Include="$(_BrowserExtension_Project_PublishOutput_BrowserExtension_Framework_Directory)\dotnet.*.js" />
     </ItemGroup>
-    <BlazorToBrowserExtensionReplaceContent Files="@(_BrowserExtension_Project_PublishOutput_Assets_Framework_BlazorJs_FilePath)" Replace="@(_BrowserExtension_BlazorJs_FileContentReplacements)" />
-    <BlazorToBrowserExtensionReplaceContent Files="@(_BrowserExtension_Project_PublishOutput_Assets_Framework_DotnetJs_FilePath)" Replace="@(_BrowserExtension_DotNetJs_FileContentReplacements)" />
+    <BlazorToBrowserExtensionReplaceContent Files="@(_BrowserExtension_Project_PublishOutput_BrowserExtension_Framework_BlazorJs_FilePath)" Replace="@(_BrowserExtension_BlazorJs_FileContentReplacements)" />
+    <BlazorToBrowserExtensionReplaceContent Files="@(_BrowserExtension_Project_PublishOutput_BrowserExtension_Framework_DotnetJs_FilePath)" Replace="@(_BrowserExtension_DotNetJs_FileContentReplacements)" />
 
     <Message Importance="high" Text="  Processing routing files" />
     <BlazorToBrowserExtensionProcessRoutingFiles Input="@(RazorComponent)"
                                                  AssetsPath="$(_BrowserExtension_Project_Assets_Directory)"
-                                                 EntryFile="$(_BrowserExtension_Project_PublishOutput_Assets_Directory)\$(BrowserExtensionRoutingEntryFile)">
-      <Output TaskParameter="Output" ItemName="_BrowserExtension_Project_PublishOutput_Assets_RoutingFiles" />
+                                                 EntryFile="$(_BrowserExtension_Project_PublishOutput_BrowserExtension_Directory)\$(BrowserExtensionRoutingEntryFile)">
+      <Output TaskParameter="Output" ItemName="_BrowserExtension_Project_PublishOutput_BrowserExtension_RoutingFiles" />
     </BlazorToBrowserExtensionProcessRoutingFiles>
 
-    <Message Importance="high" Text="  Copying routing file %(_BrowserExtension_Project_BuildOutput_Assets_RoutingFiles.Route)" />
-    <Copy SourceFiles="@(_BrowserExtension_Project_PublishOutput_Assets_RoutingFiles)"
-          DestinationFiles="$(_BrowserExtension_Project_PublishOutput_Assets_Directory)\%(_BrowserExtension_Project_PublishOutput_Assets_RoutingFiles.Route)"
+    <Message Importance="high" Text="  Copying routing file %(_BrowserExtension_Project_PublishOutput_BrowserExtension_RoutingFiles.Route)" />
+    <Copy SourceFiles="@(_BrowserExtension_Project_PublishOutput_BrowserExtension_RoutingFiles)"
+          DestinationFiles="$(_BrowserExtension_Project_PublishOutput_BrowserExtension_Directory)\%(_BrowserExtension_Project_PublishOutput_BrowserExtension_RoutingFiles.Route)"
           SkipUnchangedFiles="true" />
 
-    <Message Importance="high" Text="  Moving all files from '$(_BrowserExtension_Project_PublishOutput_Assets_OriginalRclContent_Directory)' to '$(_BrowserExtension_Project_PublishOutput_Assets_RclContent_Directory)'"
-             Condition="$(_BrowserExtension_Project_PublishOutput_Assets_HasRclContentDirectory)" />
-    <ItemGroup Condition="$(_BrowserExtension_Project_PublishOutput_Assets_HasRclContentDirectory)">
-      <_BrowserExtension_Project_PublishOutput_Assets_RclContent_FilesToMove Include="$(_BrowserExtension_Project_PublishOutput_Assets_OriginalRclContent_Directory)\**\*.*" />
-    </ItemGroup>
-    <Move SourceFiles="@(_BrowserExtension_Project_PublishOutput_Assets_RclContent_FilesToMove)"
-          DestinationFolder="$(_BrowserExtension_Project_PublishOutput_Assets_RclContent_Directory)\%(RecursiveDir)"
-          Condition="$(_BrowserExtension_Project_PublishOutput_Assets_HasRclContentDirectory)" />
+    <PropertyGroup>
+      <_BrowserExtension_Project_PublishOutput_BrowserExtension_HasRclContentDirectory Condition="Exists('$(_BrowserExtension_Project_PublishOutput_BrowserExtension_OriginalRclContent_Directory)')">true</_BrowserExtension_Project_PublishOutput_BrowserExtension_HasRclContentDirectory>
+    </PropertyGroup>
 
-    <Message Importance="high" Text="  Removing directory '$(_BrowserExtension_Project_PublishOutput_Assets_OriginalRclContent_Directory)'"
-             Condition="$(_BrowserExtension_Project_PublishOutput_Assets_HasRclContentDirectory)" />
-    <RemoveDir Directories="$(_BrowserExtension_Project_PublishOutput_Assets_OriginalRclContent_Directory)"
-               Condition="$(_BrowserExtension_Project_PublishOutput_Assets_HasRclContentDirectory)" />
+    <Message Importance="high" Text="  Moving all files from '$(_BrowserExtension_Project_PublishOutput_BrowserExtension_OriginalRclContent_Directory)' to '$(_BrowserExtension_Project_PublishOutput_BrowserExtension_RclContent_Directory)'"
+             Condition="$(_BrowserExtension_Project_PublishOutput_BrowserExtension_HasRclContentDirectory)" />
+    <ItemGroup Condition="$(_BrowserExtension_Project_PublishOutput_BrowserExtension_HasRclContentDirectory)">
+      <_BrowserExtension_Project_PublishOutput_BrowserExtension_RclContent_FilesToMove Include="$(_BrowserExtension_Project_PublishOutput_BrowserExtension_OriginalRclContent_Directory)\**\*.*" />
+    </ItemGroup>
+    <Move SourceFiles="@(_BrowserExtension_Project_PublishOutput_BrowserExtension_RclContent_FilesToMove)"
+          DestinationFolder="$(_BrowserExtension_Project_PublishOutput_BrowserExtension_RclContent_Directory)\%(RecursiveDir)"
+          Condition="$(_BrowserExtension_Project_PublishOutput_BrowserExtension_HasRclContentDirectory)" />
+
+    <Message Importance="high" Text="  Removing directory '$(_BrowserExtension_Project_PublishOutput_BrowserExtension_OriginalRclContent_Directory)'"
+             Condition="$(_BrowserExtension_Project_PublishOutput_BrowserExtension_HasRclContentDirectory)" />
+    <RemoveDir Directories="$(_BrowserExtension_Project_PublishOutput_BrowserExtension_OriginalRclContent_Directory)"
+               Condition="$(_BrowserExtension_Project_PublishOutput_BrowserExtension_HasRclContentDirectory)" />
 
     <Message Importance="high" Text="Conversion completed from Blazor application to Browser Extension" />
 
   </Target>
 
+  <!--
+    Runs after clean happens.
+    Cleans the output of the browser extension project.
+  -->
+  <Target Name="CleanBlazorBrowserExtension" AfterTargets="AfterClean">
+
+    <PropertyGroup>
+      <_BrowserExtension_Project_BuildOutput_Assets_Directory>$(TargetDir)$(BrowserExtensionAssetsPath)</_BrowserExtension_Project_BuildOutput_Assets_Directory>
+      <_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory>$(TargetDir)$(BrowserExtensionOutputPath)</_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory>
+      <_BrowserExtension_Project_PublishOutput_Assets_Directory>$(TargetDir)publish\$(BrowserExtensionAssetsPath)</_BrowserExtension_Project_PublishOutput_Assets_Directory>
+      <_BrowserExtension_Project_PublishOutput_BrowserExtension_Directory>$(TargetDir)publish\$(BrowserExtensionOutputPath)</_BrowserExtension_Project_PublishOutput_BrowserExtension_Directory>
+    </PropertyGroup>
+
+    <Message Importance="high" Text="Cleaning browser extension output." />
+    <Message Importance="high" Text="Publish dir is $(PublishDir)" />
+
+    <RemoveDir Directories="$(_BrowserExtension_Project_BuildOutput_Assets_Directory)" Condition="Exists('$(_BrowserExtension_Project_BuildOutput_Assets_Directory)')" />
+    <RemoveDir Directories="$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory)" Condition="Exists('$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory)')" />
+    <RemoveDir Directories="$(_BrowserExtension_Project_PublishOutput_Assets_Directory)" Condition="Exists('$(_BrowserExtension_Project_PublishOutput_Assets_Directory)')" />
+    <RemoveDir Directories="$(_BrowserExtension_Project_PublishOutput_BrowserExtension_Directory)" Condition="Exists('$(_BrowserExtension_Project_PublishOutput_BrowserExtension_Directory)')" />
+
+  </Target>
+  
 </Project>

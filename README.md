@@ -125,16 +125,16 @@ In `wwwroot/index.html`
 ### Google Chrome
 1. Launch the Extensions page ( ⋮ → More tools → Extensions).
 2. Switch on `Developer mode`.
-3. Click on the `Load unpacked` button, then navigate to `%ProjectDir%\bin\Debug\net5.0\` and select the foler `wwwroot`.
+3. Click on the `Load unpacked` button, then navigate to `%ProjectDir%\bin\Debug\net5.0\` and select the foler `browserextension`.
 
 ### Microsoft Edge
 1. Launch the Extensions page ( ⋮ → Extensions).
 2. Click on the ☰ and switch on `Developer mode`.
-3. Click on the button with the title `Load unpacked`, then navigate to `%ProjectDir%\bin\Debug\net5.0\` and select the foler `wwwroot`.
+3. Click on the button with the title `Load unpacked`, then navigate to `%ProjectDir%\bin\Debug\net5.0\` and select the foler `browserextension`.
 
 ### Mozilla Firefox
 1. Navigate to the URL [about:debugging#/runtime/this-firefox](about:debugging#/runtime/this-firefox)
-2. Click on `Load Temporary Add-on...`, then navigate to `%ProjectDir%\bin\Debug\net5.0\wwwroot` and select any file in the directory.
+2. Click on `Load Temporary Add-on...`, then navigate to `%ProjectDir%\bin\Debug\net5.0\browserextension` and select any file in the directory.
 
 ## Debugging locally in IIS Express or Kestrel
 1. Start the Blazor project directly from Visual Studio or `dotnet run`.
@@ -292,6 +292,7 @@ The following MSBuild properties can be specified in your project file or when r
 | BuildBlazorToBrowserExtension     | True                                                 | If set to False, the Blazor to Browser Extension build target will be skipped.   |
 | PublishBlazorToBrowserExtension   | True                                                 | If set to False, the Blazor to Browser Extension publish target will be skipped. |
 | BrowserExtensionAssetsPath        | wwwroot                                              | The root folder where the JavaScript files should be added as link.              |
+| BrowserExtensionOutputPath        | browserextension                                     | The folder of the build/publish output.                                          |
 | BrowserExtensionRoutingEntryFile  | index.html                                           | The HTML entry file for the Blazor application.                                  |
 | BrowserExtensionEnableCompression | $(BlazorEnableCompression)<br />Blazor default: True | If set to True, the .br compressed files will be loaded instead of .dll.         |
 

@@ -45,16 +45,16 @@
   </Target>
 
   <!-- Target
-    Runs before the 'RunBuildBlazorToBrowserExtension' target defined in Blazor.BrowserExtension.Build package.
+    Runs after the 'RunBuildBlazorToBrowserExtension' target defined in Blazor.BrowserExtension.Build package.
     Replaces the tokens in the JavaScript files in the build output directory.
   -->
   <Target Name="RunTokenReplacementToBuildOutputBrowserExtensionScripts"
-          BeforeTargets="RunBuildBlazorToBrowserExtension"
+          AfterTargets="RunBuildBlazorToBrowserExtension"
           Condition="'$(IncludeBrowserExtensionAssets)' == 'true' and '$(BuildBlazorToBrowserExtension)' == 'true'"
           DependsOnTargets="DefineBlazorToBrowserExtensionScriptsJsFileContentReplacements">
 
     <PropertyGroup>
-      <_BrowserExtension_Project_BuildOutput_Scripts_Directory>$(TargetDir)$(BrowserExtensionAssetsPath)\BrowserExtensionScripts</_BrowserExtension_Project_BuildOutput_Scripts_Directory>
+      <_BrowserExtension_Project_BuildOutput_Scripts_Directory>$(TargetDir)$(BrowserExtensionOutputPath)\BrowserExtensionScripts</_BrowserExtension_Project_BuildOutput_Scripts_Directory>
     </PropertyGroup>
     <ItemGroup>
       <_BrowserExtension_Project_BuildOutput_Scripts_JsFiles Include="$(_BrowserExtension_Project_BuildOutput_Scripts_Directory)\*.js" />
@@ -72,7 +72,7 @@
   </Target>
 
   <!-- Target
-    Runs before the 'RunPublishBlazorToBrowserExtension' target defined in Blazor.BrowserExtension.Build package.
+    Runs after the 'RunPublishBlazorToBrowserExtension' target defined in Blazor.BrowserExtension.Build package.
     Replaces the tokens in the JavaScript files in the publish output directory.
   -->
   <Target Name="RunTokenReplacementToPublishOutputBrowserExtensionScripts"
@@ -81,7 +81,7 @@
           DependsOnTargets="DefineBlazorToBrowserExtensionScriptsJsFileContentReplacements">
 
     <PropertyGroup>
-      <_BrowserExtension_Project_PublishOutput_Scripts_Directory>$(PublishDir)$(BrowserExtensionAssetsPath)\BrowserExtensionScripts</_BrowserExtension_Project_PublishOutput_Scripts_Directory>
+      <_BrowserExtension_Project_PublishOutput_Scripts_Directory>$(PublishDir)$(BrowserExtensionOutputPath)\BrowserExtensionScripts</_BrowserExtension_Project_PublishOutput_Scripts_Directory>
     </PropertyGroup>
     <ItemGroup>
       <_BrowserExtension_Project_PublishOutput_Scripts_JsFiles Include="$(_BrowserExtension_Project_PublishOutput_Scripts_Directory)\*.js" />
