@@ -39,9 +39,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "template", "template", "{A1
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Icon", "Icon", "{E47D8D0D-3AD6-45A6-8D21-96846101EDBB}"
 	ProjectSection(SolutionItems) = preProject
-		src\Icon\Blazor.png = src\Icon\Blazor.png
-		src\Icon\BlazorWithBackground.png = src\Icon\BlazorWithBackground.png
 		src\Icon\Icon.png = src\Icon\Icon.png
+		src\Icon\Icon.svg = src\Icon\Icon.svg
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tool", "tool", "{E1F2D250-4D68-4A9A-B556-714E4C57542B}"
