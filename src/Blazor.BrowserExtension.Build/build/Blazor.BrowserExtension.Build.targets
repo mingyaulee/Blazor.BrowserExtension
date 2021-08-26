@@ -181,6 +181,7 @@
     <ItemGroup>
       <_BrowserExtension_Project_BuildOutput_Assets_FilesToCopy Include="$(_BrowserExtension_Project_BuildOutput_Assets_Directory)\**\*.*" Exclude="$(_BrowserExtension_Project_BuildOutput_Assets_Directory)\framework\**\*.*" />
     </ItemGroup>
+    <RemoveDir Directories="$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory)" Condition="Exists('$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory)')" />
     <Copy SourceFiles="@(_BrowserExtension_Project_BuildOutput_Assets_FilesToCopy)"
           DestinationFolder="$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory)\%(RecursiveDir)" />
 
@@ -293,6 +294,7 @@
     <ItemGroup>
       <_BrowserExtension_Project_PublishOutput_Assets_FilesToCopy Include="$(_BrowserExtension_Project_PublishOutput_Assets_Directory)\**\*.*" Exclude="$(_BrowserExtension_Project_PublishOutput_Assets_Directory)\framework\**\*.*" />
     </ItemGroup>
+    <RemoveDir Directories="$(_BrowserExtension_Project_PublishOutput_BrowserExtension_Directory)" Condition="Exists('$(_BrowserExtension_Project_PublishOutput_BrowserExtension_Directory)')" />
     <Copy SourceFiles="@(_BrowserExtension_Project_PublishOutput_Assets_FilesToCopy)"
           DestinationFolder="$(_BrowserExtension_Project_PublishOutput_BrowserExtension_Directory)\%(RecursiveDir)" />
 
