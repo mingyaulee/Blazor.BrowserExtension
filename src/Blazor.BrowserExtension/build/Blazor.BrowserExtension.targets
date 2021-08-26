@@ -5,13 +5,13 @@
     Adds the content JavaScript files from the NuGet package to the project
   -->
   <PropertyGroup>
-    <_BrowserExtension_Package_Contents_Scripts_Directory>$(MSBuildThisFileDirectory)..\content\BrowserExtensionScripts</_BrowserExtension_Package_Contents_Scripts_Directory>
-    <_BrowserExtension_Project_Assets_Scripts_Directory>$(BrowserExtensionAssetsPath)\BrowserExtensionScripts</_BrowserExtension_Project_Assets_Scripts_Directory>
+    <_BrowserExtension_Package_Contents_Scripts_Directory Condition="'$(_BrowserExtension_Package_Contents_Scripts_Directory)' == ''">$(MSBuildThisFileDirectory)..\content\BrowserExtensionScripts</_BrowserExtension_Package_Contents_Scripts_Directory>
+    <_BrowserExtension_Project_Link_Scripts_Directory>$(BrowserExtensionAssetsPath)\$(LinkBrowserExtensionAssetsPath)</_BrowserExtension_Project_Link_Scripts_Directory>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(IncludeBrowserExtensionAssets)' == 'true'">
     <None Include="$(_BrowserExtension_Package_Contents_Scripts_Directory)\**\*.*"
-          Link="$(_BrowserExtension_Project_Assets_Scripts_Directory)\%(RecursiveDir)%(Filename)%(Extension)">
+          Link="$(_BrowserExtension_Project_Link_Scripts_Directory)\%(RecursiveDir)%(Filename)%(Extension)">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
@@ -19,7 +19,7 @@
 
   <!-- Target
     Runs only when another target depends on this target.
-    Defines the properties required for replacing BrowserExtensionScripts/*.js.
+    Defines the properties required for replacing Core.js and ContentScript.js.
   -->
   <Target Name="DefineBlazorToBrowserExtensionScriptsJsFileContentReplacements">
 
@@ -54,23 +54,24 @@
           DependsOnTargets="DefineBlazorToBrowserExtensionScriptsJsFileContentReplacements">
 
     <PropertyGroup>
-      <_BrowserExtension_Project_BuildOutput_Scripts_Directory>$(TargetDir)$(BrowserExtensionOutputPath)\BrowserExtensionScripts</_BrowserExtension_Project_BuildOutput_Scripts_Directory>
+      <_BrowserExtension_Project_BuildOutput_Scripts_Directory>$(TargetDir)$(BrowserExtensionOutputPath)\$(LinkBrowserExtensionAssetsPath)</_BrowserExtension_Project_BuildOutput_Scripts_Directory>
     </PropertyGroup>
     <ItemGroup>
-      <_BrowserExtension_Project_BuildOutput_Scripts_JsFiles Include="$(_BrowserExtension_Project_BuildOutput_Scripts_Directory)\*.js" />
+      <_BrowserExtension_Project_BuildOutput_Scripts_JsFiles Include="$(_BrowserExtension_Project_BuildOutput_Scripts_Directory)\Core.js" />
+      <_BrowserExtension_Project_BuildOutput_Scripts_JsFiles Include="$(_BrowserExtension_Project_BuildOutput_Scripts_Directory)\ContentScript.js" />
       <_BrowserExtension_BrowserExtensionScriptsJs_FileContentReplacements Condition="'%(_BrowserExtension_BrowserExtensionScriptsJs_FileContentReplacements.From)' == '__CompressionEnabled__'">
         <To>false</To>
       </_BrowserExtension_BrowserExtensionScriptsJs_FileContentReplacements>
     </ItemGroup>
 
-    <Message Importance="high" Text="Replacing content of core Blazor.BrowserExtension *.js files" />
+    <Message Importance="high" Text="Replacing content of core Blazor.BrowserExtension Core.js and ContentScript.js" />
     <BlazorToBrowserExtensionReplaceContent Files="@(_BrowserExtension_Project_BuildOutput_Scripts_JsFiles)"
                                             Replace="@(_BrowserExtension_BrowserExtensionScriptsJs_FileContentReplacements)"
                                             FailOnWarning="true"
                                             FailMessage="Clean the project before build" />
 
   </Target>
-
+  
   <!-- Target
     Runs after the 'RunPublishBlazorToBrowserExtension' target defined in Blazor.BrowserExtension.Build package.
     Replaces the tokens in the JavaScript files in the publish output directory.
@@ -81,16 +82,17 @@
           DependsOnTargets="DefineBlazorToBrowserExtensionScriptsJsFileContentReplacements">
 
     <PropertyGroup>
-      <_BrowserExtension_Project_PublishOutput_Scripts_Directory>$(PublishDir)$(BrowserExtensionOutputPath)\BrowserExtensionScripts</_BrowserExtension_Project_PublishOutput_Scripts_Directory>
+      <_BrowserExtension_Project_PublishOutput_Scripts_Directory>$(PublishDir)$(BrowserExtensionOutputPath)\$(LinkBrowserExtensionAssetsPath)</_BrowserExtension_Project_PublishOutput_Scripts_Directory>
     </PropertyGroup>
     <ItemGroup>
-      <_BrowserExtension_Project_PublishOutput_Scripts_JsFiles Include="$(_BrowserExtension_Project_PublishOutput_Scripts_Directory)\*.js" />
+      <_BrowserExtension_Project_PublishOutput_Scripts_JsFiles Include="$(_BrowserExtension_Project_PublishOutput_Scripts_Directory)\Core.js" />
+      <_BrowserExtension_Project_PublishOutput_Scripts_JsFiles Include="$(_BrowserExtension_Project_PublishOutput_Scripts_Directory)\ContentScript.js" />
       <_BrowserExtension_BrowserExtensionScriptsJs_FileContentReplacements Condition="'%(_BrowserExtension_BrowserExtensionScriptsJs_FileContentReplacements.From)' == '__CompressionEnabled__'">
         <To>$(BrowserExtensionEnableCompression)</To>
       </_BrowserExtension_BrowserExtensionScriptsJs_FileContentReplacements>
     </ItemGroup>
 
-    <Message Importance="high" Text="Replacing content of core Blazor.BrowserExtension *.js files" />
+    <Message Importance="high" Text="Replacing content of core Blazor.BrowserExtension Core.js and ContentScript.js" />
     <BlazorToBrowserExtensionReplaceContent Files="@(_BrowserExtension_Project_PublishOutput_Scripts_JsFiles)"
                                             Replace="@(_BrowserExtension_BrowserExtensionScriptsJs_FileContentReplacements)"
                                             FailOnWarning="true"

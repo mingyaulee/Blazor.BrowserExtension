@@ -26,9 +26,13 @@
       <Pack>true</Pack>
       <PackagePath>build</PackagePath>
     </Content>
-    <Content Include="content\**">
+    <Content Include="content\dist\**">
       <Pack>true</Pack>
-      <PackagePath>content</PackagePath>
+      <PackagePath>content\BrowserExtensionScripts</PackagePath>
+    </Content>
+    <Content Include="content\src\lib\**">
+      <Pack>true</Pack>
+      <PackagePath>content\BrowserExtensionScripts\lib</PackagePath>
     </Content>
     <Content Include="..\Icon\Icon.png">
       <Pack>true</Pack>

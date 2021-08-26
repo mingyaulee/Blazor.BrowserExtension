@@ -1,9 +1,21 @@
-<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <_BrowserExtensionBuildOutputFolder>bin\$(Configuration)</_BrowserExtensionBuildOutputFolder>
   </PropertyGroup>
+
+  <!-- Link scripts according to the directory structure in the NuGet package -->
+  <PropertyGroup>
+    <_BrowserExtension_Package_Contents_Scripts_Directory>$(MSBuildThisFileDirectory)..\..\src\Blazor.BrowserExtension\content\dist</_BrowserExtension_Package_Contents_Scripts_Directory>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\Blazor.BrowserExtension\content\src\lib\*.*"
+          Link="wwwroot\BrowserExtensionScripts\lib\%(Filename)%(Extension)">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.4" />
