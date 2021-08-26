@@ -1,9 +1,0 @@
-{
-  "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
-    "checkJs": true
-  },
-  "include": [ "content/BrowserExtensionScripts/*.js" ],
-  "exclude": [ "content/BrowserExtensionScripts/lib/*.js" ]
-}

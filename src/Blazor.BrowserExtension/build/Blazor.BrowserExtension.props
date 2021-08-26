@@ -5,9 +5,6 @@
     <BrowserExtensionEnvironment Condition="'$(BrowserExtensionEnvironment)' == ''"></BrowserExtensionEnvironment>
     <BrowserExtensionAssetsPath Condition="'$(BrowserExtensionAssetsPath)' == ''">wwwroot</BrowserExtensionAssetsPath>
     <IncludeBrowserExtensionAssets Condition="'$(IncludeBrowserExtensionAssets)' == ''">true</IncludeBrowserExtensionAssets>
-    <!-- Define build properties for WebExtensions.Net -->
-    <WebExtensionsAssetsPath Condition="'$(WebExtensionsAssetsPath)' == ''">$(BrowserExtensionAssetsPath)</WebExtensionsAssetsPath>
-    <IncludeWebExtensionsAssets Condition="'$(IncludeBrowserExtensionAssets)' != 'false'">true</IncludeWebExtensionsAssets>
   </PropertyGroup>
 
 </Project>

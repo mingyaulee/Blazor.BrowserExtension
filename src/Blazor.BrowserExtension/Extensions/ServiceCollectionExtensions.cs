@@ -2,8 +2,6 @@
 using Microsoft.JSInterop;
 using System;
 using System.Linq;
-using WebExtensions.Net;
-using WebExtensions.Net.Mock;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -22,15 +20,14 @@ namespace Microsoft.Extensions.DependencyInjection
 
             var browserExtensionEnvironment = InitializeBrowserExtensionEnvironment(jsRuntime, option);
             services.AddSingleton<IBrowserExtensionEnvironment>(browserExtensionEnvironment);
-            services.AddTransient<IWebExtensionsApi, WebExtensionsApi>();
 
             if (browserExtensionEnvironment.Mode == BrowserExtensionMode.Debug)
             {
-                services.AddSingleton<IWebExtensionsJSRuntime, MockWebExtensionsJSRuntime>();
+                services.AddMockWebExtensions();
             }
             else
             {
-                services.AddSingleton<IWebExtensionsJSRuntime, WebExtensionsJSRuntime>();
+                services.AddWebExtensions();
             }
 
             return services;

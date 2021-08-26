@@ -14,13 +14,13 @@ namespace Blazor.BrowserExtension.Build.Tasks.ExtensionManifest
                 {
                     case ManifestItemKey.WebAccessibleResources:
                         if (!manifestItem.ContainsExactIgnoreCase("framework/*")
-                            || !manifestItem.ContainsExactIgnoreCase("BrowserExtensionScripts/*")
-                            || !manifestItem.ContainsExactIgnoreCase("WebExtensionsScripts/*"))
+                            || !manifestItem.ContainsExactIgnoreCase("content/*")
+                            || !manifestItem.ContainsExactIgnoreCase("BrowserExtensionScripts/*"))
                         {
                             validationResults.Add(new ValidationResult()
                             {
                                 Item = manifestItem,
-                                Error = "Manifest item 'web_accessible_resources' must specify \"framework/*\", \"BrowserExtensionScripts/*\" and \"WebExtensionsScripts/*\"."
+                                Error = "Manifest item 'web_accessible_resources' must specify \"framework/*\", \"content/*\" and \"BrowserExtensionScripts/*\"."
                             });
                         }
                         break;

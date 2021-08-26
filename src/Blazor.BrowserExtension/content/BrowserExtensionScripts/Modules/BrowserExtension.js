@@ -22,8 +22,12 @@ export default class BrowserExtension {
    * @returns {Promise<BrowserExtension>}
    */
   async InitializeAsync(environment) {
-    // import WebExtensions.Net JS
-    await import(`${this.Url}WebExtensionsScripts/WebExtensionsNet.js`);
+    // import JsBind.Net JS
+    if (this.Mode === BrowserExtensionModes.Debug) {
+      await import(`${this.Url}_content/JsBind.Net/JsBindNet.js`);
+    } else {
+      await import(`${this.Url}content/JsBind.Net/JsBindNet.js`);
+    }
 
     if (this.CompressionEnabled) {
       // import brotli decode.js

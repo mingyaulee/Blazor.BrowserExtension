@@ -6,7 +6,6 @@
     <GenerateDependencyFile>false</GenerateDependencyFile>
     <IsShippingPackage>true</IsShippingPackage>
     <HasReferenceAssembly>false</HasReferenceAssembly>
-    <IncludeWebExtensionsAssets>false</IncludeWebExtensionsAssets>
     <BuildBlazorToBrowserExtension>false</BuildBlazorToBrowserExtension>
   </PropertyGroup>
 
@@ -42,14 +41,11 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.0" />
     <PackageReference Include="Microsoft.JSInterop" Version="5.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
-    <PackageReference Include="WebExtensions.Net" Version="0.7.2" IncludeAssets="all" PrivateAssets="none" />
+    <PackageReference Include="WebExtensions.Net.Extensions.DependencyInjection" Version="0.9.0" PrivateAssets="contentfiles" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Blazor.BrowserExtension.Build\Blazor.BrowserExtension.Build.csproj">
-      <IncludeAssets>all</IncludeAssets>
-      <PrivateAssets>none</PrivateAssets>
-    </ProjectReference>
+    <ProjectReference Include="..\Blazor.BrowserExtension.Build\Blazor.BrowserExtension.Build.csproj" PrivateAssets="contentfiles" />
   </ItemGroup>
 
 </Project>

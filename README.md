@@ -46,8 +46,8 @@ You can setup the project manually as well, if for some reason you encounter any
      "content_security_policy": "script-src 'self' 'unsafe-eval' 'wasm-eval' 'sha256-v8v3RKRPmN4odZ1CWM5gw80QKPCCWMcpNeOmimNL2AA='; object-src 'self'",
      "web_accessible_resources": [
        "framework/*",
-       "BrowserExtensionScripts/*",
-       "WebExtensionsScripts/*"
+       "content/*",
+       "BrowserExtensionScripts/*"
      ]
    }
    ```
@@ -284,17 +284,18 @@ You can use the `@page` directive to add route attribute with a virtual path to 
 
 The following MSBuild properties can be specified in your project file or when running `dotnet run`, `dotnet build` and `dotnet publish` command.
 
-| Property                          | Default value                                        | Description                                                                      |
-| --------------------------------- | ---------------------------------------------------- | -------------------------------------------------------------------------------- |
-| BrowserExtensionEnvironment       | Blazor default: Production                           | The environment name which the Blazor application will run in.                   |
-| IncludeBrowserExtensionAssets     | True                                                 | If set to False, the JavaScript files will not be added as to the project.       |
-| BrowserExtensionBootstrap         | False                                                | If set to True, the project will be bootstrapped during the build.               |
-| BuildBlazorToBrowserExtension     | True                                                 | If set to False, the Blazor to Browser Extension build target will be skipped.   |
-| PublishBlazorToBrowserExtension   | True                                                 | If set to False, the Blazor to Browser Extension publish target will be skipped. |
-| BrowserExtensionAssetsPath        | wwwroot                                              | The root folder where the JavaScript files should be added as link.              |
-| BrowserExtensionOutputPath        | browserextension                                     | The folder of the build/publish output.                                          |
-| BrowserExtensionRoutingEntryFile  | index.html                                           | The HTML entry file for the Blazor application.                                  |
-| BrowserExtensionEnableCompression | $(BlazorEnableCompression)<br />Blazor default: True | If set to True, the .br compressed files will be loaded instead of .dll.         |
+| Property                          | Default value                                        | Description                                                                                   |
+| --------------------------------- | ---------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| BrowserExtensionEnvironment       | Blazor default: Production                           | The environment name which the Blazor application will run in.                                |
+| IncludeBrowserExtensionAssets     | true                                                 | If set to false, the JavaScript files will not be added to the project.                       |
+| LinkBrowserExtensionAssetsPath    | BrowserExtensionScripts                              | The root folder where the JavaScript files should be added as link.                           |
+| BrowserExtensionBootstrap         | False                                                | If set to True, the project will be bootstrapped during the build.                            |
+| BuildBlazorToBrowserExtension     | True                                                 | If set to False, the Blazor to Browser Extension build target will be skipped.                |
+| PublishBlazorToBrowserExtension   | True                                                 | If set to False, the Blazor to Browser Extension publish target will be skipped.              |
+| BrowserExtensionAssetsPath        | wwwroot                                              | The root folder of the browser extension.                                                     |
+| BrowserExtensionOutputPath        | browserextension                                     | The folder of the build/publish output.                                                       |
+| BrowserExtensionRoutingEntryFile  | index.html                                           | The HTML entry file for the Blazor application.                                               |
+| BrowserExtensionEnableCompression | $(BlazorEnableCompression)<br />Blazor default: True | If set to True, the .br compressed files will be loaded instead of .dll.                      |
 
 ## Manifest V3 Support
 
