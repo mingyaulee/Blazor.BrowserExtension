@@ -52,7 +52,11 @@ class BrowserExtension {
 
     // import blazor.webassembly.js
     const blazorScript = globalThis.document.createElement("script");
-    blazorScript.src = `${this.Url}framework/blazor.webassembly.js`;
+    if (this.Mode === BrowserExtensionModes.Debug) {
+      blazorScript.src = `${this.Url}_framework/blazor.webassembly.js`;
+    } else {
+      blazorScript.src = `${this.Url}framework/blazor.webassembly.js`;
+    }
     blazorScript.defer = true;
     // Blazor is set to not auto start, so that we can start it with different environment name
     blazorScript.setAttribute("autostart", "false");

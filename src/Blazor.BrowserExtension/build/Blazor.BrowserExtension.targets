@@ -71,6 +71,35 @@
                                             FailMessage="Clean the project before build" />
 
   </Target>
+
+  <!-- Target
+    Runs after the 'RunBuildBlazorToBrowserExtension' target defined in Blazor.BrowserExtension.Build package.
+    Replaces the tokens in the JavaScript files in the original build output directory.
+    This enables debugging in the original directory.
+  -->
+  <Target Name="RunTokenReplacementToOriginalBuildOutputBrowserExtensionScripts"
+          AfterTargets="RunBuildBlazorToBrowserExtension"
+          Condition="'$(IncludeBrowserExtensionAssets)' == 'true' and '$(BuildBlazorToBrowserExtension)' == 'true'"
+          DependsOnTargets="DefineBlazorToBrowserExtensionScriptsJsFileContentReplacements">
+
+    <PropertyGroup>
+      <_BrowserExtension_Project_Assets_Scripts_Directory>$(TargetDir)$(BrowserExtensionAssetsPath)\$(LinkBrowserExtensionAssetsPath)</_BrowserExtension_Project_Assets_Scripts_Directory>
+    </PropertyGroup>
+    <ItemGroup>
+      <_BrowserExtension_Project_Assets_Scripts_JsFiles Include="$(_BrowserExtension_Project_Assets_Scripts_Directory)\Core.js" />
+      <_BrowserExtension_Project_Assets_Scripts_JsFiles Include="$(_BrowserExtension_Project_Assets_Scripts_Directory)\ContentScript.js" />
+      <_BrowserExtension_BrowserExtensionScriptsJs_FileContentReplacements Condition="'%(_BrowserExtension_BrowserExtensionScriptsJs_FileContentReplacements.From)' == '__CompressionEnabled__'">
+        <To>false</To>
+      </_BrowserExtension_BrowserExtensionScriptsJs_FileContentReplacements>
+    </ItemGroup>
+
+    <Message Importance="high" Text="Replacing content of core Blazor.BrowserExtension Core.js and ContentScript.js in the original directory" />
+    <BlazorToBrowserExtensionReplaceContent Files="@(_BrowserExtension_Project_Assets_Scripts_JsFiles)"
+                                            Replace="@(_BrowserExtension_BrowserExtensionScriptsJs_FileContentReplacements)"
+                                            FailOnWarning="true"
+                                            FailMessage="Clean the project before build" />
+
+  </Target>
   
   <!-- Target
     Runs after the 'RunPublishBlazorToBrowserExtension' target defined in Blazor.BrowserExtension.Build package.
