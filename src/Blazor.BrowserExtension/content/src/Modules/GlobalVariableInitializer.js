@@ -2,8 +2,12 @@
 import BrowserExtensionModes from "./BrowserExtensionModes.js";
 
 /**
+ * @typedef {import("./BlazorBrowserExtension.js").InitializeFunction} InitializeFunction
+ */
+
+/**
  * Initializes the Blazor Browser Extension global variable
- * @param {import("./BlazorBrowserExtension.js").InitializeFunction} initializeAsync The initialize function.
+ * @param {InitializeFunction} initializeAsync The initialize function.
  */
 export async function initializeGlobalVariable(initializeAsync) {
   /** @type {BlazorBrowserExtension} */

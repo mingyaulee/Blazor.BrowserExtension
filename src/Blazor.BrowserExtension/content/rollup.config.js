@@ -3,6 +3,7 @@
     input: ['src/ContentScript.js', 'src/Core.js'],
     output: {
       dir: 'dist',
+      chunkFileNames: '[name].js',
       format: 'es' // ES module file
     },
     external: [

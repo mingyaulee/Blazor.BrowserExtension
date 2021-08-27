@@ -1,13 +1,14 @@
 ﻿import BrowserExtensionModes from "./BrowserExtensionModes.js";
 
-export default class BrowserExtension {
-  /** @type {string} */ Url;
-  /** @type {import("./BrowserExtensionModes").BrowserExtensionMode} */ Mode;
+/**
+ * @typedef {import("./BrowserExtensionModes").BrowserExtensionMode} BrowserExtensionMode
+ */
 
+export default class BrowserExtension {
   /**
    * Create a new instance of BrowserExtension.
    * @param {string} url The browser extension URL.
-   * @param {import("./BrowserExtensionModes").BrowserExtensionMode} mode The browser extension mode.
+   * @param {BrowserExtensionMode} mode The browser extension mode.
    * @param {boolean} compressionEnabled Indicate if compression is enabled.
    */
   constructor(url, mode, compressionEnabled) {

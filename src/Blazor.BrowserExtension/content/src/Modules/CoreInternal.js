@@ -2,12 +2,16 @@
 import { initializeGlobalVariable } from "./GlobalVariableInitializer.js";
 
 /**
+ * @typedef {import("./BrowserExtensionModes.js").BrowserExtensionMode} BrowserExtensionMode
+ */
+
+/**
  * Initializes the Blazor Browser Extension internally
  * @param {object} options The initialization options.
  * @param {string} options.ProjectName The project name.
  * @param {string} options.CompressionEnabled The project name.
  * @param {string} browserExtensionUrl The browser extension url.
- * @param {import("./BrowserExtensionModes").BrowserExtensionMode} browserExtensionMode The browser extension mode.
+ * @param {BrowserExtensionMode} browserExtensionMode The browser extension mode.
  * @returns {BrowserExtension}
  */
 export function initializeInternal({ ProjectName, CompressionEnabled }, browserExtensionUrl, browserExtensionMode) {

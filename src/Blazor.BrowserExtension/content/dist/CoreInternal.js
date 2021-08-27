@@ -16,14 +16,15 @@ const BrowserExtensionModes = {
   Debug: "Debug"
 };
 
-class BrowserExtension {
-  /** @type {string} */ Url;
-  /** @type {import("./BrowserExtensionModes").BrowserExtensionMode} */ Mode;
+/**
+ * @typedef {import("./BrowserExtensionModes").BrowserExtensionMode} BrowserExtensionMode
+ */
 
+class BrowserExtension {
   /**
    * Create a new instance of BrowserExtension.
    * @param {string} url The browser extension URL.
-   * @param {import("./BrowserExtensionModes").BrowserExtensionMode} mode The browser extension mode.
+   * @param {BrowserExtensionMode} mode The browser extension mode.
    * @param {boolean} compressionEnabled Indicate if compression is enabled.
    */
   constructor(url, mode, compressionEnabled) {
@@ -194,20 +195,31 @@ class BrowserExtension {
 }
 
 /**
+ * @typedef {import("./BrowserExtension.js").default} BrowserExtension
+ * @typedef {import("./BrowserExtensionModes.js").BrowserExtensionModesEnum} BrowserExtensionModesEnum
+ */
+
+/**
  * @callback InitializeFunction
  * @param {string} environmentName
- * @returns {Promise<import("./BrowserExtension").default>}
+ * @returns {Promise<BrowserExtension>}
  */
 
 class BlazorBrowserExtension {
-  /** @type {string} */ Url;
-  /** @type {import("./BrowserExtensionModes").BrowserExtensionModesEnum} */ Modes;
-  /** @type {InitializeFunction} */ InitializeAsync;
+  constructor() {
+    /** @type {string} */ this.Url = null;
+    /** @type {BrowserExtensionModesEnum} */ this.Modes = null;
+    /** @type {InitializeFunction} */ this.InitializeAsync = null;
+  }
 }
 
 /**
+ * @typedef {import("./BlazorBrowserExtension.js").InitializeFunction} InitializeFunction
+ */
+
+/**
  * Initializes the Blazor Browser Extension global variable
- * @param {import("./BlazorBrowserExtension.js").InitializeFunction} initializeAsync The initialize function.
+ * @param {InitializeFunction} initializeAsync The initialize function.
  */
 async function initializeGlobalVariable(initializeAsync) {
   /** @type {BlazorBrowserExtension} */
@@ -226,12 +238,16 @@ async function initializeGlobalVariable(initializeAsync) {
 }
 
 /**
+ * @typedef {import("./BrowserExtensionModes.js").BrowserExtensionMode} BrowserExtensionMode
+ */
+
+/**
  * Initializes the Blazor Browser Extension internally
  * @param {object} options The initialization options.
  * @param {string} options.ProjectName The project name.
  * @param {string} options.CompressionEnabled The project name.
  * @param {string} browserExtensionUrl The browser extension url.
- * @param {import("./BrowserExtensionModes").BrowserExtensionMode} browserExtensionMode The browser extension mode.
+ * @param {BrowserExtensionMode} browserExtensionMode The browser extension mode.
  * @returns {BrowserExtension}
  */
 function initializeInternal({ ProjectName, CompressionEnabled }, browserExtensionUrl, browserExtensionMode) {

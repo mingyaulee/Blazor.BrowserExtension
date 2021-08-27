@@ -1,11 +1,18 @@
 ﻿/**
+ * @typedef {import("./BrowserExtension.js").default} BrowserExtension
+ * @typedef {import("./BrowserExtensionModes.js").BrowserExtensionModesEnum} BrowserExtensionModesEnum
+ */
+
+/**
  * @callback InitializeFunction
  * @param {string} environmentName
- * @returns {Promise<import("./BrowserExtension").default>}
+ * @returns {Promise<BrowserExtension>}
  */
 
 export default class BlazorBrowserExtension {
-  /** @type {string} */ Url;
-  /** @type {import("./BrowserExtensionModes").BrowserExtensionModesEnum} */ Modes;
-  /** @type {InitializeFunction} */ InitializeAsync;
+  constructor() {
+    /** @type {string} */ this.Url = null;
+    /** @type {BrowserExtensionModesEnum} */ this.Modes = null;
+    /** @type {InitializeFunction} */ this.InitializeAsync = null;
+  }
 }

@@ -15,7 +15,7 @@
     await import('./lib/browser-polyfill.min.js');
   }
 
-  const initializeInternal = (await import('./CoreInternal-6d8b2f30.js')).initializeInternal;
+  const initializeInternal = (await import('./CoreInternal.js')).initializeInternal;
   const url = globalThis.browser.runtime.getURL("");
   const browserExtension = initializeInternal(options, url, "ContentScript");
 
