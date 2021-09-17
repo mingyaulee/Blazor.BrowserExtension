@@ -30,6 +30,10 @@
       <Pack>true</Pack>
       <PackagePath>content\BrowserExtensionScripts</PackagePath>
     </Content>
+    <Content Include="JsFetchHttpClient\JsHttpClient.js">
+      <Pack>true</Pack>
+      <PackagePath>content\BrowserExtensionScripts</PackagePath>
+    </Content>
     <Content Include="content\src\lib\**">
       <Pack>true</Pack>
       <PackagePath>content\BrowserExtensionScripts\lib</PackagePath>

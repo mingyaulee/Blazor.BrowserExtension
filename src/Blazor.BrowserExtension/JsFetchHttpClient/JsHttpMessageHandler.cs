@@ -15,7 +15,7 @@ namespace Blazor.BrowserExtension.JsFetchHttpClient
 
         public JsHttpMessageHandler(IJSRuntime jsRuntime)
         {
-            jsModule = jsRuntime.InvokeAsync<IJSObjectReference>("import", "./BrowserExtensionScripts/Modules/JsHttpClient.js").AsTask();
+            jsModule = jsRuntime.InvokeAsync<IJSObjectReference>("import", "./BrowserExtensionScripts/JsHttpClient.js").AsTask();
         }
 
         public Uri BaseAddress { get; set; }
