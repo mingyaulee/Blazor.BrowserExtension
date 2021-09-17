@@ -94,9 +94,7 @@ namespace Blazor.BrowserExtension.Build.Tasks.StaticWebAssets
             }
 
             var contentFile = Path.Combine(contentRootPath, match.Path);
-            var depth = match.Path.Trim(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar).Count(pathCharacter => pathCharacter == Path.DirectorySeparatorChar || pathCharacter == Path.AltDirectorySeparatorChar);
-            var relativePaths = contentRelativePath.Split('/');
-            var contentRelativeDirectory = string.Join("/", relativePaths.Take(relativePaths.Length - depth - 1));
+            var contentRelativeDirectory = Path.GetDirectoryName(contentRelativePath);
             AddOutput(contentFile, contentRelativeDirectory);
         }
     }
