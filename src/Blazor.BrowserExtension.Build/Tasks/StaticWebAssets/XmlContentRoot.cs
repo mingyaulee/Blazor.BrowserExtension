@@ -2,7 +2,7 @@
 
 namespace Blazor.BrowserExtension.Build.Tasks.StaticWebAssets
 {
-    public class ContentRoot
+    public class XmlContentRoot
     {
         [XmlAttribute("BasePath")]
         public string BasePath { get; set; }

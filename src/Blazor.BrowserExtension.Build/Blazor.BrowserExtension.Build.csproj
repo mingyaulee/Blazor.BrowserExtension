@@ -2,7 +2,7 @@
 
   <!-- Build properties. -->
   <PropertyGroup>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>9.0</LangVersion>
     <TargetFrameworks>net5.0;net472</TargetFrameworks>
     <GenerateDependencyFile>false</GenerateDependencyFile>
     <IsShippingPackage>true</IsShippingPackage>
@@ -29,6 +29,10 @@
       <Pack>true</Pack>
       <PackagePath>build</PackagePath>
     </Content>
+    <Content Include="lib/*.*">
+      <Pack>true</Pack>
+      <PackagePath>tasks/net472</PackagePath>
+    </Content>
     <Content Include="content\**">
       <Pack>true</Pack>
       <PackagePath>content</PackagePath>
@@ -42,6 +46,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Build.Framework" Version="16.9.0" />
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.9.0" />
+    <PackageReference Include="System.Text.Json" Version="5.0.2" Condition="'$(TargetFramework)' == 'net472'" />
     <!-- marks all packages as 'local only' so they don't end up in the nuspec -->
     <PackageReference Update="@(PackageReference)" PrivateAssets="All" />
   </ItemGroup>

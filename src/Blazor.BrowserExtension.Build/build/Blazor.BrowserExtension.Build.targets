@@ -167,9 +167,14 @@
       <_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory>$(TargetDir)$(BrowserExtensionOutputPath)</_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory>
       <_BrowserExtension_Project_BuildOutput_BrowserExtension_OriginalFramework_Directory>$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory)\_framework</_BrowserExtension_Project_BuildOutput_BrowserExtension_OriginalFramework_Directory>
       <_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_Directory>$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory)\framework</_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_Directory>
-      <_BrowserExtension_Project_IntermediateOutput_StaticWebAssets_Directory>$(IntermediateOutputPath)staticwebassets</_BrowserExtension_Project_IntermediateOutput_StaticWebAssets_Directory>
-      <_BrowserExtension_Project_IntermediateOutput_StaticWebAssets_Directory Condition="'$(TargetFramework)' == 'net6.0'">$(IntermediateOutputPath)</_BrowserExtension_Project_IntermediateOutput_StaticWebAssets_Directory>
-      <_BrowserExtension_Project_StaticWebAssets_Manifest_FileName>$(ProjectName).StaticWebAssets.xml</_BrowserExtension_Project_StaticWebAssets_Manifest_FileName>
+      <!-- StaticWebAssets
+	      The StaticWebAssets manifest is created by the dotnet SDK and read by the DevServer.
+		    Source:
+		    - Current/.Net 6 https://github.com/dotnet/aspnetcore/blob/main/src/Components/WebAssembly/DevServer/src/Server/Program.cs
+		    - .Net 5 https://github.com/dotnet/aspnetcore/blob/v5.0.0/src/Components/WebAssembly/DevServer/src/Server/Program.cs
+	    -->
+      <_BrowserExtension_Project_BuildOutput_StaticWebAssets_Manifest_FilePath>$(TargetDir)$(ProjectName).StaticWebAssets.xml</_BrowserExtension_Project_BuildOutput_StaticWebAssets_Manifest_FilePath>
+      <_BrowserExtension_Project_BuildOutput_StaticWebAssets_Manifest_FilePath Condition="'$(TargetFramework)' == 'net6.0' AND Exists('$(TargetDir)$(ProjectName).staticwebassets.runtime.json')">$(TargetDir)$(ProjectName).staticwebassets.runtime.json</_BrowserExtension_Project_BuildOutput_StaticWebAssets_Manifest_FilePath>
     </PropertyGroup>
 
     <Message Importance="high" Text="Validating Browser Extension manifest.json" />
@@ -216,19 +221,20 @@
     <Copy SourceFiles="@(_BrowserExtension_Project_BuildOutput_BrowserExtension_RoutingFiles)"
           DestinationFiles="$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory)\%(_BrowserExtension_Project_BuildOutput_BrowserExtension_RoutingFiles.Route)"
           SkipUnchangedFiles="true" />
-
+    
     <ItemGroup>
-      <_BrowserExtension_Project_IntermediateOutput_StaticWebAssets_Manifest_FilePath Include="$(_BrowserExtension_Project_IntermediateOutput_StaticWebAssets_Directory)\$(_BrowserExtension_Project_StaticWebAssets_Manifest_FileName)" />
+      <_BrowserExtension_StaticWebAssets_ExcludePaths Include="$(_BrowserExtension_Project_Assets_Directory)" />
+      <_BrowserExtension_StaticWebAssets_ExcludePaths Include="$(_BrowserExtension_Project_BuildOutput_Assets_Directory)" />
     </ItemGroup>
-    <Message Importance="high" Text="  Processing static web assets from manifest files '@(_BrowserExtension_Project_IntermediateOutput_StaticWebAssets_Manifest_FilePath, ', ')'" />
-    <BlazorToBrowserExtensionProcessStaticWebAssetsManifest Input="@(_BrowserExtension_Project_IntermediateOutput_StaticWebAssets_Manifest_FilePath)"
-                                                            Exclude="$(_BrowserExtension_Project_BuildOutput_Assets_Directory)">
-      <Output TaskParameter="Output" ItemName="_BrowserExtension_Project_IntermediateOutput_StaticWebAssets_Files" />
+    <Message Importance="high" Text="  Processing static web assets from manifest files '$(_BrowserExtension_Project_BuildOutput_StaticWebAssets_Manifest_FilePath)'" />
+    <BlazorToBrowserExtensionProcessStaticWebAssetsManifest Input="$(_BrowserExtension_Project_BuildOutput_StaticWebAssets_Manifest_FilePath)"
+                                                            Exclude="@(_BrowserExtension_StaticWebAssets_ExcludePaths)">
+      <Output TaskParameter="Output" ItemName="_BrowserExtension_Project_BuildOutput_StaticWebAssets_Files" />
     </BlazorToBrowserExtensionProcessStaticWebAssetsManifest>
 
     <Message Importance="high" Text="  Copying static web asset files" />
-    <Copy SourceFiles="@(_BrowserExtension_Project_IntermediateOutput_StaticWebAssets_Files)"
-          DestinationFolder="$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory)\%(_BrowserExtension_Project_IntermediateOutput_StaticWebAssets_Files.ContentRelativeDirectory)"
+    <Copy SourceFiles="@(_BrowserExtension_Project_BuildOutput_StaticWebAssets_Files)"
+          DestinationFolder="$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory)\%(_BrowserExtension_Project_BuildOutput_StaticWebAssets_Files.ContentRelativeDirectory)"
           SkipUnchangedFiles="true" />
 
     <Message Importance="high" Text="Conversion completed from Blazor application to Browser Extension" />
@@ -372,5 +378,5 @@
     <RemoveDir Directories="$(_BrowserExtension_Project_PublishOutput_BrowserExtension_Directory)" Condition="Exists('$(_BrowserExtension_Project_PublishOutput_BrowserExtension_Directory)')" />
 
   </Target>
-  
+
 </Project>

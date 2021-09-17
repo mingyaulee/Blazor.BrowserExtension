@@ -1,0 +1,140 @@
+﻿#nullable enable
+// Implementation from https://github.com/dotnet/aspnetcore/blob/main/src/Shared/StaticWebAssets/ManifestStaticWebAssetFileProvider.cs
+
+using System;
+using System.Collections.Generic;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
+namespace Blazor.BrowserExtension.Build.Tasks.StaticWebAssets
+{
+    internal sealed class StaticWebAssetManifest
+    {
+#if NETFRAMEWORK
+#pragma warning disable S3400 // Methods should not return constants
+        internal static bool IsWindows()
+#pragma warning restore S3400 // Methods should not return constants
+        {
+            // .Net framework runs on Windows
+            return true;
+        }
+#else
+        internal static bool IsWindows()
+        {
+            return OperatingSystem.IsWindows();
+        }
+#endif
+
+    internal static readonly StringComparer PathComparer =
+                 IsWindows() ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal;
+
+        public string[] ContentRoots { get; set; } = Array.Empty<string>();
+
+        public StaticWebAssetNode Root { get; set; } = null!;
+
+        internal static StaticWebAssetManifest Parse(string manifest)
+        {
+            return JsonSerializer.Deserialize<StaticWebAssetManifest>(manifest)!;
+        }
+    }
+
+    internal sealed class StaticWebAssetNode
+    {
+        [JsonPropertyName("Asset")]
+        public StaticWebAssetMatch? Match { get; set; }
+
+        [JsonConverter(typeof(OSBasedCaseConverter))]
+        public Dictionary<string, StaticWebAssetNode>? Children { get; set; }
+
+        public StaticWebAssetPattern[]? Patterns { get; set; }
+
+        internal bool HasChildren() => Children != null && Children.Count > 0;
+
+        internal bool HasPatterns() => Patterns != null && Patterns.Length > 0;
+    }
+
+    internal sealed class StaticWebAssetMatch
+    {
+        [JsonPropertyName("ContentRootIndex")]
+        public int ContentRoot { get; set; }
+
+        [JsonPropertyName("SubPath")]
+        public string Path { get; set; } = null!;
+    }
+
+    internal sealed class StaticWebAssetPattern
+    {
+        [JsonPropertyName("ContentRootIndex")]
+        public int ContentRoot { get; set; }
+
+        public int Depth { get; set; }
+
+        public string Pattern { get; set; } = null!;
+    }
+
+    internal sealed class OSBasedCaseConverter : JsonConverter<Dictionary<string, StaticWebAssetNode>>
+    {
+        public override Dictionary<string, StaticWebAssetNode> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            var parsed = JsonSerializer.Deserialize<IDictionary<string, StaticWebAssetNode>>(ref reader, options)!;
+            var result = new Dictionary<string, StaticWebAssetNode>(StaticWebAssetManifest.PathComparer);
+            MergeChildren(parsed, result);
+            return result;
+
+            static void MergeChildren(
+                IDictionary<string, StaticWebAssetNode> newChildren,
+                IDictionary<string, StaticWebAssetNode> existing)
+            {
+                foreach (var keyValuePair in newChildren)
+                {
+                    var key = keyValuePair.Key;
+                    var value = keyValuePair.Value;
+                    if (!existing.TryGetValue(key, out var existingNode))
+                    {
+                        existing.Add(key, value);
+                    }
+                    else
+                    {
+                        if (value.Patterns != null)
+                        {
+                            if (existingNode.Patterns == null)
+                            {
+                                existingNode.Patterns = value.Patterns;
+                            }
+                            else
+                            {
+                                if (value.Patterns.Length > 0)
+                                {
+                                    var newList = new StaticWebAssetPattern[existingNode.Patterns.Length + value.Patterns.Length];
+                                    existingNode.Patterns.CopyTo(newList, 0);
+                                    value.Patterns.CopyTo(newList, existingNode.Patterns.Length);
+                                    existingNode.Patterns = newList;
+                                }
+                            }
+                        }
+
+                        if (value.Children != null)
+                        {
+                            if (existingNode.Children == null)
+                            {
+                                existingNode.Children = value.Children;
+                            }
+                            else
+                            {
+                                if (value.Children.Count > 0)
+                                {
+                                    MergeChildren(value.Children, existingNode.Children);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public override void Write(Utf8JsonWriter writer, Dictionary<string, StaticWebAssetNode> value, JsonSerializerOptions options)
+        {
+            JsonSerializer.Serialize(writer, value, options);
+        }
+    }
+}

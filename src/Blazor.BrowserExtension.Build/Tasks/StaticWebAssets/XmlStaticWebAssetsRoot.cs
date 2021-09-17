@@ -4,9 +4,9 @@ using System.Xml.Serialization;
 namespace Blazor.BrowserExtension.Build.Tasks.StaticWebAssets
 {
     [XmlRoot("StaticWebAssets")]
-    public class StaticWebAssetsRoot
+    public class XmlStaticWebAssetsRoot
     {
         [XmlElement("ContentRoot")]
-        public List<ContentRoot> ContentRoots { get; set; }
+        public List<XmlContentRoot> ContentRoots { get; set; }
     }
 }
