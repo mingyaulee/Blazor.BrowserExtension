@@ -152,7 +152,7 @@ export default class BrowserExtension {
    * @param {any} integrity
    */
   _loadBootResource(resourceType, resourceName, defaultUri, integrity) {
-    if (resourceType === "dotnetjs") {
+    if (resourceType === "dotnetjs" || resourceType === "manifest") {
       return `${this.Url}framework/${resourceName}`;
     }
 
