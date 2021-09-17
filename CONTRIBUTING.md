@@ -27,7 +27,7 @@ Pull requests are the best way to propose changes to the codebase. We actively w
 
 ## Working in this repository
 ### Packages shipped by this repository
-There are two packages that are shipped from the two repositories:
+These are the packages that are shipped from this repository:
 1. Blazor.BrowserExtension
 0. Blazor.BrowserExtension.Build
 0. Blazor.BrowserExtension.Template
@@ -36,7 +36,7 @@ There are two packages that are shipped from the two repositories:
 This package provides the runtime functionalities, including:
 - Importing the browser polyfill
 - Importing WebExtensions.Net and registering in dependency container
-- Handling the page reload in background
+- Handling the routing in background page and index page
 
 ### Blazor.BrowserExtension.Build
 This package facilitates the build process by defining and importing the build tasks, including:
