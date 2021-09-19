@@ -24,7 +24,7 @@ namespace Blazor.BrowserExtension.JsFetchHttpClient
         {
             var requestUri = GetRequestUri(request);
             var jsHttpClientModule = await jsModule;
-            var fetchOptions = GetFetchOptions(request);
+            var fetchOptions = await GetFetchOptions(request);
             var response = await jsHttpClientModule.InvokeAsync<IJSObjectReference>("Fetch", cancellationToken, requestUri, fetchOptions);
             var responseMessage = new JsHttpResponseMessage(response, cancellationToken)
             {
@@ -49,13 +49,16 @@ namespace Blazor.BrowserExtension.JsFetchHttpClient
             var fetchOptions = new Dictionary<string, object>(request.Options)
             {
                 ["method"] = request.Method.Method,
-                ["headers"] = request.Headers.ToDictionary(header => header.Key, header => string.Join(',', header.Value))
             };
 
+            var headers = request.Headers.ToList();
             if (request.Content is not null)
             {
+                headers.AddRange(request.Content.Headers);
                 fetchOptions["body"] = await request.Content.ReadAsStringAsync();
             }
+
+            fetchOptions["headers"] = headers.ToDictionary(header => header.Key, header => string.Join(',', header.Value));
 
             return fetchOptions;
         }
