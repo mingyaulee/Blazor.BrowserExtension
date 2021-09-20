@@ -2,7 +2,8 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <!-- Region
-    Adds the content JavaScript files from the NuGet package to the project
+    Adds the content JavaScript files from the NuGet package to the project.
+    Link is used to allow the files to be copied from the package to the project build and publish output before their contents are replaced.
   -->
   <PropertyGroup>
     <_BrowserExtension_Package_Contents_Scripts_Directory Condition="'$(_BrowserExtension_Package_Contents_Scripts_Directory)' == ''">$(MSBuildThisFileDirectory)..\content\BrowserExtensionScripts</_BrowserExtension_Package_Contents_Scripts_Directory>
@@ -15,6 +16,26 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+
+  <Target Name="AddComputedBrowserExtensionScriptsStaticWebAssets"
+          BeforeTargets="GenerateStaticWebAssetsManifest">
+    <ItemGroup Condition="'$(IncludeBrowserExtensionAssets)' == 'true'">
+      <_BrowserExtension_Package_Contents_Scripts_Files Include="$(_BrowserExtension_Package_Contents_Scripts_Directory)\**\*.*" />
+      <StaticWebAsset Include="@(_BrowserExtension_Package_Contents_Scripts_Files)">
+        <SourceType>Computed</SourceType>
+        <SourceId>Blazor.BrowserExtension</SourceId>
+        <ContentRoot>$(TargetDir)$(BrowserExtensionAssetsPath)</ContentRoot>
+        <BasePath>/</BasePath>
+        <RelativePath>$(LinkBrowserExtensionAssetsPath)/%(RecursiveDir)%(Filename)%(Extension)</RelativePath>
+        <OriginalItemSpec>%(FullPath)</OriginalItemSpec>
+        <AssetKind>All</AssetKind>
+        <AssetMode>All</AssetMode>
+        <AssetRole>Primary</AssetRole>
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+        <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+      </StaticWebAsset>
+    </ItemGroup>
+  </Target>
   <!-- EndRegion -->
 
   <!-- Target
@@ -26,7 +47,7 @@
     <BlazorToBrowserExtensionSafeNamespace Input="$(ProjectName)" Replacement="_">
       <Output TaskParameter="Output" PropertyName="_BrowserExtension_Project_SafeProjectName" />
     </BlazorToBrowserExtensionSafeNamespace>
-    
+
     <ItemGroup>
       <_BrowserExtension_BrowserExtensionScriptsJs_FileContentReplacements Include="Safe project name">
         <From>__ProjectName__</From>
@@ -100,7 +121,7 @@
                                             FailMessage="Clean the project before build" />
 
   </Target>
-  
+
   <!-- Target
     Runs after the 'RunPublishBlazorToBrowserExtension' target defined in Blazor.BrowserExtension.Build package.
     Replaces the tokens in the JavaScript files in the publish output directory.
