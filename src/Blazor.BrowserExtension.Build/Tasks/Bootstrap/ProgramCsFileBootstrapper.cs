@@ -9,16 +9,6 @@ namespace Blazor.BrowserExtension.Build.Tasks.Bootstrap
         {
             var isUpdated = false;
 
-            // Replace
-            // builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-            // with
-            // builder.Services.AddScoped<HttpClient>(sp => new JsHttpClient(sp) { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-            var registerHttpClientIndex = fileLines.FindIndex(fileLine => fileLine.Contains("HttpClient"));
-            if (registerHttpClientIndex > -1)
-            {
-                fileLines[registerHttpClientIndex] = "            builder.Services.AddScoped<HttpClient>(sp => new JsHttpClient(sp) { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });";
-            }
-
             // Insert
             // builder.Services.AddBrowserExtensionServices(options =>
             // {
@@ -33,10 +23,22 @@ namespace Blazor.BrowserExtension.Build.Tasks.Bootstrap
                 {
                     throw new InvalidOperationException("Unable to find builder.Build().RunAsync() in Program.cs file.");
                 }
-                fileLines.Insert(buildHostIndex + 0, "            builder.Services.AddBrowserExtensionServices(options =>");
-                fileLines.Insert(buildHostIndex + 1, "            {");
-                fileLines.Insert(buildHostIndex + 2, "                options.ProjectNamespace = typeof(Program).Namespace;");
-                fileLines.Insert(buildHostIndex + 3, "            });");
+
+                var indentCount = 0;
+                foreach (var character in fileLines[buildHostIndex])
+                {
+                    if (character != ' ')
+                    {
+                        break;
+                    }
+                    indentCount++;
+                }
+
+                var indent = "".PadLeft(indentCount, ' ');
+                fileLines.Insert(buildHostIndex + 0, $"{indent}builder.Services.AddBrowserExtensionServices(options =>");
+                fileLines.Insert(buildHostIndex + 1, $"{indent}{{");
+                fileLines.Insert(buildHostIndex + 2, $"{indent}    options.ProjectNamespace = typeof(Program).Namespace;");
+                fileLines.Insert(buildHostIndex + 3, $"{indent}}});");
                 fileLines.Insert(buildHostIndex + 4, "");
                 isUpdated = true;
             }

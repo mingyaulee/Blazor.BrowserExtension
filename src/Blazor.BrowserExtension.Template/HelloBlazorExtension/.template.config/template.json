@@ -35,6 +35,14 @@
       ],
       "defaultValue": "net5.0",
       "replaces": "net5.0"
+    },
+    "IsNet5": {
+      "type": "computed",
+      "value": "Framework == \"net5.0\""
+    },
+    "IsNet6": {
+      "type": "computed",
+      "value": "Framework == \"net6.0\""
     }
   }
 }

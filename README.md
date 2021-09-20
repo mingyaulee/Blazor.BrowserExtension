@@ -87,9 +87,6 @@ You can setup the project manually as well, if for some reason you encounter any
    public static async Task Main(string[] args)
    {
        ...
-       // workaround to use JavaScript fetch to bypass url validation
-       // see: https://github.com/dotnet/runtime/issues/52836
-       builder.Services.AddScoped<HttpClient>(sp => new JsHttpClient(sp) { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
        builder.Services.AddBrowserExtensionServices(options =>
        {
            options.ProjectNamespace = typeof(Program).Namespace;
@@ -97,6 +94,18 @@ You can setup the project manually as well, if for some reason you encounter any
        ...
    }
    ```
+   If you are targeting .Net 5.0 you will need to add replace the original `HttpClient` service registration with
+   ```csharp
+   public static async Task Main(string[] args)
+   {
+       ...
+       // workaround to use JavaScript fetch to bypass url validation
+       // see: https://github.com/dotnet/runtime/issues/52836 (fixed in .Net 6)
+       builder.Services.AddScoped<HttpClient>(sp => new JsHttpClient(sp) { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+       ...
+   }
+   ```
+
 
 ## Change initialization behaviour
 The following properties can be set to change the behaviour of the core scripts.

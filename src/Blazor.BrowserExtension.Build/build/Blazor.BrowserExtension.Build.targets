@@ -76,7 +76,11 @@
 
     <Message Importance="high" Text="  Bootstrapping Program.cs file '$(_BrowserExtension_Project_ProgramCs_FilePath)'" />
     <BlazorToBrowserExtensionBootstrapFile FilePath="$(_BrowserExtension_Project_ProgramCs_FilePath)"
-                                           FileType="ProgramCs" />
+                                           FileType="ProgramCs"
+                                           Condition="'$(TargetFramework)' != 'net5.0'" />
+    <BlazorToBrowserExtensionBootstrapFile FilePath="$(_BrowserExtension_Project_ProgramCs_FilePath)"
+                                           FileType="ProgramCs_Net5"
+                                           Condition="'$(TargetFramework)' == 'net5.0'" />
 
     <Message Importance="high" Text="Bootstrapping completed from Blazor application to Blazor Browser Extension application" />
 
