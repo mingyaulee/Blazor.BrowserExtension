@@ -173,6 +173,10 @@ export default class BrowserExtension {
     return defaultUri;
   }
 
+  /**
+   * Gets the browser extension mode. Called during initialization in DotNet.
+   * @returns {any}
+   */
   _getBrowserExtensionMode() {
     return globalThis.BINDING.js_string_to_mono_string(this.Mode);
   }

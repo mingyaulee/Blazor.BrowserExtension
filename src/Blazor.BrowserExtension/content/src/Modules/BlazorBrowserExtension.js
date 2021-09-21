@@ -11,8 +11,8 @@
 
 export default class BlazorBrowserExtension {
   constructor() {
-    /** @type {string} */ this.Url = null;
     /** @type {BrowserExtensionModesEnum} */ this.Modes = null;
     /** @type {InitializeFunction} */ this.InitializeAsync = null;
+    /** @type {BrowserExtension} */ this.BrowserExtension = null;
   }
 }

@@ -189,6 +189,10 @@ class BrowserExtension {
     return defaultUri;
   }
 
+  /**
+   * Gets the browser extension mode. Called during initialization in DotNet.
+   * @returns {any}
+   */
   _getBrowserExtensionMode() {
     return globalThis.BINDING.js_string_to_mono_string(this.Mode);
   }
@@ -207,21 +211,22 @@ class BrowserExtension {
 
 class BlazorBrowserExtension {
   constructor() {
-    /** @type {string} */ this.Url = null;
     /** @type {BrowserExtensionModesEnum} */ this.Modes = null;
     /** @type {InitializeFunction} */ this.InitializeAsync = null;
+    /** @type {BrowserExtension} */ this.BrowserExtension = null;
   }
 }
 
 /**
  * @typedef {import("./BlazorBrowserExtension.js").InitializeFunction} InitializeFunction
+ * @typedef {import("./BrowserExtension.js").default} BrowserExtension
  */
 
 /**
  * Initializes the Blazor Browser Extension global variable
- * @param {InitializeFunction} initializeAsync The initialize function.
+ * @param {BrowserExtension} browserExtension The browser extension.
  */
-async function initializeGlobalVariable(initializeAsync) {
+async function initializeGlobalVariable(browserExtension) {
   /** @type {BlazorBrowserExtension} */
   let blazorBrowserExtension;
 
@@ -234,7 +239,13 @@ async function initializeGlobalVariable(initializeAsync) {
     blazorBrowserExtension = /** @type {BlazorBrowserExtension} */ (globalThis.BlazorBrowserExtension);
   }
 
-  blazorBrowserExtension.InitializeAsync = initializeAsync;
+  if (blazorBrowserExtension.BrowserExtension) {
+    // Extensions execution should be isolated so this property should be null upon initialization.
+    throw new Error("Browser extension cannot be loaded.");
+  }
+
+  blazorBrowserExtension.InitializeAsync = browserExtension.InitializeAsync;
+  blazorBrowserExtension.BrowserExtension = browserExtension;
 }
 
 /**
@@ -244,18 +255,15 @@ async function initializeGlobalVariable(initializeAsync) {
 /**
  * Initializes the Blazor Browser Extension internally
  * @param {object} options The initialization options.
- * @param {string} options.ProjectName The project name.
  * @param {string} options.CompressionEnabled The project name.
  * @param {string} browserExtensionUrl The browser extension url.
  * @param {BrowserExtensionMode} browserExtensionMode The browser extension mode.
  * @returns {BrowserExtension}
  */
-function initializeInternal({ ProjectName, CompressionEnabled }, browserExtensionUrl, browserExtensionMode) {
+function initializeInternal({ CompressionEnabled }, browserExtensionUrl, browserExtensionMode) {
   const compressionEnabled = CompressionEnabled.toLowerCase() !== "false";
-  // each extension's definition is stored in BlazorBrowserExtension[name]
   const browserExtension = new BrowserExtension(browserExtensionUrl, browserExtensionMode, compressionEnabled);
-  initializeGlobalVariable(browserExtension.InitializeAsync);
-  globalThis.BlazorBrowserExtension[ProjectName] = browserExtension;
+  initializeGlobalVariable(browserExtension);
   return browserExtension;
 }
 

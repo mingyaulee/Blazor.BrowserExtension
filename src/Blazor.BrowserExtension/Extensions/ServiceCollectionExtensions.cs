@@ -18,7 +18,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 throw new NotSupportedException("An instance of IJSUnmarshalledRuntime must be registered by Blazor.");
             }
 
-            var browserExtensionEnvironment = InitializeBrowserExtensionEnvironment(jsRuntime, option);
+            var browserExtensionEnvironment = new BrowserExtensionEnvironment(GetBrowserExtensionMode(jsRuntime));
             services.AddSingleton<IBrowserExtensionEnvironment>(browserExtensionEnvironment);
 
             if (browserExtensionEnvironment.Mode == BrowserExtensionMode.Debug)
@@ -33,14 +33,9 @@ namespace Microsoft.Extensions.DependencyInjection
             return services;
         }
 
-        private static BrowserExtensionEnvironment InitializeBrowserExtensionEnvironment(IJSUnmarshalledRuntime jsRuntime, BrowserExtensionOption option)
+        private static BrowserExtensionMode GetBrowserExtensionMode(IJSUnmarshalledRuntime jsRuntime)
         {
-            return new(GetBrowserExtensionMode(jsRuntime, option));
-        }
-
-        private static BrowserExtensionMode GetBrowserExtensionMode(IJSUnmarshalledRuntime jsRuntime, BrowserExtensionOption option)
-        {
-            var browserExtensionModeString = jsRuntime.InvokeUnmarshalled<string>($"BlazorBrowserExtension.{option.GetSafeProjectNamespace()}._getBrowserExtensionMode");
+            var browserExtensionModeString = jsRuntime.InvokeUnmarshalled<string>($"BlazorBrowserExtension.BrowserExtension._getBrowserExtensionMode");
             if (Enum.TryParse<BrowserExtensionMode>(browserExtensionModeString, out var result))
             {
                 return result;

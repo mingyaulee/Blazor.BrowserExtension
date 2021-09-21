@@ -92,15 +92,11 @@
   -->
   <Target Name="DefineBlazorToBrowserExtensionFrameworkJsFileContentReplacements">
 
-    <BlazorToBrowserExtensionSafeNamespace Input="$(ProjectName)" Replacement="_">
-      <Output TaskParameter="Output" PropertyName="_BrowserExtension_Project_SafeProjectName" />
-    </BlazorToBrowserExtensionSafeNamespace>
-
     <ItemGroup>
       <!-- Define contents to replace in blazor.webassembly.js -->
       <_BrowserExtension_BlazorJs_FileContentReplacements Include="append element to document body">
         <From>document.body.appendChild</From>
-        <To>globalThis.BlazorBrowserExtension.$(_BrowserExtension_Project_SafeProjectName).AppendElementToDocumentAsync</To>
+        <To>globalThis.BlazorBrowserExtension.BrowserExtension.AppendElementToDocumentAsync</To>
       </_BrowserExtension_BlazorJs_FileContentReplacements>
       <_BrowserExtension_BlazorJs_FileContentReplacements Include="framework path">
         <From>_framework</From>
@@ -112,7 +108,7 @@
       </_BrowserExtension_BlazorJs_FileContentReplacements>
       <_BrowserExtension_BlazorJs_FileContentReplacements Include="fetch url">
         <From>fetch(</From>
-        <To>globalThis.BlazorBrowserExtension.$(_BrowserExtension_Project_SafeProjectName).FetchAsync(</To>
+        <To>globalThis.BlazorBrowserExtension.BrowserExtension.FetchAsync(</To>
       </_BrowserExtension_BlazorJs_FileContentReplacements>
       <_BrowserExtension_BlazorJs_FileContentReplacements Include="Module cwrap">
         <From>cwrap(</From>
@@ -129,7 +125,7 @@
       <!-- Define contents to replace in dotnet.*.js -->
       <_BrowserExtension_DotNetJs_FileContentReplacements Include="fetch url">
         <From>fetch(</From>
-        <To>globalThis.BlazorBrowserExtension.$(_BrowserExtension_Project_SafeProjectName).FetchAsync(</To>
+        <To>globalThis.BlazorBrowserExtension.BrowserExtension.FetchAsync(</To>
       </_BrowserExtension_DotNetJs_FileContentReplacements>
       <_BrowserExtension_DotNetJs_FileContentReplacements Include="module reference">
         <From>Module!=="undefined"?Module</From>
