@@ -34,6 +34,10 @@
 
   const browserExtension = initializeInternal(config, url, browserExtensionMode);
 
+  if (config.HasAppJs) {
+    await import(`${url}app.js`);
+  }
+
   if (globalThis.StartBlazorBrowserExtension !== false) {
     await browserExtension.InitializeAsync(config.EnvironmentName);
   }

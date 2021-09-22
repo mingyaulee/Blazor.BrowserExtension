@@ -44,6 +44,10 @@
   -->
   <Target Name="DefineBlazorToBrowserExtensionConfig">
 
+    <PropertyGroup>
+      <_BrowserExtension_Config_HasAppJs Condition="Exists('$(ProjectDir)$(BrowserExtensionAssetsPath)\app.js')">true</_BrowserExtension_Config_HasAppJs>
+    </PropertyGroup>
+    
     <BlazorToBrowserExtensionSafeNamespace Input="$(ProjectName)" Replacement="_">
       <Output TaskParameter="Output" PropertyName="_BrowserExtension_Project_SafeProjectName" />
     </BlazorToBrowserExtensionSafeNamespace>
@@ -60,6 +64,11 @@
       <BrowserExtensionConfig Include="Compression enabled">
         <Key>CompressionEnabled</Key>
         <Value>$(BrowserExtensionEnableCompression)</Value>
+        <Type>bool</Type>
+      </BrowserExtensionConfig>
+      <BrowserExtensionConfig Include="Has app.js">
+        <Key>HasAppJs</Key>
+        <Value>$(_BrowserExtension_Config_HasAppJs)</Value>
         <Type>bool</Type>
       </BrowserExtensionConfig>
     </ItemGroup>

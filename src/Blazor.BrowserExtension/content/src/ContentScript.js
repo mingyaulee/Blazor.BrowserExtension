@@ -17,6 +17,10 @@
   appDiv.id = `${config.ProjectName}_app`;
   document.body.appendChild(appDiv);
 
+  if (config.HasAppJs) {
+    await import(`${url}app.js`);
+  }
+
   if (globalThis.StartBlazorBrowserExtension !== false) {
     await browserExtension.InitializeAsync(config.EnvironmentName);
   }
