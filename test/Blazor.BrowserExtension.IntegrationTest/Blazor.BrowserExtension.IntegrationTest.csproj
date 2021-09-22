@@ -11,10 +11,20 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)..\..\src\Blazor.BrowserExtension\content\src\lib\*.*"
-          Link="wwwroot\BrowserExtensionScripts\lib\%(Filename)%(Extension)">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <StaticWebAsset Include="$(MSBuildThisFileDirectory)..\..\src\Blazor.BrowserExtension\content\src\lib\*.*">
+      <SourceType>Package</SourceType>
+      <SourceId>Blazor.BrowserExtension</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\..\src\Blazor.BrowserExtension\content\src\lib</ContentRoot>
+      <BasePath>_content/Blazor.BrowserExtension/lib</BasePath>
+      <RelativePath>%(RecursiveDir)%(Filename)%(Extension)</RelativePath>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$(MSBuildThisFileDirectory)..\..\src\Blazor.BrowserExtension\content\JsFetchHttpClient\JsHttpClient.js">
+      <SourceType>Package</SourceType>
+      <SourceId>Blazor.BrowserExtension</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\..\src\Blazor.BrowserExtension\JsFetchHttpClient</ContentRoot>
+      <BasePath>_content/Blazor.BrowserExtension</BasePath>
+      <RelativePath>JsHttpClient.js</RelativePath>
+    </StaticWebAsset>
   </ItemGroup>
 
   <ItemGroup>

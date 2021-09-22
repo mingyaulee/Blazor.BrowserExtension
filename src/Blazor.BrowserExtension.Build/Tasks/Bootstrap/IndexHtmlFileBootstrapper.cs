@@ -8,11 +8,11 @@ namespace Blazor.BrowserExtension.Build.Tasks.Bootstrap
         {
             var isUpdated = false;
 
-            // Replace the script tag `<script src="_framework/blazor.webassembly.js"></script>` with `<script src="BrowserExtensionScripts/Core.js"></script>`
+            // Replace the script tag `<script src="_framework/blazor.webassembly.js"></script>` with `<script src="content/Blazor.BrowserExtension/Core.js"></script>`
             var scriptTagIndex = fileLines.FindIndex(fileLine => fileLine.Contains("_framework/blazor.webassembly.js"));
             if (scriptTagIndex > -1)
             {
-                fileLines[scriptTagIndex] = fileLines[scriptTagIndex].Replace("_framework/blazor.webassembly.js", "BrowserExtensionScripts/Core.js");
+                fileLines[scriptTagIndex] = fileLines[scriptTagIndex].Replace("_framework/blazor.webassembly.js", "content/Blazor.BrowserExtension/Core.js");
                 isUpdated = true;
             }
 

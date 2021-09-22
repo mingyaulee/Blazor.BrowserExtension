@@ -4,7 +4,6 @@
   <PropertyGroup>
     <BrowserExtensionEnvironment Condition="'$(BrowserExtensionEnvironment)' == ''"></BrowserExtensionEnvironment>
     <IncludeBrowserExtensionAssets Condition="'$(IncludeBrowserExtensionAssets)' == ''">true</IncludeBrowserExtensionAssets>
-    <LinkBrowserExtensionAssetsPath Condition="'$(LinkBrowserExtensionAssetsPath)' == ''">BrowserExtensionScripts</LinkBrowserExtensionAssetsPath>
     <BrowserExtensionAssetsPath Condition="'$(BrowserExtensionAssetsPath)' == ''">wwwroot</BrowserExtensionAssetsPath>
   </PropertyGroup>
 

@@ -46,8 +46,7 @@ You can setup the project manually as well, if for some reason you encounter any
      "content_security_policy": "script-src 'self' 'unsafe-eval' 'wasm-eval' 'sha256-v8v3RKRPmN4odZ1CWM5gw80QKPCCWMcpNeOmimNL2AA='; object-src 'self'",
      "web_accessible_resources": [
        "framework/*",
-       "content/*",
-       "BrowserExtensionScripts/*"
+       "content/*"
      ]
    }
    ```
@@ -57,7 +56,7 @@ You can setup the project manually as well, if for some reason you encounter any
        <None Include="wwwroot\**\*" CopyToOutputDirectory="Always" />
      </ItemGroup>
    ```
-0. In `wwwroot/index.html` replace the script tag `<script src="_framework/blazor.webassembly.js"></script>` with `<script src="BrowserExtensionScripts/Core.js"></script>`
+0. In `wwwroot/index.html` replace the script tag `<script src="_framework/blazor.webassembly.js"></script>` with `<script src="content/Blazor.BrowserExtension/Core.js"></script>`
 0. In `Pages/Index.razor` replace the first line `@page "/"` with the following lines:
    ```razor
    @page "/index.html"
@@ -124,7 +123,7 @@ In `wwwroot/index.html`
   globalThis.ImportBrowserPolyfill = false;
   globalThis.StartBlazorBrowserExtension = false;
 </script>
-<script src="BrowserExtensionScripts/Core.js"></script>
+<script src="content/Blazor.BrowserExtension/Core.js"></script>
 <script>
   globalThis.BlazorBrowserExtension.InitializeAsync("Production");
 </script>
@@ -188,7 +187,7 @@ Add the following to the `manifest.json`
 "content_scripts": [
   {
     "matches": [ "*://*/*" ],
-    "js": [ "BrowserExtensionScripts/ContentScript.js" ]
+    "js": [ "content/Blazor.BrowserExtension/ContentScript.js" ]
   }
 ]
 ```
@@ -297,7 +296,6 @@ The following MSBuild properties can be specified in your project file or when r
 | --------------------------------- | ---------------------------------------------------- | --------------------------------------------------------------------------------------------- |
 | BrowserExtensionEnvironment       | Blazor default: Production                           | The environment name which the Blazor application will run in.                                |
 | IncludeBrowserExtensionAssets     | true                                                 | If set to false, the JavaScript files will not be added to the project.                       |
-| LinkBrowserExtensionAssetsPath    | BrowserExtensionScripts                              | The root folder where the JavaScript files should be added as link.                           |
 | BrowserExtensionBootstrap         | False                                                | If set to True, the project will be bootstrapped during the build.                            |
 | BuildBlazorToBrowserExtension     | True                                                 | If set to False, the Blazor to Browser Extension build target will be skipped.                |
 | PublishBlazorToBrowserExtension   | True                                                 | If set to False, the Blazor to Browser Extension publish target will be skipped.              |

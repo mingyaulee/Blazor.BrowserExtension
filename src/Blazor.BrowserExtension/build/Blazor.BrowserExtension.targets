@@ -3,39 +3,20 @@
 
   <!-- Region
     Adds the content JavaScript files from the NuGet package to the project.
-    Link is used to allow the files to be copied from the package to the project build and publish output before their contents are replaced.
   -->
   <PropertyGroup>
     <_BrowserExtension_Package_Contents_Scripts_Directory Condition="'$(_BrowserExtension_Package_Contents_Scripts_Directory)' == ''">$(MSBuildThisFileDirectory)..\content\BrowserExtensionScripts</_BrowserExtension_Package_Contents_Scripts_Directory>
-    <_BrowserExtension_Project_Link_Scripts_Directory>$(BrowserExtensionAssetsPath)\$(LinkBrowserExtensionAssetsPath)</_BrowserExtension_Project_Link_Scripts_Directory>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(IncludeBrowserExtensionAssets)' == 'true'">
-    <None Include="$(_BrowserExtension_Package_Contents_Scripts_Directory)\**\*.*"
-          Link="$(_BrowserExtension_Project_Link_Scripts_Directory)\%(RecursiveDir)%(Filename)%(Extension)">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <StaticWebAsset Include="$(_BrowserExtension_Package_Contents_Scripts_Directory)\**\*.*">
+      <SourceType>Package</SourceType>
+      <SourceId>Blazor.BrowserExtension</SourceId>
+      <ContentRoot>$(_BrowserExtension_Package_Contents_Scripts_Directory)</ContentRoot>
+      <BasePath>_content/Blazor.BrowserExtension</BasePath>
+      <RelativePath>%(RecursiveDir)%(Filename)%(Extension)</RelativePath>
+    </StaticWebAsset>
   </ItemGroup>
-
-  <Target Name="AddComputedBrowserExtensionScriptsStaticWebAssets"
-          BeforeTargets="GenerateStaticWebAssetsManifest">
-    <ItemGroup Condition="'$(IncludeBrowserExtensionAssets)' == 'true'">
-      <_BrowserExtension_Package_Contents_Scripts_Files Include="$(_BrowserExtension_Package_Contents_Scripts_Directory)\**\*.*" />
-      <StaticWebAsset Include="@(_BrowserExtension_Package_Contents_Scripts_Files)">
-        <SourceType>Computed</SourceType>
-        <SourceId>Blazor.BrowserExtension</SourceId>
-        <ContentRoot>$(TargetDir)$(BrowserExtensionAssetsPath)</ContentRoot>
-        <BasePath>/</BasePath>
-        <RelativePath>$(LinkBrowserExtensionAssetsPath)/%(RecursiveDir)%(Filename)%(Extension)</RelativePath>
-        <OriginalItemSpec>%(FullPath)</OriginalItemSpec>
-        <AssetKind>All</AssetKind>
-        <AssetMode>All</AssetMode>
-        <AssetRole>Primary</AssetRole>
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        <CopyToPublishDirectory>Never</CopyToPublishDirectory>
-      </StaticWebAsset>
-    </ItemGroup>
-  </Target>
   <!-- EndRegion -->
 
   <!-- Target
@@ -47,7 +28,7 @@
     <PropertyGroup>
       <_BrowserExtension_Config_HasAppJs Condition="Exists('$(ProjectDir)$(BrowserExtensionAssetsPath)\app.js')">true</_BrowserExtension_Config_HasAppJs>
     </PropertyGroup>
-    
+
     <BlazorToBrowserExtensionSafeNamespace Input="$(ProjectName)" Replacement="_">
       <Output TaskParameter="Output" PropertyName="_BrowserExtension_Project_SafeProjectName" />
     </BlazorToBrowserExtensionSafeNamespace>
