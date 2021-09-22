@@ -1,10 +1,4 @@
 (async () => {
-  const options = {
-    ProjectName: "__ProjectName__",
-    EnvironmentName: "__EnvironmentName__",
-    CompressionEnabled: "__CompressionEnabled__"
-  };
-
   let debugMode = false;
   if (typeof globalThis.chrome != "object" || !globalThis.chrome || !globalThis.chrome.runtime || !globalThis.chrome.runtime.id) {
     debugMode = true;
@@ -27,9 +21,20 @@
     url = globalThis.location.origin + "/";
     browserExtensionMode = "Debug";
   }
-  const browserExtension = initializeInternal(options, url, browserExtensionMode);
+
+  let configUrl;
+  if (debugMode) {
+    configUrl = `${url}_content/browserextension.config.json`;
+  } else {
+    configUrl = `${url}content/browserextension.config.json`;
+  }
+
+  const configRequest = await fetch(configUrl);
+  const config = await configRequest.json();
+
+  const browserExtension = initializeInternal(config, url, browserExtensionMode);
 
   if (globalThis.StartBlazorBrowserExtension !== false) {
-    await browserExtension.InitializeAsync(options.EnvironmentName);
+    await browserExtension.InitializeAsync(config.EnvironmentName);
   }
 })();

@@ -261,8 +261,7 @@ async function initializeGlobalVariable(browserExtension) {
  * @returns {BrowserExtension}
  */
 function initializeInternal({ CompressionEnabled }, browserExtensionUrl, browserExtensionMode) {
-  const compressionEnabled = CompressionEnabled.toLowerCase() !== "false";
-  const browserExtension = new BrowserExtension(browserExtensionUrl, browserExtensionMode, compressionEnabled);
+  const browserExtension = new BrowserExtension(browserExtensionUrl, browserExtensionMode, CompressionEnabled);
   initializeGlobalVariable(browserExtension);
   return browserExtension;
 }

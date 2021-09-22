@@ -14,8 +14,7 @@ import { initializeGlobalVariable } from "./GlobalVariableInitializer.js";
  * @returns {BrowserExtension}
  */
 export function initializeInternal({ CompressionEnabled }, browserExtensionUrl, browserExtensionMode) {
-  const compressionEnabled = CompressionEnabled.toLowerCase() !== "false";
-  const browserExtension = new BrowserExtension(browserExtensionUrl, browserExtensionMode, compressionEnabled);
+  const browserExtension = new BrowserExtension(browserExtensionUrl, browserExtensionMode, CompressionEnabled);
   initializeGlobalVariable(browserExtension);
   return browserExtension;
 }

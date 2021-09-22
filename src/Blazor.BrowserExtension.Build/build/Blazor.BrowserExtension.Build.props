@@ -25,5 +25,6 @@
   <UsingTask TaskName="Blazor.BrowserExtension.Build.Tasks.BlazorToBrowserExtensionReplaceContent" AssemblyFile="$(_BrowserExtensionBuildTaskAssembly)" />
   <UsingTask TaskName="Blazor.BrowserExtension.Build.Tasks.BlazorToBrowserExtensionSafeNamespace" AssemblyFile="$(_BrowserExtensionBuildTaskAssembly)" />
   <UsingTask TaskName="Blazor.BrowserExtension.Build.Tasks.BlazorToBrowserExtensionValidateManifest" AssemblyFile="$(_BrowserExtensionBuildTaskAssembly)" />
+  <UsingTask TaskName="Blazor.BrowserExtension.Build.Tasks.BlazorToBrowserExtensionWriteConfigFile" AssemblyFile="$(_BrowserExtensionBuildTaskAssembly)" />
 
 </Project>
