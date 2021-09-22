@@ -7,12 +7,8 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddBrowserExtensionServices(this IServiceCollection services, Action<BrowserExtensionOption> optionSetup = null)
+        public static IServiceCollection AddBrowserExtensionServices(this IServiceCollection services)
         {
-            var option = new BrowserExtensionOption();
-            optionSetup?.Invoke(option);
-            services.AddSingleton(option);
-
             if (services.FirstOrDefault(service => service.ServiceType == typeof(IJSRuntime))?.ImplementationInstance is not IJSUnmarshalledRuntime jsRuntime)
             {
                 throw new NotSupportedException("An instance of IJSUnmarshalledRuntime must be registered by Blazor.");

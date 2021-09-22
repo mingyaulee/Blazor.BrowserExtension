@@ -21,10 +21,7 @@ namespace Blazor.BrowserExtension.Build.Tasks.Bootstrap
             }
 
             // Insert
-            // builder.Services.AddBrowserExtensionServices(options =>
-            // {
-            //     options.ProjectNamespace = typeof(Program).Namespace;
-            // });
+            // builder.Services.AddBrowserExtensionServices();
             // before await builder.Build().RunAsync();
             var registerServicesIndex = fileLines.FindIndex(fileLine => fileLine.Contains(".AddBrowserExtensionServices"));
             if (registerServicesIndex == -1)
@@ -34,11 +31,8 @@ namespace Blazor.BrowserExtension.Build.Tasks.Bootstrap
                 {
                     throw new InvalidOperationException("Unable to find builder.Build().RunAsync() in Program.cs file.");
                 }
-                fileLines.Insert(buildHostIndex + 0, "            builder.Services.AddBrowserExtensionServices(options =>");
-                fileLines.Insert(buildHostIndex + 1, "            {");
-                fileLines.Insert(buildHostIndex + 2, "                options.ProjectNamespace = typeof(Program).Namespace;");
-                fileLines.Insert(buildHostIndex + 3, "            });");
-                fileLines.Insert(buildHostIndex + 4, "");
+                fileLines.Insert(buildHostIndex + 0, "            builder.Services.AddBrowserExtensionServices();");
+                fileLines.Insert(buildHostIndex + 1, "");
                 isUpdated = true;
             }
 

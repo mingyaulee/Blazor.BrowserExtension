@@ -21,10 +21,7 @@ namespace HelloBlazorExtension
             builder.Services.AddScoped<HttpClient>(sp => new JsHttpClient(sp) { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 #endif
 
-            builder.Services.AddBrowserExtensionServices(options =>
-            {
-                options.ProjectNamespace = typeof(Program).Namespace;
-            });
+            builder.Services.AddBrowserExtensionServices();
             await builder.Build().RunAsync();
         }
     }

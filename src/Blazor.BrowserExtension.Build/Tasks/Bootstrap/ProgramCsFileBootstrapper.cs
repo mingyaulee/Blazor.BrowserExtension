@@ -10,10 +10,7 @@ namespace Blazor.BrowserExtension.Build.Tasks.Bootstrap
             var isUpdated = false;
 
             // Insert
-            // builder.Services.AddBrowserExtensionServices(options =>
-            // {
-            //     options.ProjectNamespace = typeof(Program).Namespace;
-            // });
+            // builder.Services.AddBrowserExtensionServices();
             // before await builder.Build().RunAsync();
             var registerServicesIndex = fileLines.FindIndex(fileLine => fileLine.Contains(".AddBrowserExtensionServices"));
             if (registerServicesIndex == -1)
@@ -35,11 +32,8 @@ namespace Blazor.BrowserExtension.Build.Tasks.Bootstrap
                 }
 
                 var indent = "".PadLeft(indentCount, ' ');
-                fileLines.Insert(buildHostIndex + 0, $"{indent}builder.Services.AddBrowserExtensionServices(options =>");
-                fileLines.Insert(buildHostIndex + 1, $"{indent}{{");
-                fileLines.Insert(buildHostIndex + 2, $"{indent}    options.ProjectNamespace = typeof(Program).Namespace;");
-                fileLines.Insert(buildHostIndex + 3, $"{indent}}});");
-                fileLines.Insert(buildHostIndex + 4, "");
+                fileLines.Insert(buildHostIndex + 0, $"{indent}builder.Services.AddBrowserExtensionServices();");
+                fileLines.Insert(buildHostIndex + 1, "");
                 isUpdated = true;
             }
 

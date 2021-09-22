@@ -87,10 +87,7 @@ You can setup the project manually as well, if for some reason you encounter any
    public static async Task Main(string[] args)
    {
        ...
-       builder.Services.AddBrowserExtensionServices(options =>
-       {
-           options.ProjectNamespace = typeof(Program).Namespace;
-       });
+       builder.Services.AddBrowserExtensionServices();
        ...
    }
    ```
