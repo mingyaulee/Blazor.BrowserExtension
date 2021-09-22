@@ -34,7 +34,7 @@ namespace Blazor.BrowserExtension.Build.Tasks.StaticWebAssets
                 return;
             }
 
-            var contentRootPath = NormalizePath(contentRoot.Path);
+            var contentRootPath = NormalizePath(Path.GetFullPath(contentRoot.Path));
             if (ShouldExcludePath(contentRootPath))
             {
                 return;
