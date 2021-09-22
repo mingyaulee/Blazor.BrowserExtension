@@ -13,10 +13,6 @@
 
   const browserExtension = initializeInternal(config, url, "ContentScript");
 
-  const appDiv = document.createElement("div");
-  appDiv.id = `${config.ProjectName}_app`;
-  document.body.appendChild(appDiv);
-
   if (config.HasAppJs) {
     await import(`${url}app.js`);
   }

@@ -15,7 +15,8 @@ You can now easily build a browser extension with Blazor!
 
 This package imports two other packages, which are:
 1. [WebExtensions.Net](https://github.com/mingyaulee/WebExtensions.Net) - Provides interop for WebExtensions standard API.
-2. Blazor.BrowserExtension.Build (in this repository) - Adds build target and tasks to the project.
+2. [JsBind.Net](https://github.com/mingyaulee/JsBind.Net) - Provides advanced JavaScript interop features used by WebExtensions.Net.
+3. Blazor.BrowserExtension.Build (in this repository) - Adds build target and tasks to the project.
 
 ### Create new project
 1. Run `dotnet new --install Blazor.BrowserExtension.Template`.
@@ -129,6 +130,13 @@ In `wwwroot/index.html`
 </script>
 ```
 
+## Pre-initialization script
+A custom script can be run before the initialization of the Blazor application.
+This is particularly useful for content scripts because we need to inject a `DIV` element as the container for the Blazor application before it is initialized.
+
+To do so, create a file named `app.js` under the directory `wwwroot` in your project.
+The file will automatically be detected during the build and the `app.js` file will be executed every time the Blazor application is going to be initialized.
+
 ## Build and load extension
 ### Google Chrome
 1. Launch the Extensions page ( ⋮ → More tools → Extensions).
@@ -147,6 +155,9 @@ In `wwwroot/index.html`
 ## Debugging locally in IIS Express or Kestrel
 1. Start the Blazor project directly from Visual Studio or `dotnet run`.
 0. Once the application is loaded, use the Blazor debugging hotkey Shift+Alt+D to launch the debugging console.
+
+> At the moment, debugging when the application is loaded as an extension in the browser is not possible.
+> This is because debugging requires a NodeJs debugging proxy launched by the DevServer, which is not available when loaded as extension in the browser.
 
 ## Browser Extension features
 
@@ -198,18 +209,22 @@ Add a `ContentScript.razor` Razor component under `Pages` folder with the follow
 
 <h1>My content script</h1>
 ```
-Additional changes are required for content scripts to not have conflict of the element ID of the Blazor root component with any other elements in any pages.
-1. In `index.html` change the ID `app` of line `<div id="app">Loading...</div>` to `%SafeProjectName%_app`.
-2. In `Program.cs` change the ID `#app` of line `builder.RootComponents.Add<App>("#app");` to `#%SafeProjectName%_app`.
+Additional changes are required for content scripts to not have conflict of the element ID of the Blazor root component with any other elements in any pages it is injected in.
 
-**Example:**
+First of all, decide on a unique ID to be used for the application `DIV` container, such as `My_Unique_Extension_App_Id` (**this ID is used in the steps below, replace with your own unique ID**).
+It should be unique enough that it does not collide with any existing element in the pages where the content scripts are going to be injected.
 
-| Project Name | Safe Project Name | Element Name   |
-| ------------ | ----------------- | -------------- |
-| MyProject    | MyProject         | MyProject_app  |
-| My.Project   | My_Project        | My_Project_app |
-| My Project   | My_Project        | My_Project_app |
-| My-Project   | My_Project        | My_Project_app |
+1. In `index.html` change the ID `app` of line `<div id="app">Loading...</div>` to `My_Unique_Extension_App_Id`.
+2. In `Program.cs` change the ID `#app` of line `builder.RootComponents.Add<App>("#app");` to `#My_Unique_Extension_App_Id`.
+3. Add a new file named `app.js` under the directory `wwwroot` (Skip this if it has been created already).
+4. Add the following code in the `app.js` file to inject a new `DIV` element with the matching ID into the current page.
+   ```javascript
+   if (globalThis.BlazorBrowserExtension.BrowserExtension.Mode === globalThis.BlazorBrowserExtension.Modes.ContentScript) {
+     const appDiv = document.createElement("div");
+     appDiv.id = "My_Unique_Extension_App_Id";
+     document.body.appendChild(appDiv);
+   }
+   ```
 
 In `App.razor`, add the following `if` statement to opt out of routing only for content scripts.
 ```razor

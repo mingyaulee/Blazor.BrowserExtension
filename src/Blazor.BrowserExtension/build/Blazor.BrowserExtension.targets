@@ -29,15 +29,7 @@
       <_BrowserExtension_Config_HasAppJs Condition="Exists('$(ProjectDir)$(BrowserExtensionAssetsPath)\app.js')">true</_BrowserExtension_Config_HasAppJs>
     </PropertyGroup>
 
-    <BlazorToBrowserExtensionSafeNamespace Input="$(ProjectName)" Replacement="_">
-      <Output TaskParameter="Output" PropertyName="_BrowserExtension_Project_SafeProjectName" />
-    </BlazorToBrowserExtensionSafeNamespace>
-
     <ItemGroup>
-      <BrowserExtensionConfig Include="Safe project name">
-        <Key>ProjectName</Key>
-        <Value>$(_BrowserExtension_Project_SafeProjectName)</Value>
-      </BrowserExtensionConfig>
       <BrowserExtensionConfig Include="Environment name">
         <Key>EnvironmentName</Key>
         <Value>$(BrowserExtensionEnvironment)</Value>
