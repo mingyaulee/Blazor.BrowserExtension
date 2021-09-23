@@ -1,4 +1,4 @@
-﻿$relativeLibPath = "../src/Blazor.BrowserExtension/content/BrowserExtensionScripts/lib"
+﻿$relativeLibPath = "../src/Blazor.BrowserExtension/content/src/lib"
 $scriptPath = Split-Path -Parent $MyInvocation.MyCommand.Definition
 $libPath = Resolve-Path "$scriptPath/$relativeLibPath"
 
