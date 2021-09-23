@@ -20,7 +20,7 @@ export function initializeGlobalVariable(browserExtension) {
     blazorBrowserExtension.Modes = BrowserExtensionModes;
     globalThis.BlazorBrowserExtension = blazorBrowserExtension;
   } else {
-    blazorBrowserExtension = /** @type {BlazorBrowserExtension} */ (globalThis.BlazorBrowserExtension);
+    blazorBrowserExtension = /** @type {BlazorBrowserExtension} */(globalThis.BlazorBrowserExtension);
   }
 
   if (blazorBrowserExtension.BrowserExtension) {

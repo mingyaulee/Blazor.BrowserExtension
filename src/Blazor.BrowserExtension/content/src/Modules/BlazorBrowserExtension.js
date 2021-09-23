@@ -5,9 +5,11 @@
 
 export default class BlazorBrowserExtension {
   constructor() {
-    /** @type {boolean} */ this.ImportBrowserPolyfill = true;
-    /** @type {boolean} */ this.StartBlazorBrowserExtension = true;
-    /** @type {BrowserExtensionModesEnum} */ this.Modes = null;
-    /** @type {BrowserExtension} */ this.BrowserExtension = null;
+    this.ImportBrowserPolyfill = true;
+    this.StartBlazorBrowserExtension = true;
+    /** @type {BrowserExtensionModesEnum} */
+    this.Modes = null;
+    /** @type {BrowserExtension} */
+    this.BrowserExtension = null;
   }
 }

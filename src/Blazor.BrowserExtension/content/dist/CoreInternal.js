@@ -1,44 +1,16 @@
-/** @typedef {"Standard" | "ContentScript" | "Debug"} BrowserExtensionMode */
-
-/**
- * @typedef BrowserExtensionModesEnum
- * @property {BrowserExtensionMode} Standard
- * @property {BrowserExtensionMode} ContentScript
- * @property {BrowserExtensionMode} Debug
- */
-
-/**
- * @type {BrowserExtensionModesEnum}
- */
 const BrowserExtensionModes = {
   Standard: "Standard",
   ContentScript: "ContentScript",
   Debug: "Debug"
 };
 
-/**
- * @typedef {import("./BrowserExtensionModes").BrowserExtensionMode} BrowserExtensionMode
- * @typedef {import("./BrowserExtensionConfig.js").default} BrowserExtensionConfig
- */
-
 class BrowserExtension {
-  /**
-   * Create a new instance of BrowserExtension.
-   * @param {string} url The browser extension URL.
-   * @param {BrowserExtensionMode} mode The browser extension mode.
-   * @param {BrowserExtensionConfig} config Indicate if compression is enabled.
-   */
   constructor(url, mode, config) {
     this.Url = url;
     this.Mode = mode;
     this.Config = config;
   }
 
-  /**
-   * Initializes the browser extension.
-   * @param {string} environment Environment name
-   * @returns {Promise<BrowserExtension>}
-   */
   async InitializeAsync(environment) {
     // import JsBind.Net JS
     if (this.Mode === BrowserExtensionModes.Debug) {
@@ -80,12 +52,6 @@ class BrowserExtension {
     return this;
   }
 
-  /**
-   * Intercept fetch requests from blazor.webassembly.js and dotnet.*.js
-   * @param {RequestInfo|string} input
-   * @param {RequestInit} init?
-   * @returns {Promise<Response>}
-   */
   FetchAsync(input, init) {
     if (typeof (input) === "string") {
       if (input === "dotnet.wasm") {
@@ -96,19 +62,14 @@ class BrowserExtension {
     return fetch(input, init);
   }
 
-  /**
-   * Intercept document.body.appendChild from blazor.webassembly.js and dotnet.*.js
-   * @param {Element} element
-   * @returns {Promise}
-   */
   async AppendElementToDocumentAsync(element) {
     if (this.Mode !== BrowserExtensionModes.ContentScript) {
-      /** @type {any} */(element).integrity = "";
+      (element).integrity = "";
       await this._appendElementToDocumentAsync(element);
       return;
     }
     if (element.tagName === "SCRIPT") {
-      const scriptElement = /** @type {HTMLScriptElement} */(element);
+      const scriptElement = (element);
       if (scriptElement.innerText.indexOf("__wasmmodulecallback__") > -1) {
         globalThis.__wasmmodulecallback__();
         delete globalThis.__wasmmodulecallback__;
@@ -124,35 +85,20 @@ class BrowserExtension {
     }
   }
 
-  /**
-   * Import called from BasePage.cs
-   * @param {string} script The script name to import
-   * @returns {Promise}
-   */
   async ImportAsync(script) {
     await import(`${this.Url}${script}`);
   }
 
-  /**
-   * Gets the URL for the path requested.
-   * @param {any} path The path requested.
-   * @returns {string} The absolute extension path if it is not a full URL with scheme, otherwise the original path.
-   */
   _getUrl(path) {
     return path.indexOf("://") > -1 ? path : this.Url + path;
   }
 
-  /**
-   * Appends element to document.
-   * @param {Element} element
-   * @returns {Promise}
-   */
   async _appendElementToDocumentAsync(element) {
     return new Promise(resolve => {
       let immediateResolve = true;
       if (element.tagName === "SCRIPT") {
         immediateResolve = false;
-        /** @type {HTMLScriptElement} */ (element).onload = () => resolve();
+        (element).onload = () => resolve();
       }
       document.body.appendChild(element);
       if (immediateResolve) {
@@ -161,13 +107,6 @@ class BrowserExtension {
     });
   }
 
-  /**
-   * Loads boot resource for Blazor application.
-   * @param {any} resourceType
-   * @param {any} resourceName
-   * @param {any} defaultUri
-   * @param {any} integrity
-   */
   _loadBootResource(resourceType, resourceName, defaultUri, integrity) {
     if (resourceType === "dotnetjs" || resourceType === "manifest") {
       return `${this.Url}framework/${resourceName}`;
@@ -190,40 +129,21 @@ class BrowserExtension {
     return defaultUri;
   }
 
-  /**
-   * Gets the browser extension mode. Called during initialization in DotNet.
-   * @returns {any}
-   */
   _getBrowserExtensionMode() {
     return globalThis.BINDING.js_string_to_mono_string(this.Mode);
   }
 }
 
-/**
- * @typedef {import("./BrowserExtension.js").default} BrowserExtension
- * @typedef {import("./BrowserExtensionModes.js").BrowserExtensionModesEnum} BrowserExtensionModesEnum
- */
-
 class BlazorBrowserExtension {
   constructor() {
-    /** @type {boolean} */ this.ImportBrowserPolyfill = true;
-    /** @type {boolean} */ this.StartBlazorBrowserExtension = true;
-    /** @type {BrowserExtensionModesEnum} */ this.Modes = null;
-    /** @type {BrowserExtension} */ this.BrowserExtension = null;
+    this.ImportBrowserPolyfill = true;
+    this.StartBlazorBrowserExtension = true;
+    this.Modes = null;
+    this.BrowserExtension = null;
   }
 }
 
-/**
- * @typedef {import("./BrowserExtension.js").default} BrowserExtension
- */
-
-/**
- * Initializes the Blazor Browser Extension global variable
- * @param {BrowserExtension} browserExtension The browser extension.
- * @returns {BlazorBrowserExtension}
- */
 function initializeGlobalVariable(browserExtension) {
-  /** @type {BlazorBrowserExtension} */
   let blazorBrowserExtension;
 
   // initialize global property BlazorBrowserExtension
@@ -232,7 +152,7 @@ function initializeGlobalVariable(browserExtension) {
     blazorBrowserExtension.Modes = BrowserExtensionModes;
     globalThis.BlazorBrowserExtension = blazorBrowserExtension;
   } else {
-    blazorBrowserExtension = /** @type {BlazorBrowserExtension} */ (globalThis.BlazorBrowserExtension);
+    blazorBrowserExtension = (globalThis.BlazorBrowserExtension);
   }
 
   if (blazorBrowserExtension.BrowserExtension) {
@@ -245,19 +165,6 @@ function initializeGlobalVariable(browserExtension) {
   return blazorBrowserExtension;
 }
 
-/**
- * @typedef {import("./BlazorBrowserExtension.js").default} BlazorBrowserExtension
- * @typedef {import("./BrowserExtensionModes.js").BrowserExtensionMode} BrowserExtensionMode
- * @typedef {import("./BrowserExtensionConfig.js").default} BrowserExtensionConfig
- */
-
-/**
- * Initializes the Blazor Browser Extension internally
- * @param {BrowserExtensionConfig} config The initialization options.
- * @param {string} browserExtensionUrl The browser extension url.
- * @param {BrowserExtensionMode} browserExtensionMode The browser extension mode.
- * @returns {BlazorBrowserExtension}
- */
 function initializeInternal(config, browserExtensionUrl, browserExtensionMode) {
   const browserExtension = new BrowserExtension(browserExtensionUrl, browserExtensionMode, config);
   return initializeGlobalVariable(browserExtension);

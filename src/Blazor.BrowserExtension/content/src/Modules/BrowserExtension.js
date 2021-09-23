@@ -136,7 +136,7 @@ export default class BrowserExtension {
       let immediateResolve = true;
       if (element.tagName === "SCRIPT") {
         immediateResolve = false;
-        /** @type {HTMLScriptElement} */ (element).onload = () => resolve();
+        /** @type {HTMLScriptElement} */(element).onload = () => resolve();
       }
       document.body.appendChild(element);
       if (immediateResolve) {

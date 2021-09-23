@@ -7,7 +7,6 @@
 
   const initializeInternal = (await import('./CoreInternal.js')).initializeInternal;
   let url;
-  /** @type {import("./Modules/BrowserExtensionModes.js").BrowserExtensionMode} */
   let browserExtensionMode;
   if (!debugMode) {
     url = (globalThis.browser || globalThis.chrome).runtime.getURL("");
@@ -25,7 +24,6 @@
   }
 
   const configRequest = await fetch(configUrl);
-  /** @type {import("./Modules/BrowserExtensionConfig.js").default} */
   const config = await configRequest.json();
 
   const blazorBrowserExtension = initializeInternal(config, url, browserExtensionMode);
