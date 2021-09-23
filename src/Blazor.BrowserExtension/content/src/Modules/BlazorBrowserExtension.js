@@ -3,16 +3,11 @@
  * @typedef {import("./BrowserExtensionModes.js").BrowserExtensionModesEnum} BrowserExtensionModesEnum
  */
 
-/**
- * @callback InitializeFunction
- * @param {string} environmentName
- * @returns {Promise<BrowserExtension>}
- */
-
 export default class BlazorBrowserExtension {
   constructor() {
+    /** @type {boolean} */ this.ImportBrowserPolyfill = true;
+    /** @type {boolean} */ this.StartBlazorBrowserExtension = true;
     /** @type {BrowserExtensionModesEnum} */ this.Modes = null;
-    /** @type {InitializeFunction} */ this.InitializeAsync = null;
     /** @type {BrowserExtension} */ this.BrowserExtension = null;
   }
 }

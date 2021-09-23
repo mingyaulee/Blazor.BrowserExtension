@@ -2,6 +2,7 @@
 
 /**
  * @typedef {import("./BrowserExtensionModes").BrowserExtensionMode} BrowserExtensionMode
+ * @typedef {import("./BrowserExtensionConfig.js").default} BrowserExtensionConfig
  */
 
 export default class BrowserExtension {
@@ -9,12 +10,12 @@ export default class BrowserExtension {
    * Create a new instance of BrowserExtension.
    * @param {string} url The browser extension URL.
    * @param {BrowserExtensionMode} mode The browser extension mode.
-   * @param {boolean} compressionEnabled Indicate if compression is enabled.
+   * @param {BrowserExtensionConfig} config Indicate if compression is enabled.
    */
-  constructor(url, mode, compressionEnabled) {
+  constructor(url, mode, config) {
     this.Url = url;
     this.Mode = mode;
-    this.CompressionEnabled = compressionEnabled;
+    this.Config = config;
   }
 
   /**
@@ -30,7 +31,7 @@ export default class BrowserExtension {
       await import(`${this.Url}content/JsBind.Net/JsBindNet.js`);
     }
 
-    if (this.CompressionEnabled) {
+    if (this.Config.CompressionEnabled) {
       // import brotli decode.js
       this.BrotliDecode = (await import("../lib/decode.min.js")).BrotliDecode;
     }
@@ -55,7 +56,7 @@ export default class BrowserExtension {
       startOption.environment = environment;
     }
 
-    if (this.Mode === BrowserExtensionModes.ContentScript || this.CompressionEnabled) {
+    if (this.Mode === BrowserExtensionModes.ContentScript || this.Config.CompressionEnabled) {
       startOption.loadBootResource = this._loadBootResource.bind(this);
     }
     globalThis.Blazor.start(startOption);
@@ -156,7 +157,7 @@ export default class BrowserExtension {
       return `${this.Url}framework/${resourceName}`;
     }
 
-    if (this.CompressionEnabled) {
+    if (this.Config.CompressionEnabled) {
       return (async () => {
         const response = await this.FetchAsync(defaultUri + '.br', { cache: 'no-cache' });
         if (!response.ok) {

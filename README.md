@@ -103,36 +103,28 @@ You can setup the project manually as well, if for some reason you encounter any
    }
    ```
 
-
-## Change initialization behaviour
-The following properties can be set to change the behaviour of the core scripts.
-
-| Variable Name               | Description                                                                                                                                        |
-| --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| ImportBrowserPolyfill       | Set to `false` to disable importing of the browser polyfill script.<br />Default: `true`                                                           |
-| StartBlazorBrowserExtension | Set to `false` to prevent auto initialization of Blazor. Use `BlazorBrowserExtension.InitializeAsync` to initialize manually.<br />Default: `true` |
-
-**Example:**
-
-In `wwwroot/index.html`
-
-```html
-<script>
-  globalThis.ImportBrowserPolyfill = false;
-  globalThis.StartBlazorBrowserExtension = false;
-</script>
-<script src="content/Blazor.BrowserExtension/Core.js"></script>
-<script>
-  globalThis.BlazorBrowserExtension.InitializeAsync("Production");
-</script>
-```
-
-## Pre-initialization script
+## Pre-initialization script (app.js)
 A custom script can be run before the initialization of the Blazor application.
 This is particularly useful for content scripts because we need to inject a `DIV` element as the container for the Blazor application before it is initialized.
 
 To do so, create a file named `app.js` under the directory `wwwroot` in your project.
 The file will automatically be detected during the build and the `app.js` file will be executed every time the Blazor application is going to be initialized.
+
+### Change initialization behaviour
+Using an `app.js`, you can set the following properties in the `BlazorBrowserExtension` global object to change the initialization behaviour.
+
+| Property Name               | Description                                                                                                                                                         |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ImportBrowserPolyfill       | Set to `false` to disable importing of the browser polyfill script.<br />Default: `true`                                                                            |
+| StartBlazorBrowserExtension | Set to `false` to prevent auto initialization of Blazor. Use `BlazorBrowserExtension.BrowserExtension.InitializeAsync` to initialize manually.<br />Default: `true` |
+
+**Example:**
+
+```javascript
+globalThis.BlazorBrowserExtension.ImportBrowserPolyfill = false;
+globalThis.BlazorBrowserExtension.StartBlazorBrowserExtension = false;
+globalThis.BlazorBrowserExtension.BrowserExtension.InitializeAsync("Production");
+```
 
 ## Build and load extension
 ### Google Chrome
@@ -197,7 +189,12 @@ Add the following to the `manifest.json`
     "matches": [ "*://*/*" ],
     "js": [ "content/Blazor.BrowserExtension/ContentScript.js" ]
   }
-]
+],
+...
+"web_accessible_resources": [
+  ...
+  "app.js"
+],
 ```
 Add a `ContentScript.razor` Razor component under `Pages` folder with the following content.
 ```razor
@@ -304,17 +301,17 @@ You can use the `@page` directive to add route attribute with a virtual path to 
 
 The following MSBuild properties can be specified in your project file or when running `dotnet run`, `dotnet build` and `dotnet publish` command.
 
-| Property                          | Default value                                        | Description                                                                                   |
-| --------------------------------- | ---------------------------------------------------- | --------------------------------------------------------------------------------------------- |
-| BrowserExtensionEnvironment       | Blazor default: Production                           | The environment name which the Blazor application will run in.                                |
-| IncludeBrowserExtensionAssets     | true                                                 | If set to false, the JavaScript files will not be added to the project.                       |
-| BrowserExtensionBootstrap         | False                                                | If set to True, the project will be bootstrapped during the build.                            |
-| BuildBlazorToBrowserExtension     | True                                                 | If set to False, the Blazor to Browser Extension build target will be skipped.                |
-| PublishBlazorToBrowserExtension   | True                                                 | If set to False, the Blazor to Browser Extension publish target will be skipped.              |
-| BrowserExtensionAssetsPath        | wwwroot                                              | The root folder of the browser extension.                                                     |
-| BrowserExtensionOutputPath        | browserextension                                     | The folder of the build/publish output.                                                       |
-| BrowserExtensionRoutingEntryFile  | index.html                                           | The HTML entry file for the Blazor application.                                               |
-| BrowserExtensionEnableCompression | $(BlazorEnableCompression)<br />Blazor default: True | If set to True, the .br compressed files will be loaded instead of .dll.                      |
+| Property                          | Default value                                        | Description                                                                      |
+| --------------------------------- | ---------------------------------------------------- | -------------------------------------------------------------------------------- |
+| BrowserExtensionEnvironment       | Blazor default: Production                           | The environment name which the Blazor application will run in.                   |
+| IncludeBrowserExtensionAssets     | true                                                 | If set to false, the JavaScript files will not be added to the project.          |
+| BrowserExtensionBootstrap         | False                                                | If set to True, the project will be bootstrapped during the build.               |
+| BuildBlazorToBrowserExtension     | True                                                 | If set to False, the Blazor to Browser Extension build target will be skipped.   |
+| PublishBlazorToBrowserExtension   | True                                                 | If set to False, the Blazor to Browser Extension publish target will be skipped. |
+| BrowserExtensionAssetsPath        | wwwroot                                              | The root folder of the browser extension.                                        |
+| BrowserExtensionOutputPath        | browserextension                                     | The folder of the build/publish output.                                          |
+| BrowserExtensionRoutingEntryFile  | index.html                                           | The HTML entry file for the Blazor application.                                  |
+| BrowserExtensionEnableCompression | $(BlazorEnableCompression)<br />Blazor default: True | If set to True, the .br compressed files will be loaded instead of .dll.         |
 
 ## Manifest V3 Support
 

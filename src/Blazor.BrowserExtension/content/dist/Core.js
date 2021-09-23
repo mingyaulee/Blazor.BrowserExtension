@@ -1,21 +1,16 @@
 (async () => {
   let debugMode = false;
-  if (typeof globalThis.chrome != "object" || !globalThis.chrome || !globalThis.chrome.runtime || !globalThis.chrome.runtime.id) {
+  const hasExtensionsApi = namespace => typeof globalThis[namespace] == "object" && globalThis[namespace]?.runtime?.id;
+  if (!hasExtensionsApi("browser") && !hasExtensionsApi("chrome")) {
     debugMode = true;
-  }
-
-  if (globalThis.ImportBrowserPolyfill !== false && !debugMode) {
-    // import browser extension API polyfill
-    // @ts-ignore JS is not a module
-    await import('./lib/browser-polyfill.min.js');
   }
 
   const initializeInternal = (await import('./CoreInternal.js')).initializeInternal;
   let url;
-  /** @type {import("./Modules/BrowserExtensionModes").BrowserExtensionMode} */
+  /** @type {import("./Modules/BrowserExtensionModes.js").BrowserExtensionMode} */
   let browserExtensionMode;
   if (!debugMode) {
-    url = globalThis.browser.runtime.getURL("");
+    url = (globalThis.browser || globalThis.chrome).runtime.getURL("");
     browserExtensionMode = "Standard";
   } else {
     url = globalThis.location.origin + "/";
@@ -30,15 +25,26 @@
   }
 
   const configRequest = await fetch(configUrl);
+  /** @type {import("./Modules/BrowserExtensionConfig.js").default} */
   const config = await configRequest.json();
 
-  const browserExtension = initializeInternal(config, url, browserExtensionMode);
+  const blazorBrowserExtension = initializeInternal(config, url, browserExtensionMode);
+
+  if (debugMode) {
+    blazorBrowserExtension.ImportBrowserPolyfill = false;
+  }
 
   if (config.HasAppJs) {
     await import(`${url}app.js`);
   }
 
-  if (globalThis.StartBlazorBrowserExtension !== false) {
-    await browserExtension.InitializeAsync(config.EnvironmentName);
+  if (blazorBrowserExtension.ImportBrowserPolyfill) {
+    // import browser extension API polyfill
+    // @ts-ignore JS is not a module
+    await import('./lib/browser-polyfill.min.js');
+  }
+
+  if (blazorBrowserExtension.StartBlazorBrowserExtension) {
+    await blazorBrowserExtension.BrowserExtension.InitializeAsync(config.EnvironmentName);
   }
 })();

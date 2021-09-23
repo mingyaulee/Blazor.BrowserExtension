@@ -1,23 +1,24 @@
 (async () => {
-  if (globalThis.ImportBrowserPolyfill !== false) {
-    // import browser extension API polyfill
-    // @ts-ignore JS is not a module
-    await import('./lib/browser-polyfill.min.js');
-  }
-
   const initializeInternal = (await import('./CoreInternal.js')).initializeInternal;
-  const url = globalThis.browser.runtime.getURL("");
+  const url = (globalThis.browser || globalThis.chrome).runtime.getURL("");
 
   const configRequest = await fetch(`${url}content/browserextension.config.json`);
+  /** @type {import("./Modules/BrowserExtensionConfig.js").default} */
   const config = await configRequest.json();
 
-  const browserExtension = initializeInternal(config, url, "ContentScript");
+  const blazorBrowserExtension = initializeInternal(config, url, "ContentScript");
 
   if (config.HasAppJs) {
     await import(`${url}app.js`);
   }
 
-  if (globalThis.StartBlazorBrowserExtension !== false) {
-    await browserExtension.InitializeAsync(config.EnvironmentName);
+  if (blazorBrowserExtension.ImportBrowserPolyfill) {
+    // import browser extension API polyfill
+    // @ts-ignore JS is not a module
+    await import('./lib/browser-polyfill.min.js');
+  }
+
+  if (blazorBrowserExtension.StartBlazorBrowserExtension) {
+    await blazorBrowserExtension.BrowserExtension.InitializeAsync(config.EnvironmentName);
   }
 })();

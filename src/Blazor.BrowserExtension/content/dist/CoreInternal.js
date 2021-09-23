@@ -18,6 +18,7 @@ const BrowserExtensionModes = {
 
 /**
  * @typedef {import("./BrowserExtensionModes").BrowserExtensionMode} BrowserExtensionMode
+ * @typedef {import("./BrowserExtensionConfig.js").default} BrowserExtensionConfig
  */
 
 class BrowserExtension {
@@ -25,12 +26,12 @@ class BrowserExtension {
    * Create a new instance of BrowserExtension.
    * @param {string} url The browser extension URL.
    * @param {BrowserExtensionMode} mode The browser extension mode.
-   * @param {boolean} compressionEnabled Indicate if compression is enabled.
+   * @param {BrowserExtensionConfig} config Indicate if compression is enabled.
    */
-  constructor(url, mode, compressionEnabled) {
+  constructor(url, mode, config) {
     this.Url = url;
     this.Mode = mode;
-    this.CompressionEnabled = compressionEnabled;
+    this.Config = config;
   }
 
   /**
@@ -46,7 +47,7 @@ class BrowserExtension {
       await import(`${this.Url}content/JsBind.Net/JsBindNet.js`);
     }
 
-    if (this.CompressionEnabled) {
+    if (this.Config.CompressionEnabled) {
       // import brotli decode.js
       this.BrotliDecode = (await import('./lib/decode.min.js')).BrotliDecode;
     }
@@ -71,7 +72,7 @@ class BrowserExtension {
       startOption.environment = environment;
     }
 
-    if (this.Mode === BrowserExtensionModes.ContentScript || this.CompressionEnabled) {
+    if (this.Mode === BrowserExtensionModes.ContentScript || this.Config.CompressionEnabled) {
       startOption.loadBootResource = this._loadBootResource.bind(this);
     }
     globalThis.Blazor.start(startOption);
@@ -172,7 +173,7 @@ class BrowserExtension {
       return `${this.Url}framework/${resourceName}`;
     }
 
-    if (this.CompressionEnabled) {
+    if (this.Config.CompressionEnabled) {
       return (async () => {
         const response = await this.FetchAsync(defaultUri + '.br', { cache: 'no-cache' });
         if (!response.ok) {
@@ -203,30 +204,25 @@ class BrowserExtension {
  * @typedef {import("./BrowserExtensionModes.js").BrowserExtensionModesEnum} BrowserExtensionModesEnum
  */
 
-/**
- * @callback InitializeFunction
- * @param {string} environmentName
- * @returns {Promise<BrowserExtension>}
- */
-
 class BlazorBrowserExtension {
   constructor() {
+    /** @type {boolean} */ this.ImportBrowserPolyfill = true;
+    /** @type {boolean} */ this.StartBlazorBrowserExtension = true;
     /** @type {BrowserExtensionModesEnum} */ this.Modes = null;
-    /** @type {InitializeFunction} */ this.InitializeAsync = null;
     /** @type {BrowserExtension} */ this.BrowserExtension = null;
   }
 }
 
 /**
- * @typedef {import("./BlazorBrowserExtension.js").InitializeFunction} InitializeFunction
  * @typedef {import("./BrowserExtension.js").default} BrowserExtension
  */
 
 /**
  * Initializes the Blazor Browser Extension global variable
  * @param {BrowserExtension} browserExtension The browser extension.
+ * @returns {BlazorBrowserExtension}
  */
-async function initializeGlobalVariable(browserExtension) {
+function initializeGlobalVariable(browserExtension) {
   /** @type {BlazorBrowserExtension} */
   let blazorBrowserExtension;
 
@@ -244,26 +240,27 @@ async function initializeGlobalVariable(browserExtension) {
     throw new Error("Browser extension cannot be loaded.");
   }
 
-  blazorBrowserExtension.InitializeAsync = browserExtension.InitializeAsync;
   blazorBrowserExtension.BrowserExtension = browserExtension;
+
+  return blazorBrowserExtension;
 }
 
 /**
+ * @typedef {import("./BlazorBrowserExtension.js").default} BlazorBrowserExtension
  * @typedef {import("./BrowserExtensionModes.js").BrowserExtensionMode} BrowserExtensionMode
+ * @typedef {import("./BrowserExtensionConfig.js").default} BrowserExtensionConfig
  */
 
 /**
  * Initializes the Blazor Browser Extension internally
- * @param {object} options The initialization options.
- * @param {string} options.CompressionEnabled The project name.
+ * @param {BrowserExtensionConfig} config The initialization options.
  * @param {string} browserExtensionUrl The browser extension url.
  * @param {BrowserExtensionMode} browserExtensionMode The browser extension mode.
- * @returns {BrowserExtension}
+ * @returns {BlazorBrowserExtension}
  */
-function initializeInternal({ CompressionEnabled }, browserExtensionUrl, browserExtensionMode) {
-  const browserExtension = new BrowserExtension(browserExtensionUrl, browserExtensionMode, CompressionEnabled);
-  initializeGlobalVariable(browserExtension);
-  return browserExtension;
+function initializeInternal(config, browserExtensionUrl, browserExtensionMode) {
+  const browserExtension = new BrowserExtension(browserExtensionUrl, browserExtensionMode, config);
+  return initializeGlobalVariable(browserExtension);
 }
 
 export { initializeInternal };

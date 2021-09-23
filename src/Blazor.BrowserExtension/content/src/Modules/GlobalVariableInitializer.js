@@ -2,15 +2,15 @@
 import BrowserExtensionModes from "./BrowserExtensionModes.js";
 
 /**
- * @typedef {import("./BlazorBrowserExtension.js").InitializeFunction} InitializeFunction
  * @typedef {import("./BrowserExtension.js").default} BrowserExtension
  */
 
 /**
  * Initializes the Blazor Browser Extension global variable
  * @param {BrowserExtension} browserExtension The browser extension.
+ * @returns {BlazorBrowserExtension}
  */
-export async function initializeGlobalVariable(browserExtension) {
+export function initializeGlobalVariable(browserExtension) {
   /** @type {BlazorBrowserExtension} */
   let blazorBrowserExtension;
 
@@ -28,6 +28,7 @@ export async function initializeGlobalVariable(browserExtension) {
     throw new Error("Browser extension cannot be loaded.");
   }
 
-  blazorBrowserExtension.InitializeAsync = browserExtension.InitializeAsync;
   blazorBrowserExtension.BrowserExtension = browserExtension;
+
+  return blazorBrowserExtension;
 }
