@@ -223,7 +223,7 @@ It should be unique enough that it does not collide with any existing element in
 In `App.razor`, add the following `if` statement to opt out of routing only for content scripts.
 ```razor
 @using My.Project.Pages;
-@inject IBrowserExtensionEnvironment BrowserExtensionEnvironment
+@inject Blazor.BrowserExtension.IBrowserExtensionEnvironment BrowserExtensionEnvironment
 
 @if (BrowserExtensionEnvironment.Mode == BrowserExtensionMode.ContentScript)
 {
