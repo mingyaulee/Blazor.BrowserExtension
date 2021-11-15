@@ -38,6 +38,7 @@ namespace Blazor.BrowserExtension.Build.Tasks
                     {
                         var from = replace.GetMetadata("From");
                         var to = replace.GetMetadata("To");
+                        var isOptional = "true".Equals(replace.GetMetadata("IsOptional"), StringComparison.OrdinalIgnoreCase);
 
                         Log.LogMessage(MessageImportance.Normal, $"{LogPrefix}Replacing {replace.ItemSpec}");
                         if (fileContent.Contains(from))
@@ -46,7 +47,7 @@ namespace Blazor.BrowserExtension.Build.Tasks
                             fileChanged = true;
                             Log.LogMessage(MessageImportance.Normal, $"{LogPrefix}Replaced from '{from}' to '{to}'");
                         }
-                        else
+                        else if (!isOptional)
                         {
                             Log.LogWarning($"{LogPrefix}Unable to find text to replace '{from}' in file '{FileName}'");
                             hasWarning = true;
