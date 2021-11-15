@@ -93,7 +93,12 @@
   <Target Name="DefineBlazorToBrowserExtensionFrameworkJsFileContentReplacements">
 
     <ItemGroup>
-      <!-- Define contents to replace in blazor.webassembly.js -->
+      <!--
+        Define contents to replace in blazor.webassembly.js
+        Source:
+        - Current/.Net 6 https://github.com/dotnet/aspnetcore/tree/main/src/Components/Web.JS/src/Platform
+        - .Net 5 https://github.com/dotnet/aspnetcore/tree/v5.0.0/src/Components/Web.JS/src/Platform
+      -->
       <_BrowserExtension_BlazorJs_FileContentReplacements Include="append element to document body">
         <From>document.body.appendChild</From>
         <To>globalThis.BlazorBrowserExtension.BrowserExtension.AppendElementToDocumentAsync</To>
@@ -122,7 +127,12 @@
         <From>removeRunDependency(</From>
         <To>globalThis.Module.removeRunDependency(</To>
       </_BrowserExtension_BlazorJs_FileContentReplacements>
-      <!-- Define contents to replace in dotnet.*.js -->
+      <!--
+        Define contents to replace in dotnet.*.js
+        Source:
+        - Current/.Net 6 https://github.com/dotnet/runtime/tree/main/src/mono/wasm/runtime
+        - .Net 5 https://github.com/dotnet/runtime/tree/v5.0.0/src/mono/wasm/runtime
+      -->
       <_BrowserExtension_DotNetJs_FileContentReplacements Include="fetch url">
         <From>fetch(</From>
         <To>globalThis.BlazorBrowserExtension.BrowserExtension.FetchAsync(</To>
@@ -138,6 +148,21 @@
       <_BrowserExtension_DotNetJs_FileContentReplacements Include="BINDING declaration">
         <From>var BINDING=</From>
         <To>globalThis.BINDING=</To>
+      </_BrowserExtension_DotNetJs_FileContentReplacements>
+      <_BrowserExtension_DotNetJs_FileContentReplacements Include="bodyJs variable declaration" Condition="'$(TargetFramework)' == 'net6.0'">
+        <From>bodyJs=body.join("\r\n");if(friendly_name)</From>
+        <To>var bodyJs=body.join("\r\n");if(friendly_name)</To>
+        <IsOptional>true</IsOptional>
+      </_BrowserExtension_DotNetJs_FileContentReplacements>
+      <_BrowserExtension_DotNetJs_FileContentReplacements Include="result variable declaration 1" Condition="'$(TargetFramework)' == 'net6.0'">
+        <From>if(is_result_marshaled)result=this._unbox_mono_obj_root</From>
+        <To>let result;if(is_result_marshaled)result=this._unbox_mono_obj_root</To>
+        <IsOptional>true</IsOptional>
+      </_BrowserExtension_DotNetJs_FileContentReplacements>
+      <_BrowserExtension_DotNetJs_FileContentReplacements Include="result variable declaration 2" Condition="'$(TargetFramework)' == 'net6.0'">
+        <From>case typeof js_obj==="number":{if((js_obj|0)===js_obj)</From>
+        <To>case typeof js_obj==="number":{let result;if((js_obj|0)===js_obj)</To>
+        <IsOptional>true</IsOptional>
       </_BrowserExtension_DotNetJs_FileContentReplacements>
       <_BrowserExtension_DotNetJs_FileContentReplacements Include="accessing mono_wasm_assembly_already_added" Condition="'$(TargetFramework)' == 'net5.0'">
         <From>this.mono_wasm_assembly_already_added</From>
