@@ -13,12 +13,12 @@ namespace HelloBlazorExtension
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
 
-#if (IsNet6)
-            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-#else
+#if (IsNet5)
             // workaround to use JavaScript fetch to bypass url validation
             // see: https://github.com/dotnet/runtime/issues/52836
             builder.Services.AddScoped<HttpClient>(sp => new JsHttpClient(sp) { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+#else
+            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 #endif
 
             builder.Services.AddBrowserExtensionServices();

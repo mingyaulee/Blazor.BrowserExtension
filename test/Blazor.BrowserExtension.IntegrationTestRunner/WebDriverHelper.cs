@@ -35,7 +35,7 @@ namespace Blazor.BrowserExtension.IntegrationTestRunner
         {
             await Retry(
                 () => (bool)WebDriver.ExecuteScript("return document.querySelector(\"#Blazor_BrowserExtension_IntegrationTest_app h3\") != null;"),
-                TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(5));
+                TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(10));
             return WebDriver.FindElementByCssSelector("#Blazor_BrowserExtension_IntegrationTest_app h3")?.Text;
         }
 

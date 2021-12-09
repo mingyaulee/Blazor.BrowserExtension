@@ -45,7 +45,7 @@ namespace Blazor.BrowserExtension.IntegrationTestRunner
 #else
             var configuration = "release";
 #endif
-            return $"{solutionDirectory}\\test\\Blazor.BrowserExtension.IntegrationTest\\bin\\{configuration}\\net5.0\\browserextension";
+            return $"{solutionDirectory}\\test\\Blazor.BrowserExtension.IntegrationTest\\bin\\{configuration}\\net6.0\\browserextension";
         }
 
         private static RemoteWebDriver GetWebDriver(string driverPath, string extensionPath)

@@ -33,8 +33,8 @@
           "description": "Target .NET 6.0"
         }
       ],
-      "defaultValue": "net5.0",
-      "replaces": "net5.0"
+      "defaultValue": "net6.0",
+      "replaces": "net6.0"
     },
     "IsNet5": {
       "type": "computed",
