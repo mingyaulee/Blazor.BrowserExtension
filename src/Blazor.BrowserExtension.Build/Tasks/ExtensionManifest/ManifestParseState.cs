@@ -30,7 +30,11 @@ namespace Blazor.BrowserExtension.Build.Tasks.ExtensionManifest
 
         public void AddManifestItemValue(string value)
         {
+#if NETFRAMEWORK
             if (CurrentItemKey.HasValue && !(IsAtRoot && value.Contains("}")))
+#else
+            if (CurrentItemKey.HasValue && !(IsAtRoot && value.Contains('}')))
+#endif
             {
                 ManifestItems[CurrentItemKey.Value].AddValue(value);
             }

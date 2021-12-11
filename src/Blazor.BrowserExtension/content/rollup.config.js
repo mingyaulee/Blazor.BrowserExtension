@@ -1,5 +1,5 @@
-﻿import cleanup from "./rollup-plugins/cleanup.js";
-import normalizeLineEndings from "./rollup-plugins/normalizeLineEndings.js";
+﻿import rollupCleanup from "./rollup-plugins/rollupCleanup.js";
+import rollupNormalizeLineEndings from "./rollup-plugins/rollupNormalizeLineEndings.js";
 
 export default [
   {
@@ -15,8 +15,8 @@ export default [
       "../../JsBind.Net/JsBindNet.js"
     ],
     plugins: [
-      cleanup(),
-      normalizeLineEndings()
+      rollupCleanup(),
+      rollupNormalizeLineEndings()
     ]
   }
 ];
