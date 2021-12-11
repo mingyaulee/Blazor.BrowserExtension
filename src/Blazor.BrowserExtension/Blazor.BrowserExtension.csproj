@@ -53,7 +53,7 @@
     <PackageReference Condition="'$(TargetFramework)' == 'net5.0'" Include="Microsoft.JSInterop" Version="5.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
     <PackageReference Include="JsBind.Net.Extensions.DependencyInjection" Version="0.3.2" PrivateAssets="contentfiles" />
-    <PackageReference Include="WebExtensions.Net.Extensions.DependencyInjection" Version="0.10.0" PrivateAssets="contentfiles" />
+    <PackageReference Include="WebExtensions.Net.Extensions.DependencyInjection" Version="0.10.1" PrivateAssets="contentfiles" />
   </ItemGroup>
 
   <ItemGroup>
