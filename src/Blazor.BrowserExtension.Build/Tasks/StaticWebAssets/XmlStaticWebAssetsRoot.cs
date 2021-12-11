@@ -8,5 +8,8 @@ namespace Blazor.BrowserExtension.Build.Tasks.StaticWebAssets
     {
         [XmlElement("ContentRoot")]
         public List<XmlContentRoot> ContentRoots { get; set; }
+
+        [XmlAttribute("Version")]
+        public string Version { get; set; }
     }
 }

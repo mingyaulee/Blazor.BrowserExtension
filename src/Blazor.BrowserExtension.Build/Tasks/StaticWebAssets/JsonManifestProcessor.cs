@@ -4,21 +4,24 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 
 namespace Blazor.BrowserExtension.Build.Tasks.StaticWebAssets
 {
-    public class JsonManifestParser : BaseManifestParser
+    public class JsonManifestProcessor : BaseManifestProcessor
     {
         private List<string> contentRoots = new();
+        private StaticWebAssetManifest? staticWebAssetManifest;
+        private bool isUpdated;
 
-        public JsonManifestParser(IEnumerable<string> excludePaths) : base(excludePaths)
+        public JsonManifestProcessor(IEnumerable<string> excludePaths) : base(excludePaths)
         {
         }
 
         public override void ReadFromFile(string filePath)
         {
             var json = File.ReadAllText(filePath);
-            var staticWebAssetManifest = StaticWebAssetManifest.Parse(json);
+            staticWebAssetManifest = StaticWebAssetManifest.Parse(json);
             if (staticWebAssetManifest?.ContentRoots is null || !staticWebAssetManifest.ContentRoots.Any())
             {
                 return;
@@ -26,6 +29,63 @@ namespace Blazor.BrowserExtension.Build.Tasks.StaticWebAssets
 
             contentRoots = staticWebAssetManifest.ContentRoots.ToList();
             VisitNode(staticWebAssetManifest.Root, "/");
+        }
+
+        public override void Process(string outputPath)
+        {
+            if (staticWebAssetManifest?.ContentRoots is null || !staticWebAssetManifest.ContentRoots.Any() || staticWebAssetManifest.Root?.Children is null)
+            {
+                return;
+            }
+
+            if (staticWebAssetManifest.Root.Children.ContainsKey("_framework"))
+            {
+                staticWebAssetManifest.Root.Children.Add("framework", staticWebAssetManifest.Root.Children["_framework"]);
+                staticWebAssetManifest.Root.Children.Remove("_framework");
+                isUpdated = true;
+            }
+
+            if (staticWebAssetManifest.Root.Children.ContainsKey("_content"))
+            {
+                staticWebAssetManifest.Root.Children.Add("content", staticWebAssetManifest.Root.Children["_content"]);
+                staticWebAssetManifest.Root.Children.Remove("_content");
+                isUpdated = true;
+            }
+
+            outputPath = Path.GetFullPath(outputPath);
+            if (!contentRoots.Contains(outputPath))
+            {
+                contentRoots.Add(outputPath);
+                var outputPathIndex = contentRoots.Count - 1;
+                staticWebAssetManifest.ContentRoots = contentRoots.ToArray();
+                var frameworkChildren = staticWebAssetManifest.Root.Children["framework"].Children;
+                if (frameworkChildren is not null)
+                {
+                    var replacedFiles = frameworkChildren.Keys
+                        .Where(name =>
+                            name.Equals("blazor.webassembly.js", StringComparison.OrdinalIgnoreCase) ||
+                            (name.StartsWith("dotnet.", StringComparison.OrdinalIgnoreCase) && name.EndsWith(".js", StringComparison.OrdinalIgnoreCase))
+                        ) ?? Enumerable.Empty<string>();
+                    foreach (var replacedFile in replacedFiles)
+                    {
+                        frameworkChildren[replacedFile].Match!.Path = frameworkChildren[replacedFile].Match!.Path.Replace("_", "");
+                        frameworkChildren[replacedFile].Match!.ContentRoot = outputPathIndex;
+                    }
+                }
+
+                isUpdated = true;
+            }
+        }
+
+        public override void WriteToFile(string filePath)
+        {
+            if (!isUpdated)
+            {
+                return;
+            }
+
+            var json = JsonSerializer.Serialize(staticWebAssetManifest);
+            File.WriteAllText(filePath, json);
         }
 
         private void VisitNode(StaticWebAssetNode content, string contentRelativePath)

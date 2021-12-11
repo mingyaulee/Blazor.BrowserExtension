@@ -13,6 +13,8 @@ namespace Blazor.BrowserExtension.Build.Tasks
         [Required]
         public ITaskItem Input { get; set; }
         public ITaskItem[] Exclude { get; set; }
+        [Required]
+        public string OutputPath { get; set; }
 
         [Output]
         public ITaskItem[] Output { get; set; }
@@ -20,23 +22,25 @@ namespace Blazor.BrowserExtension.Build.Tasks
         public override bool Execute()
         {
             var excludePaths = Exclude?.Select(exclude => exclude.ItemSpec);
-            Output = ReadFromFile(Input.ItemSpec, excludePaths);
+            Output = Process(Input.ItemSpec, excludePaths, OutputPath);
             return true;
         }
 
-        private static ITaskItem[] ReadFromFile(string filePath, IEnumerable<string> excludePaths)
+        private static ITaskItem[] Process(string filePath, IEnumerable<string> excludePaths, string outputPath)
         {
-            BaseManifestParser parser;
+            BaseManifestProcessor processor;
             if (".xml".Equals(Path.GetExtension(filePath), StringComparison.OrdinalIgnoreCase))
             {
-                parser = new XmlManifestParser(excludePaths);
+                processor = new XmlManifestProcessor(excludePaths);
             }
             else
             {
-                parser = new JsonManifestParser(excludePaths);
+                processor = new JsonManifestProcessor(excludePaths);
             }
-            parser.ReadFromFile(filePath);
-            var output = parser.GetOutput()
+            processor.ReadFromFile(filePath);
+            processor.Process(outputPath);
+            processor.WriteToFile(filePath);
+            var output = processor.GetOutput()
                 .Select(staticWebAssetFile =>
                     new TaskItem(staticWebAssetFile.FilePath, new Dictionary<string, string>()
                     {

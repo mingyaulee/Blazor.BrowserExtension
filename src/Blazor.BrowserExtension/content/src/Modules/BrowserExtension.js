@@ -25,11 +25,7 @@ export default class BrowserExtension {
    */
   async InitializeAsync(environment) {
     // import JsBind.Net JS
-    if (this.Mode === BrowserExtensionModes.Debug) {
-      await import(`${this.Url}_content/JsBind.Net/JsBindNet.js`);
-    } else {
-      await import(`${this.Url}content/JsBind.Net/JsBindNet.js`);
-    }
+    await import(`${this.Url}content/JsBind.Net/JsBindNet.js`);
 
     if (this.Config.CompressionEnabled) {
       // import brotli decode.js
@@ -38,11 +34,7 @@ export default class BrowserExtension {
 
     // import blazor.webassembly.js
     const blazorScript = globalThis.document.createElement("script");
-    if (this.Mode === BrowserExtensionModes.Debug) {
-      blazorScript.src = `${this.Url}_framework/blazor.webassembly.js`;
-    } else {
-      blazorScript.src = `${this.Url}framework/blazor.webassembly.js`;
-    }
+    blazorScript.src = `${this.Url}framework/blazor.webassembly.js`;
     blazorScript.defer = true;
     // Blazor is set to not auto start, so that we can start it with different environment name
     blazorScript.setAttribute("autostart", "false");

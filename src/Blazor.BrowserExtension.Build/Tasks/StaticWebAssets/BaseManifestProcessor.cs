@@ -5,18 +5,22 @@ using System.Linq;
 
 namespace Blazor.BrowserExtension.Build.Tasks.StaticWebAssets
 {
-    public abstract class BaseManifestParser
+    public abstract class BaseManifestProcessor
     {
         private readonly IEnumerable<string> excludePaths;
         private readonly List<StaticWebAssetFile> output;
 
-        protected BaseManifestParser(IEnumerable<string> excludePaths)
+        protected BaseManifestProcessor(IEnumerable<string> excludePaths)
         {
             this.excludePaths = excludePaths?.Select(excludePath => NormalizePath(excludePath)).ToList() ?? Enumerable.Empty<string>();
             output = new List<StaticWebAssetFile>();
         }
 
         public abstract void ReadFromFile(string filePath);
+
+        public abstract void Process(string outputPath);
+
+        public abstract void WriteToFile(string filePath);
 
         protected void AddOutput(string filePath, string relativePath)
         {

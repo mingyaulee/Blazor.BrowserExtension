@@ -16,12 +16,7 @@
     browserExtensionMode = "Debug";
   }
 
-  let configUrl;
-  if (debugMode) {
-    configUrl = `${url}_content/browserextension.config.json`;
-  } else {
-    configUrl = `${url}content/browserextension.config.json`;
-  }
+  const configUrl = `${url}content/browserextension.config.json`;
 
   const configRequest = await fetch(configUrl);
   const config = await configRequest.json();

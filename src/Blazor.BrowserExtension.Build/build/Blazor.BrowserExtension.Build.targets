@@ -253,7 +253,8 @@
     </ItemGroup>
     <Message Importance="high" Text="  Processing static web assets from manifest files '$(_BrowserExtension_Project_BuildOutput_StaticWebAssets_Manifest_FilePath)'" />
     <BlazorToBrowserExtensionProcessStaticWebAssetsManifest Input="$(_BrowserExtension_Project_BuildOutput_StaticWebAssets_Manifest_FilePath)"
-                                                            Exclude="@(_BrowserExtension_StaticWebAssets_ExcludePaths)">
+                                                            Exclude="@(_BrowserExtension_StaticWebAssets_ExcludePaths)"
+                                                            OutputPath="$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory)">
       <Output TaskParameter="Output" ItemName="_BrowserExtension_Project_BuildOutput_StaticWebAssets_Files" />
     </BlazorToBrowserExtensionProcessStaticWebAssetsManifest>
 
