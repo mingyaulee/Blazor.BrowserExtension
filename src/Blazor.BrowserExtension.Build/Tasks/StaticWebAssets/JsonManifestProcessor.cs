@@ -40,15 +40,13 @@ namespace Blazor.BrowserExtension.Build.Tasks.StaticWebAssets
 
             if (staticWebAssetManifest.Root.Children.ContainsKey("_framework"))
             {
-                staticWebAssetManifest.Root.Children.Add("framework", staticWebAssetManifest.Root.Children["_framework"]);
-                staticWebAssetManifest.Root.Children.Remove("_framework");
+                MoveNode(staticWebAssetManifest.Root.Children, "_framework", "framework");
                 isUpdated = true;
             }
 
             if (staticWebAssetManifest.Root.Children.ContainsKey("_content"))
             {
-                staticWebAssetManifest.Root.Children.Add("content", staticWebAssetManifest.Root.Children["_content"]);
-                staticWebAssetManifest.Root.Children.Remove("_content");
+                MoveNode(staticWebAssetManifest.Root.Children, "_content", "content");
                 isUpdated = true;
             }
 
@@ -75,6 +73,27 @@ namespace Blazor.BrowserExtension.Build.Tasks.StaticWebAssets
 
                 isUpdated = true;
             }
+        }
+
+        private void MoveNode(Dictionary<string, StaticWebAssetNode> nodes, string fromKey, string toKey)
+        {
+            var nodeToMove = nodes[fromKey];
+            if (nodes.TryGetValue(toKey, out var existingNode) && existingNode.Children is not null)
+            {
+                if (nodeToMove.Children is null)
+                {
+                    nodeToMove.Children = existingNode.Children;
+                }
+                else
+                {
+                    foreach (var existingNodePair in existingNode.Children)
+                    {
+                        nodeToMove.Children.Add(existingNodePair.Key, existingNodePair.Value);
+                    }
+                }
+            }
+            nodes[toKey] = nodeToMove;
+            nodes.Remove(fromKey);
         }
 
         public override void WriteToFile(string filePath)
