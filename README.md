@@ -18,6 +18,15 @@ This package imports two other packages, which are:
 2. [JsBind.Net](https://github.com/mingyaulee/JsBind.Net) - Provides advanced JavaScript interop features used by WebExtensions.Net.
 3. Blazor.BrowserExtension.Build (in this repository) - Adds build target and tasks to the project.
 
+### Samples/References
+
+Sample projects are available in the repository [Blazor.BrowserExtension.Samples](https://github.com/mingyaulee/Blazor.BrowserExtension.Samples).
+
+You can also refer to the following projects for real life extensions:
+- [Blazor Edge New Tab](https://github.com/dragnilar/EdgeExtensionsBlazor) - Published for [Chrome](https://chrome.google.com/webstore/detail/blazor-edge-new-tab/bdcfngldhocoffghnlmhibpifmoakiec?hl=en&authuser=0) and [Edge](https://microsoftedge.microsoft.com/addons/detail/blazor-edge-new-tab/bfhdepjammnaoddhikhogfbnikmeocfj).
+
+Or check out the [GitHub dependency graph](https://github.com/mingyaulee/Blazor.BrowserExtension/network/dependents?package_id=UGFja2FnZS0yMDQyMjY4MDIy) for more repositories.
+
 ### Create new project
 1. Run `dotnet new --install Blazor.BrowserExtension.Template`.
 0. Run `dotnet new browserext --name <ProjectName>` to initialize a new project with the template.
@@ -130,12 +139,12 @@ globalThis.BlazorBrowserExtension.BrowserExtension.InitializeAsync("Production")
 ### Google Chrome
 1. Launch the Extensions page ( ⋮ → More tools → Extensions).
 2. Switch on `Developer mode`.
-3. Click on the `Load unpacked` button, then navigate to `%ProjectDir%\bin\Debug\net5.0\` and select the foler `browserextension`.
+3. Click on the `Load unpacked` button, then navigate to `%ProjectDir%\bin\Debug\net5.0\` and select the folder `browserextension`.
 
 ### Microsoft Edge
 1. Launch the Extensions page ( ⋮ → Extensions).
 2. Click on the ☰ and switch on `Developer mode`.
-3. Click on the button with the title `Load unpacked`, then navigate to `%ProjectDir%\bin\Debug\net5.0\` and select the foler `browserextension`.
+3. Click on the button with the title `Load unpacked`, then navigate to `%ProjectDir%\bin\Debug\net5.0\` and select the folder `browserextension`.
 
 ### Mozilla Firefox
 1. Navigate to the URL [about:debugging#/runtime/this-firefox](about:debugging#/runtime/this-firefox)
@@ -324,3 +333,7 @@ Therefore, manifest V3 is currently not supported for Blazor browser extension p
 Find out how to build a cross browser extension with the links below:
 1. [MDN - Building a cross-browser extension](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Build_a_cross_browser_extension)
 2. [David Rousset - Creating One Browser Extension For All Browsers: Edge, Chrome, Firefox, Opera, Brave And Vivaldi](https://www.smashingmagazine.com/2017/04/browser-extension-edge-chrome-firefox-opera-brave-vivaldi/)
+
+If you want to publish the extension to the browser extension stores, do take note of the following (courtesy of [@dragnilar](https://github.com/mingyaulee/Blazor.BrowserExtension/issues/39)):
+- Publishing to the Microsoft Edge Add-ons store is easier as long as you note somewhere in the testing steps and/or description that the extension uses Blazor. It's slower than Google but it's pretty much a hassle free experience.
+- Publishing to Google Chrome Extension store is more difficult. They will reject your extension at first if you declare any chromium apis in the manifest. Their automated testing doesn't work with Blazor / WASM yet but the support team will help you to resolve the challenges throughout the process.
