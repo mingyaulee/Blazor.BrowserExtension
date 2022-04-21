@@ -1,5 +1,5 @@
-﻿using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.Remote;
+﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
 using System;
 using System.IO;
 
@@ -7,7 +7,7 @@ namespace Blazor.BrowserExtension.IntegrationTestRunner
 {
     public class Fixture : IDisposable
     {
-        public RemoteWebDriver WebDriver { get; }
+        public WebDriver WebDriver { get; }
         public WebDriverHelper WebDriverHelper { get; }
         private bool disposedValue;
 
@@ -48,7 +48,7 @@ namespace Blazor.BrowserExtension.IntegrationTestRunner
             return $"{solutionDirectory}\\test\\Blazor.BrowserExtension.IntegrationTest\\bin\\{configuration}\\net7.0\\browserextension";
         }
 
-        private static RemoteWebDriver GetWebDriver(string driverPath, string extensionPath)
+        private static WebDriver GetWebDriver(string driverPath, string extensionPath)
         {
             var chromeOptions = new ChromeOptions();
             chromeOptions.AddArgument($"load-extension={extensionPath}");

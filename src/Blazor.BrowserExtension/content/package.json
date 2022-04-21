@@ -2,7 +2,7 @@
   "name": "blazor-browser-extension",
   "private": true,
   "devDependencies": {
-    "rollup": "^2.36.2"
+    "rollup": "^2.70.2"
   },
   "scripts": {
     "bundle": "rollup -c"
