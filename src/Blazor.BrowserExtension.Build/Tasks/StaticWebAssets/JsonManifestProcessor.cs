@@ -75,7 +75,7 @@ namespace Blazor.BrowserExtension.Build.Tasks.StaticWebAssets
             }
         }
 
-        private void MoveNode(Dictionary<string, StaticWebAssetNode> nodes, string fromKey, string toKey)
+        private static void MoveNode(Dictionary<string, StaticWebAssetNode> nodes, string fromKey, string toKey)
         {
             var nodeToMove = nodes[fromKey];
             if (nodes.TryGetValue(toKey, out var existingNode) && existingNode.Children is not null)

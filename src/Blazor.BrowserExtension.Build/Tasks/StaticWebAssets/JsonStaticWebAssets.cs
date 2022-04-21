@@ -81,60 +81,65 @@ namespace Blazor.BrowserExtension.Build.Tasks.StaticWebAssets
             MergeChildren(parsed, result);
             return result;
 
-            static void MergeChildren(
-                IDictionary<string, StaticWebAssetNode> newChildren,
-                IDictionary<string, StaticWebAssetNode> existing)
-            {
-                foreach (var keyValuePair in newChildren)
-                {
-                    var key = keyValuePair.Key;
-                    var value = keyValuePair.Value;
-                    if (!existing.TryGetValue(key, out var existingNode))
-                    {
-                        existing.Add(key, value);
-                    }
-                    else
-                    {
-                        if (value.Patterns != null)
-                        {
-                            if (existingNode.Patterns == null)
-                            {
-                                existingNode.Patterns = value.Patterns;
-                            }
-                            else
-                            {
-                                if (value.Patterns.Length > 0)
-                                {
-                                    var newList = new StaticWebAssetPattern[existingNode.Patterns.Length + value.Patterns.Length];
-                                    existingNode.Patterns.CopyTo(newList, 0);
-                                    value.Patterns.CopyTo(newList, existingNode.Patterns.Length);
-                                    existingNode.Patterns = newList;
-                                }
-                            }
-                        }
-
-                        if (value.Children != null)
-                        {
-                            if (existingNode.Children == null)
-                            {
-                                existingNode.Children = value.Children;
-                            }
-                            else
-                            {
-                                if (value.Children.Count > 0)
-                                {
-                                    MergeChildren(value.Children, existingNode.Children);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            
         }
 
         public override void Write(Utf8JsonWriter writer, Dictionary<string, StaticWebAssetNode> value, JsonSerializerOptions options)
         {
             JsonSerializer.Serialize(writer, value, options);
+        }
+
+        private static void MergeChildren(IDictionary<string, StaticWebAssetNode> newChildren, IDictionary<string, StaticWebAssetNode> existing)
+        {
+            foreach (var keyValuePair in newChildren)
+            {
+                var key = keyValuePair.Key;
+                var value = keyValuePair.Value;
+                if (existing.TryGetValue(key, out var existingNode))
+                {
+                    MergeChildNode(value, existingNode);
+                }
+                else
+                {
+                    existing.Add(key, value);
+                }
+            }
+        }
+
+        private static void MergeChildNode(StaticWebAssetNode newNode, StaticWebAssetNode existingNode)
+        {
+            if (newNode.Patterns != null)
+            {
+                if (existingNode.Patterns == null)
+                {
+                    existingNode.Patterns = newNode.Patterns;
+                }
+                else
+                {
+                    if (newNode.Patterns.Length > 0)
+                    {
+                        var newList = new StaticWebAssetPattern[existingNode.Patterns.Length + newNode.Patterns.Length];
+                        existingNode.Patterns.CopyTo(newList, 0);
+                        newNode.Patterns.CopyTo(newList, existingNode.Patterns.Length);
+                        existingNode.Patterns = newList;
+                    }
+                }
+            }
+
+            if (newNode.Children != null)
+            {
+                if (existingNode.Children == null)
+                {
+                    existingNode.Children = newNode.Children;
+                }
+                else
+                {
+                    if (newNode.Children.Count > 0)
+                    {
+                        MergeChildren(newNode.Children, existingNode.Children);
+                    }
+                }
+            }
         }
     }
 }
