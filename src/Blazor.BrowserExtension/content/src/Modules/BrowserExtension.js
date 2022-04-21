@@ -51,8 +51,10 @@ export default class BrowserExtension {
     if (this.Mode === BrowserExtensionModes.ContentScript || this.Config.CompressionEnabled) {
       startOption.loadBootResource = this._loadBootResource.bind(this);
     }
-    globalThis.Blazor.start(startOption);
-
+    const blazorStart = globalThis.Blazor.start(startOption);
+    if (blazorStart && blazorStart instanceof Promise) {
+      await blazorStart;
+    }
     return this;
   }
 
@@ -78,14 +80,9 @@ export default class BrowserExtension {
    * @returns {Promise}
    */
   async AppendElementToDocumentAsync(element) {
-    if (this.Mode !== BrowserExtensionModes.ContentScript) {
-      /** @type {any} */(element).integrity = "";
-      await this._appendElementToDocumentAsync(element);
-      return;
-    }
     if (element.tagName === "SCRIPT") {
       const scriptElement = /** @type {HTMLScriptElement} */(element);
-      if (scriptElement.innerText.indexOf("__wasmmodulecallback__") > -1) {
+      if (scriptElement.text.indexOf("__wasmmodulecallback__") > -1) {
         globalThis.__wasmmodulecallback__();
         delete globalThis.__wasmmodulecallback__;
       } else if (scriptElement.src) {
@@ -94,6 +91,13 @@ export default class BrowserExtension {
       } else {
         console.error("Unknown script requested", element);
         throw new Error("Unknown script requested");
+      }
+    } else if (element.tagName == "LINK") {
+      const linkElement = /** @type {HTMLLinkElement} */(element);
+      if (linkElement.rel == "modulepreload") {
+        await import(linkElement.href);
+      } else {
+        await this._appendElementToDocumentAsync(element);
       }
     } else {
       await this._appendElementToDocumentAsync(element);

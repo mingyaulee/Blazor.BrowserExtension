@@ -31,10 +31,14 @@
         {
           "choice": "net6.0",
           "description": "Target .NET 6.0"
+        },
+        {
+          "choice": "net7.0",
+          "description": "Target .NET 7.0"
         }
       ],
-      "defaultValue": "net6.0",
-      "replaces": "net6.0"
+      "defaultValue": "net7.0",
+      "replaces": "net7.0"
     },
     "IsNet5": {
       "type": "computed",
