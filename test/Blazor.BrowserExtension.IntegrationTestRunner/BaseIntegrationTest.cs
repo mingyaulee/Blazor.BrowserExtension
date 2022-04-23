@@ -1,22 +1,30 @@
-using OpenQA.Selenium.Remote;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using Xunit;
+
+[assembly: CollectionBehavior(DisableTestParallelization = true)]
 
 namespace Blazor.BrowserExtension.IntegrationTestRunner
 {
     [TestCaseOrderer("Blazor.BrowserExtension.IntegrationTestRunner.TestOrderer", "Blazor.BrowserExtension.IntegrationTestRunner")]
-    public class IntegrationTest : IClassFixture<Fixture>
+    public abstract class BaseIntegrationTest : IClassFixture<Fixture>
     {
         private readonly WebDriverHelper webDriverHelper;
 
-        public IntegrationTest(Fixture fixture)
+        public BaseIntegrationTest(Fixture fixture)
         {
+            if (!fixture.IsInitialized)
+            {
+                SetupBeforeInitialize();
+                fixture.Initialize();
+            }
             webDriverHelper = fixture.WebDriverHelper;
         }
 
+        protected abstract void SetupBeforeInitialize();
+
         [Fact, Order(1)]
-        public async Task BackgroundPageIsLoaded()
+        public async Task IndexPageIsLoaded()
         {
             // The background page creates a new tab with the url of the extension index page on load, so check on the count of window handles
             var isLoaded = await webDriverHelper.Retry(
@@ -55,6 +63,5 @@ namespace Blazor.BrowserExtension.IntegrationTestRunner
             await webDriverHelper.NavigateToUrl($"https://developer.chrome.com/");
             Assert.Equal("ContentScript", await webDriverHelper.GetPageContent());
         }
-
     }
 }

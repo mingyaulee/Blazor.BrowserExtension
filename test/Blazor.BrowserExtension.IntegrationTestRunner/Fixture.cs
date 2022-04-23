@@ -7,12 +7,22 @@ namespace Blazor.BrowserExtension.IntegrationTestRunner
 {
     public class Fixture : IDisposable
     {
-        public WebDriver WebDriver { get; }
-        public WebDriverHelper WebDriverHelper { get; }
         private bool disposedValue;
+        private bool isInitialized;
+        private WebDriver webDriver;
+        private WebDriverHelper webDriverHelper;
+        public bool IsInitialized => isInitialized;
+        public WebDriver WebDriver => webDriver;
+        public WebDriverHelper WebDriverHelper => webDriverHelper;
 
-        public Fixture()
+        public void Initialize()
         {
+            if (isInitialized)
+            {
+                return;
+            }
+
+            isInitialized = true;
             var driverPath = "C:\\SeleniumWebDrivers\\ChromeDriver";
             if (!Directory.Exists(driverPath))
             {
@@ -27,16 +37,16 @@ namespace Blazor.BrowserExtension.IntegrationTestRunner
 
             try
             {
-                WebDriver = GetWebDriver(driverPath, extensionPath);
+                webDriver = GetWebDriver(driverPath, extensionPath);
             }
             catch (Exception exception)
             {
                 throw new NotSupportedException("Failed to create WebDriver.", exception);
             }
-            WebDriverHelper = new WebDriverHelper(WebDriver);
+            webDriverHelper = new WebDriverHelper(webDriver);
         }
 
-        private static string GetExtensionPath()
+        public static string GetExtensionPath()
         {
             var currentDirectory = Directory.GetCurrentDirectory();
             var solutionDirectory = currentDirectory.Substring(0, currentDirectory.LastIndexOf("\\test"));
@@ -59,8 +69,8 @@ namespace Blazor.BrowserExtension.IntegrationTestRunner
         {
             if (!disposedValue)
             {
-                WebDriver?.Close();
-                WebDriver?.Dispose();
+                webDriver?.Close();
+                webDriver?.Dispose();
                 disposedValue = true;
             }
             GC.SuppressFinalize(this);

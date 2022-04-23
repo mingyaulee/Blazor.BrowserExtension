@@ -68,7 +68,7 @@ namespace Blazor.BrowserExtension.Build.Tasks
                 var validator = ValidatorFactory.GetValidator(manifestVersion);
                 if (validator is null)
                 {
-                    LogErrorAtLine(manifestVersion.LineNumber, "Manifest version is supported");
+                    LogErrorAtLine(manifestVersion.LineNumber, $"Manifest version '{manifestVersion.Value}' is not supported");
                     return false;
                 }
 

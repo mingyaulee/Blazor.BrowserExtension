@@ -95,7 +95,7 @@ export default class BrowserExtension {
     } else if (element.tagName == "LINK") {
       const linkElement = /** @type {HTMLLinkElement} */(element);
       if (linkElement.rel == "modulepreload") {
-        await import(linkElement.href);
+        // do nothing because we do not need to preload
       } else {
         await this._appendElementToDocumentAsync(element);
       }
@@ -146,9 +146,9 @@ export default class BrowserExtension {
    * @param {any} resourceType
    * @param {any} resourceName
    * @param {any} defaultUri
-   * @param {any} integrity
+   * @param {any} _integrity
    */
-  _loadBootResource(resourceType, resourceName, defaultUri, integrity) {
+  _loadBootResource(resourceType, resourceName, defaultUri, _integrity) {
     if (resourceType === "dotnetjs" || resourceType === "manifest") {
       return `${this.Url}framework/${resourceName}`;
     }

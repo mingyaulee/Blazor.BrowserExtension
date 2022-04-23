@@ -33,9 +33,9 @@
       <_BrowserExtension_Package_Contents_ManifestJson_FilePath>$(_BrowserExtension_Package_Contents_Directory)\manifest.json</_BrowserExtension_Package_Contents_ManifestJson_FilePath>
       <_BrowserExtension_Project_Assets_ManifestJson_FilePath>$(_BrowserExtension_Project_Assets_Directory)\manifest.json</_BrowserExtension_Project_Assets_ManifestJson_FilePath>
       <_BrowserExtension_Project_Assets_IndexHtml_FilePath>$(_BrowserExtension_Project_Assets_Directory)\index.html</_BrowserExtension_Project_Assets_IndexHtml_FilePath>
+      <_BrowserExtension_Package_Contents_BackgroundWorker_FilePath>$(_BrowserExtension_Package_Contents_Directory)\BackgroundWorker.js</_BrowserExtension_Package_Contents_BackgroundWorker_FilePath>
+      <_BrowserExtension_Project_Assets_BackgroundWorker_FilePath>$(_BrowserExtension_Project_Assets_Directory)\BackgroundWorker.js</_BrowserExtension_Project_Assets_BackgroundWorker_FilePath>
       <_BrowserExtension_Project_RazorPages_IndexRazor_FilePath>$(_BrowserExtension_Project_RazorPages_Directory)\Index.razor</_BrowserExtension_Project_RazorPages_IndexRazor_FilePath>
-      <_BrowserExtension_Package_Contents_BackgroundRazor_FilePath>$(_BrowserExtension_Package_Contents_Directory)\Background.razor</_BrowserExtension_Package_Contents_BackgroundRazor_FilePath>
-      <_BrowserExtension_Project_RazorPages_BackgroundRazor_FilePath>$(_BrowserExtension_Project_RazorPages_Directory)\Background.razor</_BrowserExtension_Project_RazorPages_BackgroundRazor_FilePath>
       <_BrowserExtension_Project_ProgramCs_FilePath>$(_BrowserExtension_Project_Directory)Program.cs</_BrowserExtension_Project_ProgramCs_FilePath>
     </PropertyGroup>
 
@@ -51,11 +51,6 @@
     <BlazorToBrowserExtensionBootstrapFile FilePath="$(_BrowserExtension_Project_FilePath)"
                                            FileType="Project" />
 
-    <!-- Make sure this build includes the wwwroot directory to copy to output directory -->
-    <ItemGroup>
-      <None Include="wwwroot\**\*" CopyToOutputDirectory="Always" />
-    </ItemGroup>
-
     <Message Importance="high" Text="  Bootstrapping index.html file '$(_BrowserExtension_Project_Assets_IndexHtml_FilePath)'" />
     <BlazorToBrowserExtensionBootstrapFile FilePath="$(_BrowserExtension_Project_Assets_IndexHtml_FilePath)"
                                            FileType="IndexHtml" />
@@ -64,15 +59,15 @@
     <BlazorToBrowserExtensionBootstrapFile FilePath="$(_BrowserExtension_Project_RazorPages_IndexRazor_FilePath)"
                                            FileType="IndexRazor" />
 
-    <Message Importance="high" Text="  Creating default Background.razor file in '$(_BrowserExtension_Project_RazorPages_BackgroundRazor_FilePath)'" />
-    <Copy SourceFiles="$(_BrowserExtension_Package_Contents_BackgroundRazor_FilePath)"
-          DestinationFiles="$(_BrowserExtension_Project_RazorPages_BackgroundRazor_FilePath)"
+    <Message Importance="high" Text="  Creating default BackgroundWorker.js file in '$(_BrowserExtension_Project_Assets_BackgroundWorker_FilePath)'" />
+    <Copy SourceFiles="$(_BrowserExtension_Package_Contents_BackgroundWorker_FilePath)"
+          DestinationFiles="$(_BrowserExtension_Project_Assets_BackgroundWorker_FilePath)"
           ContinueOnError="true"
           SkipUnchangedFiles="true" />
 
-    <!-- Make sure this build includes the newly created Background.razor -->
+    <!-- Make sure this build includes the wwwroot directory to copy to output directory -->
     <ItemGroup>
-      <Content Include="Pages/Background.razor" CopyToOutputDirectory="Never" />
+      <None Include="wwwroot\**\*" CopyToOutputDirectory="Always" />
     </ItemGroup>
 
     <Message Importance="high" Text="  Bootstrapping Program.cs file '$(_BrowserExtension_Project_ProgramCs_FilePath)'" />
@@ -105,7 +100,7 @@
         <From>document.body.appendChild</From>
         <To>globalThis.BlazorBrowserExtension.BrowserExtension.AppendElementToDocumentAsync</To>
       </_BrowserExtension_BlazorJs_FileContentReplacements>
-      <_BrowserExtension_BlazorJs_FileContentReplacements Include="append element to document body" Condition="'$(TargetFramework)' == 'net7.0'">
+      <_BrowserExtension_BlazorJs_FileContentReplacements Include="append element to document head" Condition="'$(TargetFramework)' == 'net7.0'">
         <From>document.head.appendChild</From>
         <To>globalThis.BlazorBrowserExtension.BrowserExtension.AppendElementToDocumentAsync</To>
       </_BrowserExtension_BlazorJs_FileContentReplacements>
@@ -140,8 +135,12 @@
         - .Net 6 https://github.com/dotnet/runtime/tree/v6.0.4/src/mono/wasm/runtime
         - .Net 5 https://github.com/dotnet/runtime/tree/v5.0.0/src/mono/wasm/runtime
       -->
-      <_BrowserExtension_DotNetJs_FileContentReplacements Include="fetch url">
+      <_BrowserExtension_DotNetJs_FileContentReplacements Include="fetch url" Condition="'$(TargetFramework)' == 'net5.0' OR '$(TargetFramework)' == 'net6.0'">
         <From>fetch(</From>
+        <To>globalThis.BlazorBrowserExtension.BrowserExtension.FetchAsync(</To>
+      </_BrowserExtension_DotNetJs_FileContentReplacements>
+      <_BrowserExtension_DotNetJs_FileContentReplacements Include="fetch url" Condition="'$(TargetFramework)' == 'net7.0'">
+        <From>globalThis.fetch(</From>
         <To>globalThis.BlazorBrowserExtension.BrowserExtension.FetchAsync(</To>
       </_BrowserExtension_DotNetJs_FileContentReplacements>
       <_BrowserExtension_DotNetJs_FileContentReplacements Include="module reference" Condition="'$(TargetFramework)' == 'net5.0' OR '$(TargetFramework)' == 'net6.0'">
@@ -208,6 +207,9 @@
 	    -->
       <_BrowserExtension_Project_BuildOutput_StaticWebAssets_Manifest_FilePath>$(TargetDir)$(ProjectName).StaticWebAssets.xml</_BrowserExtension_Project_BuildOutput_StaticWebAssets_Manifest_FilePath>
       <_BrowserExtension_Project_BuildOutput_StaticWebAssets_Manifest_FilePath Condition="('$(TargetFramework)' == 'net6.0' OR '$(TargetFramework)' == 'net7.0') AND Exists('$(TargetDir)$(ProjectName).staticwebassets.runtime.json')">$(TargetDir)$(ProjectName).staticwebassets.runtime.json</_BrowserExtension_Project_BuildOutput_StaticWebAssets_Manifest_FilePath>
+      <!-- TODO: To remove this custom dotnet runtime when .Net 8.0 is released -->
+      <_BrowserExtension_Package_Contents_Directory>$(MSBuildThisFileDirectory)..\content</_BrowserExtension_Package_Contents_Directory>
+      <_BrowserExtension_Package_Contents_DotNetJs_FilePath>$(_BrowserExtension_Package_Contents_Directory)\dotnet-7.0.js</_BrowserExtension_Package_Contents_DotNetJs_FilePath>
     </PropertyGroup>
 
     <Message Importance="high" Text="Validating Browser Extension manifest.json" />
@@ -238,6 +240,11 @@
       <_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_BlazorJs_FilePath Include="$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_Directory)\blazor.webassembly.js" />
       <_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_DotNetJs_FilePath Include="$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_Directory)\dotnet.*.js" />
     </ItemGroup>
+    <!-- TODO: To remove this custom dotnet runtime when .Net 8.0 is released -->
+    <Message Importance="high" Text="  Replacing 'dotnet.*.js' with custom CSP compliant version" Condition="'$(TargetFramework)' == 'net7.0'" />
+    <Copy SourceFiles="$(_BrowserExtension_Package_Contents_DotNetJs_FilePath)"
+          DestinationFiles="@(_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_DotNetJs_FilePath)"
+          Condition="'$(TargetFramework)' == 'net7.0'" />
     <BlazorToBrowserExtensionReplaceContent Files="@(_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_BlazorJs_FilePath)"
                                             Replace="@(_BrowserExtension_BlazorJs_FileContentReplacements)" />
     <BlazorToBrowserExtensionReplaceContent Files="@(_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_DotNetJs_FilePath)"
@@ -327,6 +334,9 @@
       <_BrowserExtension_Project_PublishOutput_BrowserExtension_OriginalRclContent_Directory>$(_BrowserExtension_Project_PublishOutput_BrowserExtension_Directory)\_content</_BrowserExtension_Project_PublishOutput_BrowserExtension_OriginalRclContent_Directory>
       <_BrowserExtension_Project_PublishOutput_BrowserExtension_HasRclContentDirectory>false</_BrowserExtension_Project_PublishOutput_BrowserExtension_HasRclContentDirectory>
       <_BrowserExtension_Project_PublishOutput_BrowserExtension_RclContent_Directory>$(_BrowserExtension_Project_PublishOutput_BrowserExtension_Directory)\content</_BrowserExtension_Project_PublishOutput_BrowserExtension_RclContent_Directory>
+      <!-- TODO: To remove this custom dotnet runtime when .Net 8.0 is released -->
+      <_BrowserExtension_Package_Contents_Directory>$(MSBuildThisFileDirectory)..\content</_BrowserExtension_Package_Contents_Directory>
+      <_BrowserExtension_Package_Contents_DotNetJs_FilePath>$(_BrowserExtension_Package_Contents_Directory)\dotnet-7.0.js</_BrowserExtension_Package_Contents_DotNetJs_FilePath>
     </PropertyGroup>
 
     <Message Importance="high" Text="Converting published Blazor application to Browser Extension" />
@@ -354,6 +364,11 @@
       <_BrowserExtension_Project_PublishOutput_BrowserExtension_Framework_BlazorJs_FilePath Include="$(_BrowserExtension_Project_PublishOutput_BrowserExtension_Framework_Directory)\blazor.webassembly.js" />
       <_BrowserExtension_Project_PublishOutput_BrowserExtension_Framework_DotnetJs_FilePath Include="$(_BrowserExtension_Project_PublishOutput_BrowserExtension_Framework_Directory)\dotnet.*.js" />
     </ItemGroup>
+    <Message Importance="high" Text="  Replacing 'dotnet.*.js' with custom CSP compliant version" Condition="'$(TargetFramework)' == 'net7.0'" />
+    <!-- TODO: To remove this custom dotnet runtime when .Net 8.0 is released -->
+    <Copy SourceFiles="$(_BrowserExtension_Package_Contents_DotNetJs_FilePath)"
+          DestinationFiles="@(_BrowserExtension_Project_PublishOutput_BrowserExtension_Framework_DotnetJs_FilePath)"
+          Condition="'$(TargetFramework)' == 'net7.0'" />
     <BlazorToBrowserExtensionReplaceContent Files="@(_BrowserExtension_Project_PublishOutput_BrowserExtension_Framework_BlazorJs_FilePath)" Replace="@(_BrowserExtension_BlazorJs_FileContentReplacements)" />
     <BlazorToBrowserExtensionReplaceContent Files="@(_BrowserExtension_Project_PublishOutput_BrowserExtension_Framework_DotnetJs_FilePath)" Replace="@(_BrowserExtension_DotNetJs_FileContentReplacements)" />
 

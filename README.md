@@ -5,6 +5,19 @@
 
 You can now easily build a browser extension with Blazor!
 
+## Manifest V3 support is here!
+
+At the moment, Chromium based browsers (Chrome & Edge) has support for the manifest V3 specification and manifest V2 is deprecated.
+
+Firefox's implementation is in progress.
+1. [Post 1](https://blog.mozilla.org/addons/2021/05/27/manifest-v3-update/)
+2. [Post 2](https://blog.mozilla.org/addons/2019/12/12/test-the-new-csp-for-content-scripts/)
+3. Check on the progress from the [Firefox blog](https://blog.mozilla.org/addons/tag/manifest-v3/).
+
+Check out the [migration guide](ManifestV3Migration.md) from manifest V2 to V3.
+
+> **Important Note:** Only .Net 7 is supported for manifest V3. We are using a custom version of `dotnet.js` runtime to overcome the CSP compliance issue that will only be release in .Net 8.
+
 ## Demo
 ![Blazor Browser Extension Demo](Demo.gif)
 
@@ -16,7 +29,7 @@ You can now easily build a browser extension with Blazor!
 This package imports two other packages, which are:
 1. [WebExtensions.Net](https://github.com/mingyaulee/WebExtensions.Net) - Provides interop for WebExtensions standard API.
 2. [JsBind.Net](https://github.com/mingyaulee/JsBind.Net) - Provides advanced JavaScript interop features used by WebExtensions.Net.
-3. Blazor.BrowserExtension.Build (in this repository) - Adds build target and tasks to the project.
+3. Blazor.BrowserExtension.Build (in this repository) - Adds build targets and tasks to the project.
 
 ### Samples/References
 
@@ -36,81 +49,7 @@ Or check out the [GitHub dependency graph](https://github.com/mingyaulee/Blazor.
 > If you are using Visual Studio, you can do all these from the UI after installing the template NuGet package, like how I did in the demo above (once you have enabled showing .Net Core templates in the New project dialog).
 
 ### Setup existing project
-1. Install NuGet package `Blazor.BrowserExtension`.
-0. Add `<BrowserExtensionBootstrap>true</BrowserExtensionBootstrap>` under the `<PropertyGroup>` node in your `.csproj` project file to automatically setup the project files to be compatible for building into browser extension.
-0. Build the project.
-
-### Manual Setting Up
-You can setup the project manually as well, if for some reason you encounter any problem with the bootstrapping step above.
-1. Add a new file `manifest.json` under the `wwwroot` folder. An example of minimal `manifest.json` file:
-   ```json
-   {
-     "manifest_version": 2,
-     "name": "My Blazor Extension",
-     "description": "My browser extension built with Blazor WebAssembly",
-     "version": "0.1",
-     "background": {
-       "page": "background.html",
-       "persistent": true
-     },
-     "content_security_policy": "script-src 'self' 'unsafe-eval' 'wasm-eval' 'sha256-v8v3RKRPmN4odZ1CWM5gw80QKPCCWMcpNeOmimNL2AA='; object-src 'self'",
-     "web_accessible_resources": [
-       "framework/*",
-       "content/*"
-     ]
-   }
-   ```
-0. Add the following to the `.csproj` file to make sure that all the files under `wwwroot` will always be copied to the output.
-   ```xml
-     <ItemGroup>
-       <None Include="wwwroot\**\*" CopyToOutputDirectory="Always" />
-     </ItemGroup>
-   ```
-0. In `wwwroot/index.html` replace the script tag `<script src="_framework/blazor.webassembly.js"></script>` with `<script src="content/Blazor.BrowserExtension/Core.js"></script>`
-0. In `Pages/Index.razor` replace the first line `@page "/"` with the following lines:
-   ```razor
-   @page "/index.html"
-   @inherits Blazor.BrowserExtension.Pages.IndexPage
-   ```
-0. Add a `Background.razor` file under `Pages` folder (Right click on the `Pages` folder and select Add → Razor Component), with the following content:
-   ```razor
-   @page "/background.html"
-   @inherits Blazor.BrowserExtension.Pages.BackgroundPage
-   @using WebExtensions.Net.Tabs
-   
-   @code {
-       protected override async Task OnInitializedAsync()
-       {
-           await base.OnInitializedAsync();
-           // this opens index.html in the extension as a new tab when the background page is loaded
-           var extensionUrl = await WebExtensions.Runtime.GetURL("index.html");
-           await WebExtensions.Tabs.Create(new CreateProperties()
-           {
-               url = extensionUrl
-           });
-       }
-   }
-   ```
-0. Add the following into `Program.cs` file.
-   ```csharp
-   public static async Task Main(string[] args)
-   {
-       ...
-       builder.Services.AddBrowserExtensionServices();
-       ...
-   }
-   ```
-   If you are targeting .Net 5.0 you will need to add replace the original `HttpClient` service registration with
-   ```csharp
-   public static async Task Main(string[] args)
-   {
-       ...
-       // workaround to use JavaScript fetch to bypass url validation
-       // see: https://github.com/dotnet/runtime/issues/52836 (fixed in .Net 6)
-       builder.Services.AddScoped<HttpClient>(sp => new JsHttpClient(sp) { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-       ...
-   }
-   ```
+Refer to [this guide](SetupExistingProject.md) for setting up existing project.
 
 ## Pre-initialization script (app.js)
 A custom script can be run before the initialization of the Blazor application.
@@ -118,6 +57,8 @@ This is particularly useful for content scripts because we need to inject a `DIV
 
 To do so, create a file named `app.js` under the directory `wwwroot` in your project.
 The file will automatically be detected during the build and the `app.js` file will be executed every time the Blazor application is going to be initialized.
+
+> Note: the `app.js` file will need to be added to the `web_accessible_resources` in the `manifest.json` file
 
 ### Change initialization behaviour
 Using an `app.js`, you can set the following properties in the `BlazorBrowserExtension` global object to change the initialization behaviour.
@@ -139,16 +80,16 @@ globalThis.BlazorBrowserExtension.BrowserExtension.InitializeAsync("Production")
 ### Google Chrome
 1. Launch the Extensions page ( ⋮ → More tools → Extensions).
 2. Switch on `Developer mode`.
-3. Click on the `Load unpacked` button, then navigate to `%ProjectDir%\bin\Debug\net5.0\` and select the folder `browserextension`.
+3. Click on the `Load unpacked` button, then navigate to `%ProjectDir%\bin\Debug\net7.0\` and select the folder `browserextension`.
 
 ### Microsoft Edge
 1. Launch the Extensions page ( ⋮ → Extensions).
 2. Click on the ☰ and switch on `Developer mode`.
-3. Click on the button with the title `Load unpacked`, then navigate to `%ProjectDir%\bin\Debug\net5.0\` and select the folder `browserextension`.
+3. Click on the button with the title `Load unpacked`, then navigate to `%ProjectDir%\bin\Debug\net7.0\` and select the folder `browserextension`.
 
 ### Mozilla Firefox
 1. Navigate to the URL [about:debugging#/runtime/this-firefox](about:debugging#/runtime/this-firefox)
-2. Click on `Load Temporary Add-on...`, then navigate to `%ProjectDir%\bin\Debug\net5.0\browserextension` and select any file in the directory.
+2. Click on `Load Temporary Add-on...`, then navigate to `%ProjectDir%\bin\Debug\net7.0\browserextension` and select any file in the directory.
 
 ## Debugging locally in IIS Express or Kestrel
 1. Start the Blazor project directly from Visual Studio or `dotnet run`.
@@ -161,11 +102,21 @@ globalThis.BlazorBrowserExtension.BrowserExtension.InitializeAsync("Production")
 
 ### Add a browser action popup page
 Add the following to the `manifest.json`
+
+For manifest V3
+```json
+"action": {
+  "default_popup": "popup.html"
+},
+```
+
+For manifest V2
 ```json
 "browser_action": {
   "default_popup": "popup.html"
 }
 ```
+
 Add a `Popup.razor` Razor component under `Pages` folder with the following content.
 ```razor
 @page "/popup.html"
@@ -192,6 +143,28 @@ Add a `Options.razor` Razor component under `Pages` folder with the following co
 
 ### Add a content script
 Add the following to the `manifest.json`
+
+For manifest V3
+```json
+"content_scripts": [
+  {
+    "matches": [ "*://*/*" ],
+    "js": [ "content/Blazor.BrowserExtension/ContentScript.js" ]
+  }
+],
+...
+"web_accessible_resources": [
+  {
+    "resources": [
+      ...
+      "app.js"
+    ],
+    ...
+  }
+]
+```
+
+For manifest V2
 ```json
 "content_scripts": [
   {
@@ -205,6 +178,7 @@ Add the following to the `manifest.json`
   "app.js"
 ],
 ```
+
 Add a `ContentScript.razor` Razor component under `Pages` folder with the following content.
 ```razor
 @page "/contentscript.html"
@@ -266,45 +240,7 @@ The WebExtensions API is provided by the package [WebExtensions.Net](https://git
 ```
 
 ## How does routing work
-### Default routing
-The default routing when using this package is physical file routing.
-When building the project,
-1. all the razor components are processed to get a list of all the physical file routes
-0. the routing entry file (default is `index.html`, see `BrowserExtensionRoutingEntryFile` below) is copied to the output directory based on the list of physical file routes
-
-For example, if the `Background.razor` contains `@page "/background.html"` and the `Options.razor` contains `@page "/options.html"`, when the project is built or published, the file `index.html` will be copied/duplicated to the output directory with the name `background.html` and `options.html`.
-
-This is especially useful for browser extensions because the browsers only serve static files, and the presence of these physical files supports the routing when the extension page is reloaded.
-
-### Virtual path routing
-Routing with virtual path is also supported, however not encouraged due to the requirements.
-
-Virtual path routing means that the routes do not have a corresponding physical file, for example `/background` or `/options`.
-What this means is that when the user tries to reload the page, the browser will return a page not found (404) error.
-
-To overcome this, the background page intercepts every requests that is made to the extension's path, and if any path does not have an extension, it will redirect the request to `index.html?path={original path}`.
-This forces the browser to load the `index.html` and the `IndexPage` class uses the `NavigationManager` in Blazor to redirect to the original path.
-
-You can use the `@page` directive to add route attribute with a virtual path to a Razor page, for example `@page "/options"`.
-
-**Requirements:**
-1. `Background.razor` must inherit from the `BackgroundPage` class.
-0. `Index.razor` must inherit from the `IndexPage` class.
-0. The `manifest.json` must declare the background page with `persistent: true` and the following permissions
-   - `*://*/*`
-   - `webRequest`
-   - `webRequestBlocking`
-   
-   Example:
-   ```json
-   "permissions": [
-     "*://*/*",
-     "webRequest",
-     "webRequestBlocking"
-   ]
-   ```
-> The background will only intercept the calls if it detects the permissions are declared.
-> When the permissions are not declared in the manifest, the only routing that works is the physical file routing.
+Visit [this page](Routing.md) to read about routing in browser extensions.
 
 ## Customize build
 
@@ -321,13 +257,6 @@ The following MSBuild properties can be specified in your project file or when r
 | BrowserExtensionOutputPath        | browserextension                                     | The folder of the build/publish output.                                          |
 | BrowserExtensionRoutingEntryFile  | index.html                                           | The HTML entry file for the Blazor application.                                  |
 | BrowserExtensionEnableCompression | $(BlazorEnableCompression)<br />Blazor default: True | If set to True, the .br compressed files will be loaded instead of .dll.         |
-
-## Manifest V3 Support
-
-At the moment, Chromium based browsers (Chrome & Edge) has support for the manifest V3 specification while Firefox's implementation is [in progress](https://blog.mozilla.org/addons/2021/05/27/manifest-v3-update/).
-However, there is an [issue](https://bugs.chromium.org/p/chromium/issues/detail?id=1173354) in Chromium where extensions using manifest V3 is not able to run web assembly.
-
-Therefore, manifest V3 is currently not supported for Blazor browser extension projects.
 
 ## Additional Information
 Find out how to build a cross browser extension with the links below:

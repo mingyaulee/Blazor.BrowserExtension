@@ -71,9 +71,7 @@ class BrowserExtension {
       }
     } else if (element.tagName == "LINK") {
       const linkElement = (element);
-      if (linkElement.rel == "modulepreload") {
-        await import(linkElement.href);
-      } else {
+      if (linkElement.rel == "modulepreload") ; else {
         await this._appendElementToDocumentAsync(element);
       }
     } else {
