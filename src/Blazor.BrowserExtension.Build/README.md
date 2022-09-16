@@ -1,0 +1,2 @@
+﻿## Upgrading `System.Text.Json` package for .Net Framework 4.7.2
+All required binaries for `System.Text.Json` from the output (`bin/` directory) must be copied to the `lib` directory so that they can be packaged in the NuGet package and loaded when build is running in Visual Studio.
