@@ -306,11 +306,11 @@
 
     <BlazorToBrowserExtensionProcessPublishFiles Input="@(StaticWebAsset)"
                                                  CompressionEnabled="$(BrowserExtensionEnableCompression)"
-                                                 Condition="'$(TargetFramework)' == 'net6.0'">
+                                                 Condition="'$(TargetFramework)' != 'net5.0'">
       <Output TaskParameter="Output" ItemName="_BrowserExtension_Project_PublishFiles_FilesToRemove" />
     </BlazorToBrowserExtensionProcessPublishFiles>
 
-    <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
+    <ItemGroup Condition="'$(TargetFramework)' != 'net5.0'">
       <StaticWebAsset Remove="@(_BrowserExtension_Project_PublishFiles_FilesToRemove)" />
     </ItemGroup>
 
