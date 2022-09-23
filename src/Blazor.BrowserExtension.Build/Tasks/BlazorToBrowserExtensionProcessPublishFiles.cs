@@ -33,7 +33,7 @@ namespace Blazor.BrowserExtension.Build.Tasks
         {
             var itemPath = input.ItemSpec;
             var relativePath = GetRelativePath(input);
-            if (string.IsNullOrEmpty(relativePath) || !itemPath.Contains("compress"))
+            if (string.IsNullOrEmpty(relativePath))
             {
                 return;
             }
