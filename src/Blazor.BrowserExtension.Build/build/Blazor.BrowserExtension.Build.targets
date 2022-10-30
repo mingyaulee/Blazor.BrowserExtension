@@ -84,7 +84,7 @@
 
   <!-- Target
     Runs only when another target depends on this target.
-    Defines the properties required for replacing blazor.webassembly.js and dotnet.*.js.
+    Defines the properties required for replacing blazor.webassembly.js, dotnet.*.js and blazor.boot.json.
   -->
   <Target Name="DefineBlazorToBrowserExtensionFrameworkJsFileContentReplacements">
 
@@ -178,6 +178,17 @@
         <From>this.mono_set_timeout_exec</From>
         <To>globalThis.mono_set_timeout_exec</To>
       </_BrowserExtension_DotNetJs_FileContentReplacements>
+      <!--
+        Define contents to replace in blazor.boot.json
+      -->
+      <_BrowserExtension_BlazorBootJson_FileContentReplacements Include="framework path">
+        <From>_framework</From>
+        <To>framework</To>
+      </_BrowserExtension_BlazorBootJson_FileContentReplacements>
+      <_BrowserExtension_BlazorBootJson_FileContentReplacements Include="content path">
+        <From>_content</From>
+        <To>content</To>
+      </_BrowserExtension_BlazorBootJson_FileContentReplacements>
     </ItemGroup>
 
   </Target>
@@ -235,10 +246,11 @@
     <Message Importance="high" Text="  Removing directory '$(_BrowserExtension_Project_BuildOutput_BrowserExtension_OriginalFramework_Directory)'" />
     <RemoveDir Directories="$(_BrowserExtension_Project_BuildOutput_BrowserExtension_OriginalFramework_Directory)" />
 
-    <Message Importance="high" Text="  Replacing content of 'blazor.webassembly.js' and 'dotnet.*.js'" />
+    <Message Importance="high" Text="  Replacing content of 'blazor.webassembly.js', 'dotnet.*.js' and 'blazor.boot.json'" />
     <ItemGroup>
       <_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_BlazorJs_FilePath Include="$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_Directory)\blazor.webassembly.js" />
       <_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_DotNetJs_FilePath Include="$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_Directory)\dotnet.*.js" />
+      <_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_BlazorBootJson_FilePath Include="$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_Directory)\blazor.boot.json" />
     </ItemGroup>
     <!-- TODO: To remove this custom dotnet runtime when .Net 8.0 is released -->
     <Message Importance="high" Text="  Replacing 'dotnet.*.js' with custom CSP compliant version" Condition="'$(TargetFramework)' == 'net7.0'" />
@@ -249,6 +261,8 @@
                                             Replace="@(_BrowserExtension_BlazorJs_FileContentReplacements)" />
     <BlazorToBrowserExtensionReplaceContent Files="@(_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_DotNetJs_FilePath)"
                                             Replace="@(_BrowserExtension_DotNetJs_FileContentReplacements)" />
+    <BlazorToBrowserExtensionReplaceContent Files="@(_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_BlazorBootJson_FilePath)"
+                                            Replace="@(_BrowserExtension_BlazorBootJson_FileContentReplacements)" />
 
     <Message Importance="high" Text="  Processing routing files" />
     <BlazorToBrowserExtensionProcessRoutingFiles Input="@(RazorComponent)"
@@ -359,18 +373,23 @@
     <Message Importance="high" Text="  Removing directory '$(_BrowserExtension_Project_PublishOutput_BrowserExtension_OriginalFramework_Directory)'" />
     <RemoveDir Directories="$(_BrowserExtension_Project_PublishOutput_BrowserExtension_OriginalFramework_Directory)" />
 
-    <Message Importance="high" Text="  Replacing content of 'blazor.webassembly.js' and 'dotnet.*.js'" />
+    <Message Importance="high" Text="  Replacing content of 'blazor.webassembly.js', 'dotnet.*.js' and 'blazor.boot.json'" />
     <ItemGroup>
       <_BrowserExtension_Project_PublishOutput_BrowserExtension_Framework_BlazorJs_FilePath Include="$(_BrowserExtension_Project_PublishOutput_BrowserExtension_Framework_Directory)\blazor.webassembly.js" />
       <_BrowserExtension_Project_PublishOutput_BrowserExtension_Framework_DotnetJs_FilePath Include="$(_BrowserExtension_Project_PublishOutput_BrowserExtension_Framework_Directory)\dotnet.*.js" />
+      <_BrowserExtension_Project_PublishOutput_BrowserExtension_Framework_BlazorBootJson_FilePath Include="$(_BrowserExtension_Project_PublishOutput_BrowserExtension_Framework_Directory)\blazor.boot.json" />
     </ItemGroup>
     <Message Importance="high" Text="  Replacing 'dotnet.*.js' with custom CSP compliant version" Condition="'$(TargetFramework)' == 'net7.0'" />
     <!-- TODO: To remove this custom dotnet runtime when .Net 8.0 is released -->
     <Copy SourceFiles="$(_BrowserExtension_Package_Contents_DotNetJs_FilePath)"
           DestinationFiles="@(_BrowserExtension_Project_PublishOutput_BrowserExtension_Framework_DotnetJs_FilePath)"
           Condition="'$(TargetFramework)' == 'net7.0'" />
-    <BlazorToBrowserExtensionReplaceContent Files="@(_BrowserExtension_Project_PublishOutput_BrowserExtension_Framework_BlazorJs_FilePath)" Replace="@(_BrowserExtension_BlazorJs_FileContentReplacements)" />
-    <BlazorToBrowserExtensionReplaceContent Files="@(_BrowserExtension_Project_PublishOutput_BrowserExtension_Framework_DotnetJs_FilePath)" Replace="@(_BrowserExtension_DotNetJs_FileContentReplacements)" />
+    <BlazorToBrowserExtensionReplaceContent Files="@(_BrowserExtension_Project_PublishOutput_BrowserExtension_Framework_BlazorJs_FilePath)"
+                                            Replace="@(_BrowserExtension_BlazorJs_FileContentReplacements)" />
+    <BlazorToBrowserExtensionReplaceContent Files="@(_BrowserExtension_Project_PublishOutput_BrowserExtension_Framework_DotnetJs_FilePath)"
+                                            Replace="@(_BrowserExtension_DotNetJs_FileContentReplacements)" />
+    <BlazorToBrowserExtensionReplaceContent Files="@(_BrowserExtension_Project_PublishOutput_BrowserExtension_Framework_BlazorBootJson_FilePath)"
+                                            Replace="@(_BrowserExtension_BlazorBootJson_FileContentReplacements)" />
 
     <Message Importance="high" Text="  Processing routing files" />
     <BlazorToBrowserExtensionProcessRoutingFiles Input="@(RazorComponent)"
