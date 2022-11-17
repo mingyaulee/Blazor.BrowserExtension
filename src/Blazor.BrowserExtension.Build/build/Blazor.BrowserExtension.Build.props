@@ -2,6 +2,8 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <PropertyGroup>
+    <!-- Prevent caching by default since all browser extension files are local -->
+    <BlazorCacheBootResources>false</BlazorCacheBootResources>
     <BrowserExtensionBootstrap Condition="'$(BrowserExtensionBootstrap)' == ''">false</BrowserExtensionBootstrap>
     <BuildBlazorToBrowserExtension Condition="'$(BuildBlazorToBrowserExtension)' == ''">true</BuildBlazorToBrowserExtension>
     <PublishBlazorToBrowserExtension Condition="'$(PublishBlazorToBrowserExtension)' == ''">true</PublishBlazorToBrowserExtension>
