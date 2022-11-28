@@ -184,10 +184,12 @@
       <_BrowserExtension_BlazorBootJson_FileContentReplacements Include="framework path">
         <From>_framework</From>
         <To>framework</To>
+        <IsOptional>true</IsOptional>
       </_BrowserExtension_BlazorBootJson_FileContentReplacements>
       <_BrowserExtension_BlazorBootJson_FileContentReplacements Include="content path">
         <From>_content</From>
         <To>content</To>
+        <IsOptional>true</IsOptional>
       </_BrowserExtension_BlazorBootJson_FileContentReplacements>
     </ItemGroup>
 
