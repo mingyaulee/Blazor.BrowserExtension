@@ -9,7 +9,7 @@ using WebExtensions.Net.WebRequest;
 
 namespace Blazor.BrowserExtension.Pages
 {
-    public class BackgroundPage : BasePage
+    public partial class BackgroundPage : BasePage
     {
         private string prefixUri;
 
@@ -60,9 +60,19 @@ namespace Blazor.BrowserExtension.Pages
             return null;
         }
 
+#if NET7_0_OR_GREATER
+        private static bool IsStaticFile(string url)
+        {
+            return GetStaticFileRegex().IsMatch(url);
+        }
+
+        [GeneratedRegex(@"\.\w{2,5}(\?.+)?$", RegexOptions.IgnoreCase)]
+        private static partial Regex GetStaticFileRegex();
+#else
         private static bool IsStaticFile(string url)
         {
             return Regex.IsMatch(url, @"\.\w{2,5}(\?.+)?$");
         }
-    }
+#endif
+}
 }

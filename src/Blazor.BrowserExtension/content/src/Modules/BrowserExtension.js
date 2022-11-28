@@ -41,7 +41,7 @@ export default class BrowserExtension {
     await this.AppendElementToDocumentAsync(blazorScript);
 
     // Start Blazor
-    var startOption = {
+    const startOption = {
     };
 
     if (environment) {
@@ -175,6 +175,14 @@ export default class BrowserExtension {
    * @returns {any}
    */
   _getBrowserExtensionMode() {
+    return this.Mode;
+  }
+
+  /**
+   * Gets the browser extension mode. Called during initialization in DotNet.
+   * @returns {any}
+   */
+  _getBrowserExtensionModeLegacy() {
     return globalThis.BINDING.js_string_to_mono_string(this.Mode);
   }
 }

@@ -29,7 +29,7 @@ class BrowserExtension {
     await this.AppendElementToDocumentAsync(blazorScript);
 
     // Start Blazor
-    var startOption = {
+    const startOption = {
     };
 
     if (environment) {
@@ -101,7 +101,7 @@ class BrowserExtension {
     });
   }
 
-  _loadBootResource(resourceType, resourceName, defaultUri, integrity) {
+  _loadBootResource(resourceType, resourceName, defaultUri, _integrity) {
     if (resourceType === "dotnetjs" || resourceType === "manifest") {
       return `${this.Url}framework/${resourceName}`;
     }
@@ -124,6 +124,10 @@ class BrowserExtension {
   }
 
   _getBrowserExtensionMode() {
+    return this.Mode;
+  }
+
+  _getBrowserExtensionModeLegacy() {
     return globalThis.BINDING.js_string_to_mono_string(this.Mode);
   }
 }

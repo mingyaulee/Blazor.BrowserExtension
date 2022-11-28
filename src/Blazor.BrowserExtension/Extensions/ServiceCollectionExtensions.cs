@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
-    public static class ServiceCollectionExtensions
+    public static partial class ServiceCollectionExtensions
     {
         public static IServiceCollection AddBrowserExtensionServices(this IServiceCollection services)
         {
@@ -31,7 +31,11 @@ namespace Microsoft.Extensions.DependencyInjection
 
         private static BrowserExtensionMode GetBrowserExtensionMode(IJSUnmarshalledRuntime jsRuntime)
         {
-            var browserExtensionModeString = jsRuntime.InvokeUnmarshalled<string>($"BlazorBrowserExtension.BrowserExtension._getBrowserExtensionMode");
+#if NET7_0_OR_GREATER
+            var browserExtensionModeString = GetBrowserExtensionMode();
+#else
+            var browserExtensionModeString = jsRuntime.InvokeUnmarshalled<string>($"BlazorBrowserExtension.BrowserExtension._getBrowserExtensionModeLegacy");
+#endif
             if (Enum.TryParse<BrowserExtensionMode>(browserExtensionModeString, out var result))
             {
                 return result;
@@ -41,5 +45,11 @@ namespace Microsoft.Extensions.DependencyInjection
                 return BrowserExtensionMode.Standard;
             }
         }
+
+#if NET7_0_OR_GREATER
+
+        [System.Runtime.InteropServices.JavaScript.JSImport("globalThis.BlazorBrowserExtension.BrowserExtension._getBrowserExtensionMode")]
+        private static partial string GetBrowserExtensionMode();
+#endif
     }
 }
