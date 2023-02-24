@@ -102,7 +102,7 @@ class BrowserExtension {
   }
 
   _loadBootResource(resourceType, resourceName, defaultUri, _integrity) {
-    if (resourceType === "dotnetjs" || resourceType == "dotnetwasm" || resourceType === "manifest") {
+    if (resourceType === "dotnetjs" || resourceType === "manifest") {
       return `${this.Url}framework/${resourceName}`;
     }
 
