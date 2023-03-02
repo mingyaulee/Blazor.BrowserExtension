@@ -1,40 +1,21 @@
-﻿using System.Text;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace Blazor.BrowserExtension.Build.Tasks.ExtensionManifest
 {
     internal class ManifestItem
     {
-        private readonly StringBuilder valueStringBuilder;
-
-        public ManifestItem(int lineNumber)
+        public ManifestItem(long? lineNumber, long? columnNumber, string value)
         {
-            valueStringBuilder = new StringBuilder();
             LineNumber = lineNumber;
+            ColumnNumber = columnNumber;
+            Value = value;
         }
 
-        public int LineNumber { get; }
-        private string value;
-        public string Value
-        {
-            get
-            {
-                if (value is null)
-                {
-                    value = valueStringBuilder.ToString();
-                }
-                return value;
-            }
-        }
-
-        public void AddValue(string value)
-        {
-            this.value = null;
-            valueStringBuilder.Append(value);
-        }
+        public long? LineNumber { get; }
+        public long? ColumnNumber { get; set; }
+        public string Value { get; }
 
         public bool ContainsExact(string value) => Regex.IsMatch(Value, Regex.Escape($"\"{value}\""));
-
         public bool ContainsExactIgnoreCase(string value) => Regex.IsMatch(Value, Regex.Escape($"\"{value}\""), RegexOptions.IgnoreCase);
     }
 }

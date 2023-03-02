@@ -1,59 +1,82 @@
-﻿using System.Linq;
-using System.Text.RegularExpressions;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Blazor.BrowserExtension.Build.Tasks.ExtensionManifest
 {
     internal static class ManifestParser
     {
-        private const string INVALID_MATCH = "(\\{|\\}|\\]).*(\\{|\\}|\\[|\\])";
-        private const string KEY_MATCH = "^\\s*\"(\\w+)\"\\s*:";
-        public static bool TryParseManifestFile(string[] fileLines, out Manifest manifest)
+        public static bool TryParseManifestFile(string manifestFile, out Manifest manifest)
         {
-            var state = new ManifestParseState();
-            foreach (var line in fileLines)
+            var jsonSerializerOptions = new JsonSerializerOptions();
+            jsonSerializerOptions.Converters.Add(new ManifestJsonConverter());
+            try
             {
-                state.LineNumber++;
-                if (IsInvalidMatch(line))
+                var items = JsonSerializer.Deserialize<IDictionary<ManifestItemKey, ManifestItem>>(manifestFile, jsonSerializerOptions);
+                manifest = new Manifest()
                 {
-                    state.AddError("The file manifest.json is not well formatted. Each line can only contain one of the characters '{', '}', '[', ']'");
-                }
-                var lineValue = line;
-                if (state.IsAtRoot && TryParseManifestItemKey(line, out var manifestItemKey))
-                {
-                    lineValue = lineValue.Substring(lineValue.IndexOf(':') + 1);
-                    state.AddManifestItem(manifestItemKey);
-                }
-                state.OpeningBracket += line.Count(c => c == '{');
-                if (state.OpeningBracket >= 1)
-                {
-                    state.AddManifestItemValue(lineValue);
-                }
-                state.OpeningBracket -= line.Count(c => c == '}');
-            }
-
-            manifest = new Manifest()
-            {
-                Items = state.ManifestItems,
-                ParseErrors = state.Errors
-            };
-            return !state.HasError;
-        }
-
-        private static bool IsInvalidMatch(string line)
-        {
-            return Regex.IsMatch(line, INVALID_MATCH);
-        }
-
-        private static bool TryParseManifestItemKey(string line, out ManifestItemKey? manifestItemKey)
-        {
-            var match = Regex.Match(line, KEY_MATCH);
-            if (match.Success)
-            {
-                manifestItemKey = MapManifestItemKey(match.Groups[1].Value);
+                    Items = items
+                };
                 return true;
             }
-            manifestItemKey = null;
-            return false;
+            catch (JsonException jsonException)
+            {
+                manifest = new Manifest()
+                {
+                    ParseErrors = new[]
+                    {
+                        new ManifestParseError(jsonException.LineNumber, jsonException.BytePositionInLine, jsonException.Message)
+                    }
+                };
+                return false;
+            }
+        }
+
+        private sealed class ManifestJsonConverter : JsonConverter<IDictionary<ManifestItemKey, ManifestItem>>
+        {
+            public override IDictionary<ManifestItemKey, ManifestItem> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+            {
+                if (reader.TokenType != JsonTokenType.StartObject)
+                {
+                    throw new JsonException();
+                }
+
+                var dictionary = new Dictionary<ManifestItemKey, ManifestItem>();
+
+                while (reader.Read())
+                {
+                    if (reader.TokenType == JsonTokenType.EndObject)
+                    {
+                        return dictionary;
+                    }
+
+                    if (reader.TokenType != JsonTokenType.PropertyName)
+                    {
+                        throw new JsonException();
+                    }
+
+                    var lineNumber = GetLineNumber(ref reader);
+                    var columnNumber = GetColumnNumber(ref reader);
+                    var propertyName = reader.GetString();
+                    reader.Read();
+                    var propertyValue = JsonSerializer.Deserialize<JsonElement>(ref reader);
+
+                    var manifestItemKey = MapManifestItemKey(propertyName);
+                    if (manifestItemKey is not null)
+                    {
+                        dictionary.Add(manifestItemKey.Value, new(lineNumber, columnNumber, propertyValue.ToString()));
+                    }
+                }
+
+                throw new JsonException();
+            }
+
+            public override void Write(Utf8JsonWriter writer, IDictionary<ManifestItemKey, ManifestItem> value, JsonSerializerOptions options)
+            {
+                throw new NotImplementedException();
+            }
         }
 
         private static ManifestItemKey? MapManifestItemKey(string key)
@@ -70,6 +93,31 @@ namespace Blazor.BrowserExtension.Build.Tasks.ExtensionManifest
                 "permissions" => ManifestItemKey.Permissions,
                 _ => null,
             };
+        }
+
+        delegate long? GetNumberFieldDelegate(Utf8JsonReader reader);
+        private static readonly ParameterExpression readerParameter = Expression.Parameter(typeof(Utf8JsonReader), "reader");
+        private static readonly Expression getLineNumberField = Expression.Field(readerParameter, "_lineNumber");
+        private static readonly Expression returnLineNumberConverted = Expression.ConvertChecked(getLineNumberField, typeof(long?));
+        private static readonly Expression<GetNumberFieldDelegate> getLineNumberExpression = Expression.Lambda<GetNumberFieldDelegate>(returnLineNumberConverted, readerParameter);
+        private static readonly GetNumberFieldDelegate getLineNumberDelegate = getLineNumberExpression.Compile();
+        private static readonly Expression getColumnNumberField = Expression.Field(readerParameter, "_bytePositionInLine");
+        private static readonly Expression returnColumnNumberConverted = Expression.ConvertChecked(getColumnNumberField, typeof(long?));
+        private static readonly Expression<GetNumberFieldDelegate> getColumnNumberExpression = Expression.Lambda<GetNumberFieldDelegate>(returnColumnNumberConverted, readerParameter);
+        private static readonly GetNumberFieldDelegate getColumnNumberDelegate = getColumnNumberExpression.Compile();
+        private static long? GetLineNumber(ref Utf8JsonReader reader)
+        {
+            var lineNumber = getLineNumberDelegate(reader);
+            if (lineNumber.HasValue)
+            {
+                return lineNumber.Value + 1;
+            }
+            return null;
+        }
+
+        private static long? GetColumnNumber(ref Utf8JsonReader reader)
+        {
+            return getColumnNumberDelegate(reader);
         }
     }
 }

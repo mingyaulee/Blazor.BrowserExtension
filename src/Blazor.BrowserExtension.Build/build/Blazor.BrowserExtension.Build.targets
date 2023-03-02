@@ -206,8 +206,8 @@
 
     <PropertyGroup>
       <_BrowserExtension_Project_Assets_Directory>$(ProjectDir)$(BrowserExtensionAssetsPath)</_BrowserExtension_Project_Assets_Directory>
+      <_BrowserExtension_Project_Assets_ManifestJson_FilePath>$(_BrowserExtension_Project_Assets_Directory)\manifest.json</_BrowserExtension_Project_Assets_ManifestJson_FilePath>
       <_BrowserExtension_Project_BuildOutput_Assets_Directory>$(TargetDir)$(BrowserExtensionAssetsPath)</_BrowserExtension_Project_BuildOutput_Assets_Directory>
-      <_BrowserExtension_Project_BuildOutput_Assets_ManifestJson_FilePath>$(_BrowserExtension_Project_BuildOutput_Assets_Directory)\manifest.json</_BrowserExtension_Project_BuildOutput_Assets_ManifestJson_FilePath>
       <_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory>$(TargetDir)$(BrowserExtensionOutputPath)</_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory>
       <_BrowserExtension_Project_BuildOutput_BrowserExtension_OriginalFramework_Directory>$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory)\_framework</_BrowserExtension_Project_BuildOutput_BrowserExtension_OriginalFramework_Directory>
       <_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_Directory>$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory)\framework</_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_Directory>
@@ -226,7 +226,7 @@
     </PropertyGroup>
 
     <Message Importance="high" Text="Validating Browser Extension manifest.json" />
-    <BlazorToBrowserExtensionValidateManifest FileName="$(_BrowserExtension_Project_BuildOutput_Assets_ManifestJson_FilePath)" />
+    <BlazorToBrowserExtensionValidateManifest FileName="$(_BrowserExtension_Project_Assets_ManifestJson_FilePath)" />
 
     <Message Importance="high" Text="Converting Blazor application to Browser Extension" />
 

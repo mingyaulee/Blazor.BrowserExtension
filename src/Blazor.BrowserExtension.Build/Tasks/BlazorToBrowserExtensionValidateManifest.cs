@@ -20,9 +20,9 @@ namespace Blazor.BrowserExtension.Build.Tasks
             try
             {
                 Log.LogMessage(MessageImportance.Normal, $"{LogPrefix}Reading content of file '{FileName}'");
-                var fileLines = File.ReadAllLines(FileName);
+                var manifestFile = File.ReadAllText(FileName);
 
-                if (!ValidateManifestFile(fileLines))
+                if (!ValidateManifestFile(manifestFile))
                 {
                     return false;
                 }
@@ -39,14 +39,14 @@ namespace Blazor.BrowserExtension.Build.Tasks
             }
         }
 
-        private void LogErrorAtLine(int lineNumber, string message)
+        private void LogErrorAtLine(long? lineNumber, long? columnNumber, string message)
         {
-            Log.LogError(null, null, null, FileName, lineNumber, 0, lineNumber, 0, message);
+            Log.LogError(null, null, null, FileName, (int)lineNumber.GetValueOrDefault(), (int)columnNumber.GetValueOrDefault(), (int)lineNumber.GetValueOrDefault(), (int)columnNumber.GetValueOrDefault(), message);
         }
 
-        private bool ValidateManifestFile(string[] fileLines)
+        private bool ValidateManifestFile(string manifestFile)
         {
-            var isValid = ManifestParser.TryParseManifestFile(fileLines, out var manifest);
+            var isValid = ManifestParser.TryParseManifestFile(manifestFile, out var manifest);
             if (isValid)
             {
                 return ValidateManifestItems(manifest.Items);
@@ -55,7 +55,7 @@ namespace Blazor.BrowserExtension.Build.Tasks
             {
                 foreach (var error in manifest.ParseErrors)
                 {
-                    LogErrorAtLine(error.LineNumber, error.Message);
+                    LogErrorAtLine(error.LineNumber, error.ColumnNumber, error.Message);
                 }
                 return false;
             }
@@ -68,7 +68,7 @@ namespace Blazor.BrowserExtension.Build.Tasks
                 var validator = ValidatorFactory.GetValidator(manifestVersion);
                 if (validator is null)
                 {
-                    LogErrorAtLine(manifestVersion.LineNumber, $"Manifest version '{manifestVersion.Value}' is not supported");
+                    LogErrorAtLine(manifestVersion.LineNumber, manifestVersion.ColumnNumber, $"Manifest version '{manifestVersion.Value}' is not supported");
                     return false;
                 }
 
@@ -77,7 +77,7 @@ namespace Blazor.BrowserExtension.Build.Tasks
                 {
                     foreach (var validationResult in validationResults)
                     {
-                        LogErrorAtLine(validationResult.Item.LineNumber, validationResult.Error);
+                        LogErrorAtLine(validationResult.Item.LineNumber, validationResult.Item.ColumnNumber, validationResult.Error);
                     }
                     return false;
                 }
@@ -85,7 +85,7 @@ namespace Blazor.BrowserExtension.Build.Tasks
             }
             else
             {
-                LogErrorAtLine(0, "Manifest version is not defined");
+                LogErrorAtLine(1, 0, "Manifest version is not defined");
                 return false;
             }
         }
