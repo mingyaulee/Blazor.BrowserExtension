@@ -1,0 +1,19 @@
+version: 2
+updates:
+  # Check for updates to GitHub Actions every week
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+  # Check for updates to NuGet packages every week
+  - package-ecosystem: "nuget"
+    directory: "/test/JsBind.Net.Tests/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+  - package-ecosystem: "nuget"
+    directory: "/test/JsBind.Net.TestsRunner/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
