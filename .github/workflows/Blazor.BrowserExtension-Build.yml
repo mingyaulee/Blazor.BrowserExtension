@@ -11,7 +11,7 @@ jobs:
       NuGetVersion: ${{ steps.gitversion.outputs.NuGetVersion }}
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
     - name: Install GitVersion
@@ -40,7 +40,7 @@ jobs:
     - name: Setup Chrome and Chrome Driver
       uses: nanasess/setup-chromedriver@master
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
     - name: Cache SonarCloud packages
@@ -80,7 +80,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
     - name: Check if tag exists
       uses: mukunku/tag-exists-action@v1.0.0
       id: tagExistsCheck
