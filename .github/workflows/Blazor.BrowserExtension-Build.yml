@@ -82,7 +82,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     - name: Check if tag exists
-      uses: mukunku/tag-exists-action@v1.0.0
+      uses: mukunku/tag-exists-action@v1.4.0
       id: tagExistsCheck
       with: 
         tag: 'v${{ needs.version.outputs.NuGetVersion }}'
