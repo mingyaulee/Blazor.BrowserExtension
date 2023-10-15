@@ -73,7 +73,9 @@ Using an `app.js`, you can set the following properties in the `BlazorBrowserExt
 ```javascript
 globalThis.BlazorBrowserExtension.ImportBrowserPolyfill = false;
 globalThis.BlazorBrowserExtension.StartBlazorBrowserExtension = false;
-globalThis.BlazorBrowserExtension.BrowserExtension.InitializeAsync("Production");
+globalThis.BlazorBrowserExtension.BrowserExtension.InitializeAsync({
+    environment: "Production"
+});
 ```
 
 ## Build and load extension

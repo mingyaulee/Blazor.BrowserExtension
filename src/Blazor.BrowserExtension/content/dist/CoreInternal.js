@@ -11,7 +11,7 @@ class BrowserExtension {
     this.Config = config;
   }
 
-  async InitializeAsync(environment) {
+  async InitializeAsync(blazorStartOptions) {
     // import JsBind.Net JS
     await import(`${this.Url}content/JsBind.Net/JsBindNet.js`);
 
@@ -24,22 +24,19 @@ class BrowserExtension {
     const blazorScript = globalThis.document.createElement("script");
     blazorScript.src = `${this.Url}framework/blazor.webassembly.js`;
     blazorScript.defer = true;
-    // Blazor is set to not auto start, so that we can start it with different environment name
+    // Blazor is set to not auto start, so that we can start it with different start options
     blazorScript.setAttribute("autostart", "false");
     await this.AppendElementToDocumentAsync(blazorScript);
 
     // Start Blazor
-    const startOption = {
-    };
-
-    if (environment) {
-      startOption.environment = environment;
+    if (this.Config.EnvironmentName && !blazorStartOptions.environment) {
+      blazorStartOptions.environment = this.Config.EnvironmentName;
     }
 
     if (this.Mode === BrowserExtensionModes.ContentScript || this.Config.CompressionEnabled) {
-      startOption.loadBootResource = this._loadBootResource.bind(this);
+      blazorStartOptions.loadBootResource = this._loadBootResource.bind(this);
     }
-    const blazorStart = globalThis.Blazor.start(startOption);
+    const blazorStart = globalThis.Blazor.start(blazorStartOptions);
     if (blazorStart && blazorStart instanceof Promise) {
       await blazorStart;
     }
