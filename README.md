@@ -1,6 +1,6 @@
 ﻿# Blazor.BrowserExtension
 [![Nuget](https://img.shields.io/nuget/v/Blazor.BrowserExtension?style=for-the-badge&color=blue)](https://www.nuget.org/packages/Blazor.BrowserExtension/)
-[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/mingyaulee/Blazor.BrowserExtension/Build?style=for-the-badge&color=blue)](https://github.com/mingyaulee/Blazor.BrowserExtension/actions/workflows/Blazor.BrowserExtension-Build.yml)
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/mingyaulee/Blazor.BrowserExtension/Blazor.BrowserExtension-Build.yml?branch=main&style=for-the-badge&color=blue)](https://github.com/mingyaulee/JsBind.Net/actions/workflows/JsBind.Net-Build.yml)
 [![Sonar Quality Gate](https://img.shields.io/sonar/quality_gate/Blazor.BrowserExtension?server=https%3A%2F%2Fsonarcloud.io&style=for-the-badge)](https://sonarcloud.io/dashboard?id=Blazor.BrowserExtension)
 
 You can now easily build a browser extension with Blazor!
@@ -9,14 +9,13 @@ You can now easily build a browser extension with Blazor!
 
 At the moment, Chromium based browsers (Chrome & Edge) has support for the manifest V3 specification and manifest V2 is deprecated.
 
-Firefox's implementation is in progress.
-1. [Post 1](https://blog.mozilla.org/addons/2021/05/27/manifest-v3-update/)
-2. [Post 2](https://blog.mozilla.org/addons/2019/12/12/test-the-new-csp-for-content-scripts/)
-3. Check on the progress from the [Firefox blog](https://blog.mozilla.org/addons/tag/manifest-v3/).
+Firefox's implementation has slight difference with Chromium based browsers in the [manifest format](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json).
 
 Check out the [migration guide](ManifestV3Migration.md) from manifest V2 to V3.
 
-> **Important Note:** Only .Net 7 is supported for manifest V3. We are using a custom version of `dotnet.js` runtime to overcome the CSP compliance issue that will only be release in .Net 8.
+> **Important Note:** 
+> - .Net 6 is not supported for manifest V3.
+> - We are using a custom version of `dotnet.js` runtime to overcome the CSP compliance issue in .Net 7.
 
 ## Demo
 ![Blazor Browser Extension Demo](Demo.gif)
