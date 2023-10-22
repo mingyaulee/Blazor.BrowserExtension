@@ -16,12 +16,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		SetupExistingProject.md = SetupExistingProject.md
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{790DED5B-7057-4D11-BD7D-79AFA689C68E}"
-	ProjectSection(SolutionItems) = preProject
-		.github\workflows\Blazor.BrowserExtension-Build.yml = .github\workflows\Blazor.BrowserExtension-Build.yml
-		.github\workflows\Blazor.BrowserExtension-Release.yml = .github\workflows\Blazor.BrowserExtension-Release.yml
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.BrowserExtension", "src\Blazor.BrowserExtension\Blazor.BrowserExtension.csproj", "{FD91B84D-1C70-4C4A-A17A-1B25694107E8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.BrowserExtension.Build", "src\Blazor.BrowserExtension.Build\Blazor.BrowserExtension.Build.csproj", "{58482AF3-D597-42A4-81FC-75C1727AFFB5}"
