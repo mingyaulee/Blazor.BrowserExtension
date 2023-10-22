@@ -5,9 +5,9 @@
     <!--
       The target 'ResolveRazorComponentInputs' resolves the item group RazorComponent.
       Source:
-      - Current/.Net 7 https://github.com/dotnet/sdk/blob/main/src/RazorSdk/Targets/Sdk.Razor.CurrentVersion.targets
-      - .Net 6 https://github.com/dotnet/sdk/blob/v6.0.202/src/RazorSdk/Targets/Sdk.Razor.CurrentVersion.targets
-      - .Net 5 https://github.com/dotnet/aspnetcore/blob/v5.0.0/src/Razor/Microsoft.NET.Sdk.Razor/src/build/netstandard2.0/Sdk.Razor.CurrentVersion.targets
+      - Current/.Net 8 https://github.com/dotnet/sdk/blob/main/src/RazorSdk/Targets/Sdk.Razor.CurrentVersion.targets
+      - .Net 7 https://github.com/dotnet/sdk/blob/release/7.0.4xx/src/RazorSdk/Targets/Sdk.Razor.CurrentVersion.targets
+      - .Net 6 https://github.com/dotnet/sdk/blob/release/6.0.4xx/src/RazorSdk/Targets/Sdk.Razor.CurrentVersion.targets
     -->
     <_ConvertBlazorToBrowserExtensionDependsOn>
       DefineBlazorToBrowserExtensionFrameworkJsFileContentReplacements;
@@ -72,11 +72,7 @@
 
     <Message Importance="high" Text="  Bootstrapping Program.cs file '$(_BrowserExtension_Project_ProgramCs_FilePath)'" />
     <BlazorToBrowserExtensionBootstrapFile FilePath="$(_BrowserExtension_Project_ProgramCs_FilePath)"
-                                           FileType="ProgramCs"
-                                           Condition="'$(TargetFramework)' != 'net5.0'" />
-    <BlazorToBrowserExtensionBootstrapFile FilePath="$(_BrowserExtension_Project_ProgramCs_FilePath)"
-                                           FileType="ProgramCs_Net5"
-                                           Condition="'$(TargetFramework)' == 'net5.0'" />
+                                           FileType="ProgramCs" />
 
     <Message Importance="high" Text="Bootstrapping completed from Blazor application to Blazor Browser Extension application" />
 
@@ -92,11 +88,11 @@
       <!--
         Define contents to replace in blazor.webassembly.js
         Source:
-        - Current/.Net 7 https://github.com/dotnet/aspnetcore/tree/main/src/Components/Web.JS/src/Platform
-        - .Net 6 https://github.com/dotnet/aspnetcore/tree/v6.0.4/src/Components/Web.JS/src/Platform
-        - .Net 5 https://github.com/dotnet/aspnetcore/tree/v5.0.0/src/Components/Web.JS/src/Platform
+        - Current/.Net 8 https://github.com/dotnet/aspnetcore/tree/main/src/Components/Web.JS/src/Platform
+        - .Net 7 https://github.com/dotnet/aspnetcore/tree/release/7.0/src/Components/Web.JS/src/Platform
+        - .Net 6 https://github.com/dotnet/aspnetcore/tree/release/6.0/src/Components/Web.JS/src/Platform
       -->
-      <_BrowserExtension_BlazorJs_FileContentReplacements Include="append element to document body" Condition="'$(TargetFramework)' == 'net5.0' OR '$(TargetFramework)' == 'net6.0'">
+      <_BrowserExtension_BlazorJs_FileContentReplacements Include="append element to document body" Condition="'$(TargetFramework)' == 'net6.0'">
         <From>document.body.appendChild</From>
         <To>globalThis.BlazorBrowserExtension.BrowserExtension.AppendElementToDocumentAsync</To>
       </_BrowserExtension_BlazorJs_FileContentReplacements>
@@ -116,26 +112,26 @@
         <From>fetch(</From>
         <To>globalThis.BlazorBrowserExtension.BrowserExtension.FetchAsync(</To>
       </_BrowserExtension_BlazorJs_FileContentReplacements>
-      <_BrowserExtension_BlazorJs_FileContentReplacements Include="Module cwrap" Condition="'$(TargetFramework)' == 'net5.0' OR '$(TargetFramework)' == 'net6.0'">
+      <_BrowserExtension_BlazorJs_FileContentReplacements Include="Module cwrap" Condition="'$(TargetFramework)' == 'net6.0'">
         <From>cwrap(</From>
         <To>globalThis.Module.cwrap(</To>
       </_BrowserExtension_BlazorJs_FileContentReplacements>
-      <_BrowserExtension_BlazorJs_FileContentReplacements Include="Module addRunDependency" Condition="'$(TargetFramework)' == 'net5.0' OR '$(TargetFramework)' == 'net6.0'">
+      <_BrowserExtension_BlazorJs_FileContentReplacements Include="Module addRunDependency" Condition="'$(TargetFramework)' == 'net6.0'">
         <From>addRunDependency(</From>
         <To>globalThis.Module.addRunDependency(</To>
       </_BrowserExtension_BlazorJs_FileContentReplacements>
-      <_BrowserExtension_BlazorJs_FileContentReplacements Include="Module removeRunDependency" Condition="'$(TargetFramework)' == 'net5.0' OR '$(TargetFramework)' == 'net6.0'">
+      <_BrowserExtension_BlazorJs_FileContentReplacements Include="Module removeRunDependency" Condition="'$(TargetFramework)' == 'net6.0'">
         <From>removeRunDependency(</From>
         <To>globalThis.Module.removeRunDependency(</To>
       </_BrowserExtension_BlazorJs_FileContentReplacements>
       <!--
         Define contents to replace in dotnet.*.js
         Source:
-        - Current/.Net 7 https://github.com/dotnet/runtime/tree/main/src/mono/wasm/runtime
-        - .Net 6 https://github.com/dotnet/runtime/tree/v6.0.4/src/mono/wasm/runtime
-        - .Net 5 https://github.com/dotnet/runtime/tree/v5.0.0/src/mono/wasm/runtime
+        - Current/.Net 8 https://github.com/dotnet/runtime/tree/main/src/mono/wasm/runtime
+        - .Net 7 https://github.com/dotnet/runtime/tree/v7.0.12/src/mono/wasm/runtime
+        - .Net 6 https://github.com/dotnet/runtime/tree/v6.0.23/src/mono/wasm/runtime
       -->
-      <_BrowserExtension_DotNetJs_FileContentReplacements Include="fetch url" Condition="'$(TargetFramework)' == 'net5.0' OR '$(TargetFramework)' == 'net6.0'">
+      <_BrowserExtension_DotNetJs_FileContentReplacements Include="fetch url" Condition="'$(TargetFramework)' == 'net6.0'">
         <From>fetch(</From>
         <To>globalThis.BlazorBrowserExtension.BrowserExtension.FetchAsync(</To>
       </_BrowserExtension_DotNetJs_FileContentReplacements>
@@ -143,15 +139,15 @@
         <From>globalThis.fetch(</From>
         <To>globalThis.BlazorBrowserExtension.BrowserExtension.FetchAsync(</To>
       </_BrowserExtension_DotNetJs_FileContentReplacements>
-      <_BrowserExtension_DotNetJs_FileContentReplacements Include="module reference" Condition="'$(TargetFramework)' == 'net5.0' OR '$(TargetFramework)' == 'net6.0'">
+      <_BrowserExtension_DotNetJs_FileContentReplacements Include="module reference" Condition="'$(TargetFramework)' == 'net6.0'">
         <From>Module!=="undefined"?Module</From>
         <To>globalThis.Module!=="undefined"?globalThis.Module</To>
       </_BrowserExtension_DotNetJs_FileContentReplacements>
-      <_BrowserExtension_DotNetJs_FileContentReplacements Include="MONO declaration" Condition="'$(TargetFramework)' == 'net5.0' OR '$(TargetFramework)' == 'net6.0'">
+      <_BrowserExtension_DotNetJs_FileContentReplacements Include="MONO declaration" Condition="'$(TargetFramework)' == 'net6.0'">
         <From>var MONO=</From>
         <To>globalThis.MONO=</To>
       </_BrowserExtension_DotNetJs_FileContentReplacements>
-      <_BrowserExtension_DotNetJs_FileContentReplacements Include="BINDING declaration" Condition="'$(TargetFramework)' == 'net5.0' OR '$(TargetFramework)' == 'net6.0'">
+      <_BrowserExtension_DotNetJs_FileContentReplacements Include="BINDING declaration" Condition="'$(TargetFramework)' == 'net6.0'">
         <From>var BINDING=</From>
         <To>globalThis.BINDING=</To>
       </_BrowserExtension_DotNetJs_FileContentReplacements>
@@ -170,11 +166,7 @@
         <To>case typeof js_obj==="number":{let result;if((js_obj|0)===js_obj)</To>
         <IsOptional>true</IsOptional>
       </_BrowserExtension_DotNetJs_FileContentReplacements>
-      <_BrowserExtension_DotNetJs_FileContentReplacements Include="accessing mono_wasm_assembly_already_added" Condition="'$(TargetFramework)' == 'net5.0'">
-        <From>this.mono_wasm_assembly_already_added</From>
-        <To>globalThis.mono_wasm_assembly_already_added</To>
-      </_BrowserExtension_DotNetJs_FileContentReplacements>
-      <_BrowserExtension_DotNetJs_FileContentReplacements Include="accessing mono_set_timeout_exec" Condition="'$(TargetFramework)' == 'net5.0' OR '$(TargetFramework)' == 'net6.0'">
+      <_BrowserExtension_DotNetJs_FileContentReplacements Include="accessing mono_set_timeout_exec" Condition="'$(TargetFramework)' == 'net6.0'">
         <From>this.mono_set_timeout_exec</From>
         <To>globalThis.mono_set_timeout_exec</To>
       </_BrowserExtension_DotNetJs_FileContentReplacements>
@@ -214,15 +206,14 @@
       <!-- StaticWebAssets
 	      The StaticWebAssets manifest is created by the dotnet SDK and read by the DevServer.
 		    Source:
-		    - Current/.Net 7 https://github.com/dotnet/aspnetcore/blob/main/src/Components/WebAssembly/DevServer/src/Server/Program.cs
-            - .Net 6 https://github.com/dotnet/aspnetcore/blob/v6.0.4/src/Components/WebAssembly/DevServer/src/Server/Program.cs
-		    - .Net 5 https://github.com/dotnet/aspnetcore/blob/v5.0.0/src/Components/WebAssembly/DevServer/src/Server/Program.cs
+		    - Current/.Net 8 https://github.com/dotnet/aspnetcore/blob/main/src/Components/WebAssembly/DevServer/src/Server/Program.cs
+		    - .Net 7 https://github.com/dotnet/aspnetcore/blob/v7.0.12/src/Components/WebAssembly/DevServer/src/Server/Program.cs
+        - .Net 6 https://github.com/dotnet/aspnetcore/blob/v6.0.23/src/Components/WebAssembly/DevServer/src/Server/Program.cs
 	    -->
-      <_BrowserExtension_Project_BuildOutput_StaticWebAssets_Manifest_FilePath>$(TargetDir)$(ProjectName).StaticWebAssets.xml</_BrowserExtension_Project_BuildOutput_StaticWebAssets_Manifest_FilePath>
-      <_BrowserExtension_Project_BuildOutput_StaticWebAssets_Manifest_FilePath Condition="('$(TargetFramework)' == 'net6.0' OR '$(TargetFramework)' == 'net7.0') AND Exists('$(TargetDir)$(ProjectName).staticwebassets.runtime.json')">$(TargetDir)$(ProjectName).staticwebassets.runtime.json</_BrowserExtension_Project_BuildOutput_StaticWebAssets_Manifest_FilePath>
-      <!-- TODO: To remove this custom dotnet runtime when .Net 8.0 is released -->
+      <_BrowserExtension_Project_BuildOutput_StaticWebAssets_Manifest_FilePath>$(TargetDir)$(ProjectName).staticwebassets.runtime.json</_BrowserExtension_Project_BuildOutput_StaticWebAssets_Manifest_FilePath>
+      <!-- TODO: To remove this custom dotnet runtime when .Net 7.0 support is removed -->
       <_BrowserExtension_Package_Contents_Directory>$(MSBuildThisFileDirectory)..\content</_BrowserExtension_Package_Contents_Directory>
-      <_BrowserExtension_Package_Contents_DotNetJs_FilePath>$(_BrowserExtension_Package_Contents_Directory)\dotnet-7.0.js</_BrowserExtension_Package_Contents_DotNetJs_FilePath>
+      <_BrowserExtension_Package_Contents_DotNet70Js_FilePath>$(_BrowserExtension_Package_Contents_Directory)\dotnet-7.0.js</_BrowserExtension_Package_Contents_DotNet70Js_FilePath>
     </PropertyGroup>
 
     <Message Importance="high" Text="Validating Browser Extension manifest.json" />
@@ -254,9 +245,9 @@
       <_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_DotNetJs_FilePath Include="$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_Directory)\dotnet.*.js" />
       <_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_BlazorBootJson_FilePath Include="$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_Directory)\blazor.boot.json" />
     </ItemGroup>
-    <!-- TODO: To remove this custom dotnet runtime when .Net 8.0 is released -->
+    <!-- TODO: To remove this custom dotnet runtime when .Net 7.0 support is removed -->
     <Message Importance="high" Text="  Replacing 'dotnet.*.js' with custom CSP compliant version" Condition="'$(TargetFramework)' == 'net7.0'" />
-    <Copy SourceFiles="$(_BrowserExtension_Package_Contents_DotNetJs_FilePath)"
+    <Copy SourceFiles="$(_BrowserExtension_Package_Contents_DotNet70Js_FilePath)"
           DestinationFiles="@(_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_DotNetJs_FilePath)"
           Condition="'$(TargetFramework)' == 'net7.0'" />
     <BlazorToBrowserExtensionReplaceContent Files="@(_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_BlazorJs_FilePath)"
@@ -301,32 +292,21 @@
   <!--
     Removes unnecessary compressed files from the resolved files to publish.
     Runs after the '_BlazorCompressPublishFiles' target defined in
-    - Current/.Net 7 https://github.com/dotnet/sdk/blob/main/src/BlazorWasmSdk/Targets/Microsoft.NET.Sdk.BlazorWebAssembly.6_0.targets
-    - .Net 6 https://github.com/dotnet/sdk/blob/v6.0.202/src/BlazorWasmSdk/Targets/Microsoft.NET.Sdk.BlazorWebAssembly.6_0.targets
-    - .Net 5 https://github.com/dotnet/aspnetcore/blob/v5.0.0/src/Components/WebAssembly/Sdk/src/targets/Microsoft.NET.Sdk.BlazorWebAssembly.Current.targets
+    - Current/.Net 8 https://github.com/dotnet/sdk/blob/main/src/BlazorWasmSdk/Targets/Microsoft.NET.Sdk.BlazorWebAssembly.6_0.targets
+    - .Net 7 https://github.com/dotnet/sdk/blob/v7.0.402/src/BlazorWasmSdk/Targets/Microsoft.NET.Sdk.BlazorWebAssembly.6_0.targets
+    - .Net 6 https://github.com/dotnet/sdk/blob/v6.0.415/src/BlazorWasmSdk/Targets/Microsoft.NET.Sdk.BlazorWebAssembly.6_0.targets
   -->
   <Target Name="ProcessBlazorToBrowserExtensionPublishFiles"
           AfterTargets="_BlazorCompressPublishFiles">
 
     <Message Importance="high" Text="Processing files to publish Blazor application as Browser Extension" />
 
-    <BlazorToBrowserExtensionProcessPublishFiles Input="@(ResolvedFileToPublish)"
-                                                 CompressionEnabled="$(BrowserExtensionEnableCompression)"
-                                                 Condition="'$(TargetFramework)' == 'net5.0'">
-      <Output TaskParameter="Output" ItemName="_BrowserExtension_Project_PublishFiles_FilesToRemove" />
-    </BlazorToBrowserExtensionProcessPublishFiles>
-
-    <ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
-      <ResolvedFileToPublish Remove="@(_BrowserExtension_Project_PublishFiles_FilesToRemove)" />
-    </ItemGroup>
-
     <BlazorToBrowserExtensionProcessPublishFiles Input="@(StaticWebAsset)"
-                                                 CompressionEnabled="$(BrowserExtensionEnableCompression)"
-                                                 Condition="'$(TargetFramework)' != 'net5.0'">
+                                                 CompressionEnabled="$(BrowserExtensionEnableCompression)">
       <Output TaskParameter="Output" ItemName="_BrowserExtension_Project_PublishFiles_FilesToRemove" />
     </BlazorToBrowserExtensionProcessPublishFiles>
 
-    <ItemGroup Condition="'$(TargetFramework)' != 'net5.0'">
+    <ItemGroup>
       <StaticWebAsset Remove="@(_BrowserExtension_Project_PublishFiles_FilesToRemove)" />
     </ItemGroup>
 
@@ -350,9 +330,9 @@
       <_BrowserExtension_Project_PublishOutput_BrowserExtension_OriginalRclContent_Directory>$(_BrowserExtension_Project_PublishOutput_BrowserExtension_Directory)\_content</_BrowserExtension_Project_PublishOutput_BrowserExtension_OriginalRclContent_Directory>
       <_BrowserExtension_Project_PublishOutput_BrowserExtension_HasRclContentDirectory>false</_BrowserExtension_Project_PublishOutput_BrowserExtension_HasRclContentDirectory>
       <_BrowserExtension_Project_PublishOutput_BrowserExtension_RclContent_Directory>$(_BrowserExtension_Project_PublishOutput_BrowserExtension_Directory)\content</_BrowserExtension_Project_PublishOutput_BrowserExtension_RclContent_Directory>
-      <!-- TODO: To remove this custom dotnet runtime when .Net 8.0 is released -->
+      <!-- TODO: To remove this custom dotnet runtime when .Net 7.0 support is removed -->
       <_BrowserExtension_Package_Contents_Directory>$(MSBuildThisFileDirectory)..\content</_BrowserExtension_Package_Contents_Directory>
-      <_BrowserExtension_Package_Contents_DotNetJs_FilePath>$(_BrowserExtension_Package_Contents_Directory)\dotnet-7.0.js</_BrowserExtension_Package_Contents_DotNetJs_FilePath>
+      <_BrowserExtension_Package_Contents_DotNet70Js_FilePath>$(_BrowserExtension_Package_Contents_Directory)\dotnet-7.0.js</_BrowserExtension_Package_Contents_DotNet70Js_FilePath>
     </PropertyGroup>
 
     <Message Importance="high" Text="Converting published Blazor application to Browser Extension" />
@@ -381,9 +361,9 @@
       <_BrowserExtension_Project_PublishOutput_BrowserExtension_Framework_DotnetJs_FilePath Include="$(_BrowserExtension_Project_PublishOutput_BrowserExtension_Framework_Directory)\dotnet.*.js" />
       <_BrowserExtension_Project_PublishOutput_BrowserExtension_Framework_BlazorBootJson_FilePath Include="$(_BrowserExtension_Project_PublishOutput_BrowserExtension_Framework_Directory)\blazor.boot.json" />
     </ItemGroup>
+    <!-- TODO: To remove this custom dotnet runtime when .Net 7.0 support is removed -->
     <Message Importance="high" Text="  Replacing 'dotnet.*.js' with custom CSP compliant version" Condition="'$(TargetFramework)' == 'net7.0'" />
-    <!-- TODO: To remove this custom dotnet runtime when .Net 8.0 is released -->
-    <Copy SourceFiles="$(_BrowserExtension_Package_Contents_DotNetJs_FilePath)"
+    <Copy SourceFiles="$(_BrowserExtension_Package_Contents_DotNet70Js_FilePath)"
           DestinationFiles="@(_BrowserExtension_Project_PublishOutput_BrowserExtension_Framework_DotnetJs_FilePath)"
           Condition="'$(TargetFramework)' == 'net7.0'" />
     <BlazorToBrowserExtensionReplaceContent Files="@(_BrowserExtension_Project_PublishOutput_BrowserExtension_Framework_BlazorJs_FilePath)"

@@ -5,7 +5,6 @@
         Project,
         IndexHtml,
         IndexRazor,
-        ProgramCs,
-        ProgramCs_Net5
+        ProgramCs
     }
 }

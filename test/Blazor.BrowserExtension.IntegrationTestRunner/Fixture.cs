@@ -48,14 +48,14 @@ namespace Blazor.BrowserExtension.IntegrationTestRunner
 
         public static string GetExtensionPath()
         {
-            var currentDirectory = Directory.GetCurrentDirectory();
-            var solutionDirectory = currentDirectory.Substring(0, currentDirectory.LastIndexOf("\\test"));
+            var currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            var solutionDirectory = currentDirectory[..currentDirectory.LastIndexOf("\\test")];
 #if DEBUG
             var configuration = "debug";
 #else
             var configuration = "release";
 #endif
-            return $"{solutionDirectory}\\test\\Blazor.BrowserExtension.IntegrationTest\\bin\\{configuration}\\net7.0\\browserextension";
+            return $"{solutionDirectory}\\test\\Blazor.BrowserExtension.IntegrationTest\\bin\\{configuration}\\net8.0\\browserextension";
         }
 
         private static WebDriver GetWebDriver(string driverPath, string extensionPath)

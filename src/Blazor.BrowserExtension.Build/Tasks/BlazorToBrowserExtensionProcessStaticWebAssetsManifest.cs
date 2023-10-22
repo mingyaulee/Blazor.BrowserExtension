@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Blazor.BrowserExtension.Build.Tasks.StaticWebAssets;
 using Microsoft.Build.Framework;
@@ -28,15 +26,7 @@ namespace Blazor.BrowserExtension.Build.Tasks
 
         private static ITaskItem[] Process(string filePath, IEnumerable<string> excludePaths, string outputPath)
         {
-            BaseManifestProcessor processor;
-            if (".xml".Equals(Path.GetExtension(filePath), StringComparison.OrdinalIgnoreCase))
-            {
-                processor = new XmlManifestProcessor(excludePaths);
-            }
-            else
-            {
-                processor = new JsonManifestProcessor(excludePaths);
-            }
+            BaseManifestProcessor processor = new JsonManifestProcessor(excludePaths);
             processor.ReadFromFile(filePath);
             processor.Process(outputPath);
             processor.WriteToFile(filePath);

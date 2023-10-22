@@ -19,6 +19,6 @@
   }
 
   if (blazorBrowserExtension.StartBlazorBrowserExtension) {
-    await blazorBrowserExtension.BrowserExtension.InitializeAsync(config.EnvironmentName);
+    await blazorBrowserExtension.BrowserExtension.InitializeAsync();
   }
 })();

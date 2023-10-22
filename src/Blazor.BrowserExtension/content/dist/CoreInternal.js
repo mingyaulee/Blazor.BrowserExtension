@@ -29,6 +29,10 @@ class BrowserExtension {
     await this.AppendElementToDocumentAsync(blazorScript);
 
     // Start Blazor
+    if (!blazorStartOptions) {
+      blazorStartOptions = {};
+    }
+
     if (this.Config.EnvironmentName && !blazorStartOptions.environment) {
       blazorStartOptions.environment = this.Config.EnvironmentName;
     }

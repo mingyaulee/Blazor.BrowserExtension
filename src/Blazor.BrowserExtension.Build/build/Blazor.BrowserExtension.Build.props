@@ -12,10 +12,10 @@
     <BrowserExtensionRoutingEntryFile Condition="'$(BrowserExtensionRoutingEntryFile)' == ''">index.html</BrowserExtensionRoutingEntryFile>
     <BrowserExtensionEnableCompression Condition="'$(BrowserExtensionEnableCompression)' == ''">$(BlazorEnableCompression)</BrowserExtensionEnableCompression>
     <BrowserExtensionEnableCompression Condition="'$(BrowserExtensionEnableCompression)' == ''">true</BrowserExtensionEnableCompression>
-    <!-- Get the binary file based on the runtime type, net5.0 for dotnet build and net472 for VS build -->
-    <_BrowserExtensionBuildTaskFolder Condition="'$(MSBuildRuntimeType)' == 'Core'">net7.0</_BrowserExtensionBuildTaskFolder>
+    <!-- Get the binary file based on the runtime type, net8.0 for dotnet build and net472 for VS build -->
+    <_BrowserExtensionBuildTaskFolder Condition="'$(MSBuildRuntimeType)' == 'Core'">net8.0</_BrowserExtensionBuildTaskFolder>
+    <_BrowserExtensionBuildTaskFolder Condition="'$(MSBuildRuntimeType)' == 'Core' AND '$(TargetFramework)' == 'net7.0'">net7.0</_BrowserExtensionBuildTaskFolder>
     <_BrowserExtensionBuildTaskFolder Condition="'$(MSBuildRuntimeType)' == 'Core' AND '$(TargetFramework)' == 'net6.0'">net6.0</_BrowserExtensionBuildTaskFolder>
-    <_BrowserExtensionBuildTaskFolder Condition="'$(MSBuildRuntimeType)' == 'Core' AND '$(TargetFramework)' == 'net5.0'">net5.0</_BrowserExtensionBuildTaskFolder>
     <_BrowserExtensionBuildTaskFolder Condition="'$(MSBuildRuntimeType)' != 'Core'">net472</_BrowserExtensionBuildTaskFolder>
     <_BrowserExtensionBuildOutputFolder Condition="'$(_BrowserExtensionBuildOutputFolder)' == ''">tasks</_BrowserExtensionBuildOutputFolder>
     <_BrowserExtensionBuildTaskAssembly Condition="'$(_BrowserExtensionBuildTaskAssembly)' == ''">$(MSBuildThisFileDirectory)..\$(_BrowserExtensionBuildOutputFolder)\$(_BrowserExtensionBuildTaskFolder)\Blazor.BrowserExtension.Build.dll</_BrowserExtensionBuildTaskAssembly>
