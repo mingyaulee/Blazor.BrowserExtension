@@ -22,7 +22,7 @@ namespace Blazor.BrowserExtension.Build.Tasks.StaticWebAssets
         {
             var json = File.ReadAllText(filePath);
             staticWebAssetManifest = StaticWebAssetManifest.Parse(json);
-            if (staticWebAssetManifest?.ContentRoots is null || !staticWebAssetManifest.ContentRoots.Any())
+            if (staticWebAssetManifest?.ContentRoots is null || staticWebAssetManifest.ContentRoots.Length == 0)
             {
                 return;
             }
@@ -33,7 +33,7 @@ namespace Blazor.BrowserExtension.Build.Tasks.StaticWebAssets
 
         public override void Process(string outputPath)
         {
-            if (staticWebAssetManifest?.ContentRoots is null || !staticWebAssetManifest.ContentRoots.Any() || staticWebAssetManifest.Root?.Children is null)
+            if (staticWebAssetManifest?.ContentRoots is null || staticWebAssetManifest.ContentRoots.Length == 0 || staticWebAssetManifest.Root?.Children is null)
             {
                 return;
             }
@@ -63,7 +63,7 @@ namespace Blazor.BrowserExtension.Build.Tasks.StaticWebAssets
                         .Where(name =>
                             name.Equals("blazor.webassembly.js", StringComparison.OrdinalIgnoreCase) ||
                             (name.StartsWith("dotnet.", StringComparison.OrdinalIgnoreCase) && name.EndsWith(".js", StringComparison.OrdinalIgnoreCase))
-                        ) ?? Enumerable.Empty<string>();
+                        );
                     foreach (var replacedFile in replacedFiles)
                     {
                         frameworkChildren[replacedFile].Match!.Path = frameworkChildren[replacedFile].Match!.Path.Replace("_", "");

@@ -9,12 +9,16 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddBrowserExtensionServices(this IServiceCollection services)
         {
+#if NET7_0_OR_GREATER
+            var browserExtensionEnvironment = new BrowserExtensionEnvironment(GetBrowserExtensionMode());
+#else
             if (services.FirstOrDefault(service => service.ServiceType == typeof(IJSRuntime))?.ImplementationInstance is not IJSUnmarshalledRuntime jsRuntime)
             {
                 throw new NotSupportedException("An instance of IJSUnmarshalledRuntime must be registered by Blazor.");
             }
 
             var browserExtensionEnvironment = new BrowserExtensionEnvironment(GetBrowserExtensionMode(jsRuntime));
+#endif
             services.AddSingleton<IBrowserExtensionEnvironment>(browserExtensionEnvironment);
 
             if (browserExtensionEnvironment.Mode == BrowserExtensionMode.Debug)
@@ -29,10 +33,14 @@ namespace Microsoft.Extensions.DependencyInjection
             return services;
         }
 
+#if NET7_0_OR_GREATER
+        private static BrowserExtensionMode GetBrowserExtensionMode()
+#else
         private static BrowserExtensionMode GetBrowserExtensionMode(IJSUnmarshalledRuntime jsRuntime)
+#endif
         {
 #if NET7_0_OR_GREATER
-            var browserExtensionModeString = GetBrowserExtensionMode();
+            var browserExtensionModeString = GetBrowserExtensionModeInterop();
 #else
             var browserExtensionModeString = jsRuntime.InvokeUnmarshalled<string>($"BlazorBrowserExtension.BrowserExtension._getBrowserExtensionModeLegacy");
 #endif
@@ -49,7 +57,7 @@ namespace Microsoft.Extensions.DependencyInjection
 #if NET7_0_OR_GREATER
 
         [System.Runtime.InteropServices.JavaScript.JSImport("globalThis.BlazorBrowserExtension.BrowserExtension._getBrowserExtensionMode")]
-        private static partial string GetBrowserExtensionMode();
+        private static partial string GetBrowserExtensionModeInterop();
 #endif
     }
 }

@@ -35,13 +35,13 @@ namespace Blazor.BrowserExtension.Build.Tasks
             }
             catch (Exception ex)
             {
-                Log.LogError($"{LogPrefix}An unexpected error occured when writing option file '{FilePath}'");
+                Log.LogError($"{LogPrefix}An unexpected error occurred when writing option file '{FilePath}'");
                 Log.LogErrorFromException(ex);
                 return false;
             }
         }
 
-        private static IDictionary<string, object> GetOption(IEnumerable<ITaskItem> items)
+        private static Dictionary<string, object> GetOption(IEnumerable<ITaskItem> items)
         {
             var option = new Dictionary<string, object>();
             foreach (var item in items)

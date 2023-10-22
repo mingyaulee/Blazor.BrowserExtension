@@ -134,6 +134,11 @@ class BrowserExtension {
 }
 
 class BlazorBrowserExtension {
+  ImportBrowserPolyfill;
+  StartBlazorBrowserExtension;
+  Modes;
+  BrowserExtension;
+
   constructor() {
     this.ImportBrowserPolyfill = true;
     this.StartBlazorBrowserExtension = true;

@@ -11,7 +11,7 @@ namespace Blazor.BrowserExtension.IntegrationTestRunner
     {
         private readonly WebDriverHelper webDriverHelper;
 
-        public BaseIntegrationTest(Fixture fixture)
+        protected BaseIntegrationTest(Fixture fixture)
         {
             if (!fixture.IsInitialized)
             {

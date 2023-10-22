@@ -76,7 +76,7 @@ namespace Blazor.BrowserExtension.Build.Tasks.StaticWebAssets
     {
         public override Dictionary<string, StaticWebAssetNode> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            var parsed = JsonSerializer.Deserialize<IDictionary<string, StaticWebAssetNode>>(ref reader, options)!;
+            var parsed = JsonSerializer.Deserialize<Dictionary<string, StaticWebAssetNode>>(ref reader, options)!;
             var result = new Dictionary<string, StaticWebAssetNode>(StaticWebAssetManifest.PathComparer);
             MergeChildren(parsed, result);
             return result;
@@ -89,7 +89,7 @@ namespace Blazor.BrowserExtension.Build.Tasks.StaticWebAssets
             JsonSerializer.Serialize(writer, value, options);
         }
 
-        private static void MergeChildren(IDictionary<string, StaticWebAssetNode> newChildren, IDictionary<string, StaticWebAssetNode> existing)
+        private static void MergeChildren(Dictionary<string, StaticWebAssetNode> newChildren, Dictionary<string, StaticWebAssetNode> existing)
         {
             foreach (var keyValuePair in newChildren)
             {

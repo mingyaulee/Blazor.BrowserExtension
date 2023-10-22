@@ -26,7 +26,7 @@ namespace Blazor.BrowserExtension.IntegrationTestRunner
             var driverPath = "C:\\SeleniumWebDrivers\\ChromeDriver";
             if (!Directory.Exists(driverPath))
             {
-                throw new NotSupportedException($"Download the chromedriver from and extract the executable file to {driverPath}. Check available versions at http://chromedriver.storage.googleapis.com/");
+                throw new NotSupportedException($"Download the chromedriver from and extract the executable file to {driverPath}. Download the latest version from https://googlechromelabs.github.io/chrome-for-testing/");
             }
 
             var extensionPath = GetExtensionPath();
@@ -58,7 +58,7 @@ namespace Blazor.BrowserExtension.IntegrationTestRunner
             return $"{solutionDirectory}\\test\\Blazor.BrowserExtension.IntegrationTest\\bin\\{configuration}\\net8.0\\browserextension";
         }
 
-        private static WebDriver GetWebDriver(string driverPath, string extensionPath)
+        private static ChromeDriver GetWebDriver(string driverPath, string extensionPath)
         {
             var chromeOptions = new ChromeOptions();
             chromeOptions.AddArgument($"load-extension={extensionPath}");

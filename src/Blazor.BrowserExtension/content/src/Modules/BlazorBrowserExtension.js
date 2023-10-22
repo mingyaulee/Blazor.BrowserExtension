@@ -4,12 +4,19 @@
  */
 
 export default class BlazorBrowserExtension {
+  /** @type {boolean} */
+  ImportBrowserPolyfill;
+  /** @type {boolean} */
+  StartBlazorBrowserExtension;
+  /** @type {BrowserExtensionModesEnum} */
+  Modes;
+  /** @type {BrowserExtension} */
+  BrowserExtension;
+
   constructor() {
     this.ImportBrowserPolyfill = true;
     this.StartBlazorBrowserExtension = true;
-    /** @type {BrowserExtensionModesEnum} */
     this.Modes = null;
-    /** @type {BrowserExtension} */
     this.BrowserExtension = null;
   }
 }

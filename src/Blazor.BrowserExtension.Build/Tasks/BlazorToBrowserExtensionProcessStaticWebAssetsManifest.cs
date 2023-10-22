@@ -26,7 +26,7 @@ namespace Blazor.BrowserExtension.Build.Tasks
 
         private static ITaskItem[] Process(string filePath, IEnumerable<string> excludePaths, string outputPath)
         {
-            BaseManifestProcessor processor = new JsonManifestProcessor(excludePaths);
+            var processor = new JsonManifestProcessor(excludePaths);
             processor.ReadFromFile(filePath);
             processor.Process(outputPath);
             processor.WriteToFile(filePath);

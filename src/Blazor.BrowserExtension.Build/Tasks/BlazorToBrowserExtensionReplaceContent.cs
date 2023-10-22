@@ -74,7 +74,7 @@ namespace Blazor.BrowserExtension.Build.Tasks
             }
             catch (Exception ex)
             {
-                Log.LogError($"{LogPrefix}An unexpected error occured when replacing file content of file '{FileName}'");
+                Log.LogError($"{LogPrefix}An unexpected error occurred when replacing file content of file '{FileName}'");
                 Log.LogErrorFromException(ex);
                 return false;
             }

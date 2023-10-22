@@ -33,7 +33,7 @@ namespace Blazor.BrowserExtension.Build.Tasks
             }
             catch (Exception ex)
             {
-                Log.LogError($"{LogPrefix}An unexpected error occured when validating manifest file '{FileName}'");
+                Log.LogError($"{LogPrefix}An unexpected error occurred when validating manifest file '{FileName}'");
                 Log.LogErrorFromException(ex);
                 return false;
             }

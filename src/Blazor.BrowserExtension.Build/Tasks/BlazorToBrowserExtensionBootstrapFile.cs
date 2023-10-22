@@ -21,7 +21,7 @@ namespace Blazor.BrowserExtension.Build.Tasks
         {
             try
             {
-                var bootstrapFileType = ParseFileType(FileType);
+                var bootstrapFileType = ParseFileType();
 
                 Log.LogMessage(MessageImportance.Normal, $"{LogPrefix}Reading content of {bootstrapFileType} file '{FilePath}'");
                 var fileLines = File.ReadAllLines(FilePath).ToList();
@@ -41,15 +41,15 @@ namespace Blazor.BrowserExtension.Build.Tasks
             }
             catch (Exception ex)
             {
-                Log.LogError($"{LogPrefix}An unexpected error occured when bootstrapping file '{FilePath}'");
+                Log.LogError($"{LogPrefix}An unexpected error occurred when bootstrapping file '{FilePath}'");
                 Log.LogErrorFromException(ex);
                 return false;
             }
         }
 
-        private BootstrapFileType ParseFileType(string fileType)
+        private BootstrapFileType ParseFileType()
         {
-            if (Enum.TryParse<BootstrapFileType>(fileType, out var bootstrapFileType))
+            if (Enum.TryParse<BootstrapFileType>(FileType, out var bootstrapFileType))
             {
                 return bootstrapFileType;
             }

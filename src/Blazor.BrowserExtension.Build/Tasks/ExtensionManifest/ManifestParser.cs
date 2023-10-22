@@ -8,10 +8,16 @@ namespace Blazor.BrowserExtension.Build.Tasks.ExtensionManifest
 {
     internal static class ManifestParser
     {
+        private static JsonSerializerOptions jsonSerializerOptions;
+
         public static bool TryParseManifestFile(string manifestFile, out Manifest manifest)
         {
-            var jsonSerializerOptions = new JsonSerializerOptions();
-            jsonSerializerOptions.Converters.Add(new ManifestJsonConverter());
+            if (jsonSerializerOptions is null)
+            {
+                jsonSerializerOptions = new JsonSerializerOptions();
+                jsonSerializerOptions.Converters.Add(new ManifestJsonConverter());
+            }
+
             try
             {
                 var items = JsonSerializer.Deserialize<IDictionary<ManifestItemKey, ManifestItem>>(manifestFile, jsonSerializerOptions);
@@ -77,47 +83,47 @@ namespace Blazor.BrowserExtension.Build.Tasks.ExtensionManifest
             {
                 throw new NotImplementedException();
             }
-        }
 
-        private static ManifestItemKey? MapManifestItemKey(string key)
-        {
-            return key switch
+            private static ManifestItemKey? MapManifestItemKey(string key)
             {
-                "manifest_version" => ManifestItemKey.ManifestVersion,
-                "options_ui" => ManifestItemKey.OptionsUi,
-                "browser_action" => ManifestItemKey.BrowserAction,
-                "background" => ManifestItemKey.Background,
-                "content_security_policy" => ManifestItemKey.ContentSecurityPolicy,
-                "content_scripts" => ManifestItemKey.ContentScripts,
-                "web_accessible_resources" => ManifestItemKey.WebAccessibleResources,
-                "permissions" => ManifestItemKey.Permissions,
-                _ => null,
-            };
-        }
-
-        delegate long? GetNumberFieldDelegate(Utf8JsonReader reader);
-        private static readonly ParameterExpression readerParameter = Expression.Parameter(typeof(Utf8JsonReader), "reader");
-        private static readonly Expression getLineNumberField = Expression.Field(readerParameter, "_lineNumber");
-        private static readonly Expression returnLineNumberConverted = Expression.ConvertChecked(getLineNumberField, typeof(long?));
-        private static readonly Expression<GetNumberFieldDelegate> getLineNumberExpression = Expression.Lambda<GetNumberFieldDelegate>(returnLineNumberConverted, readerParameter);
-        private static readonly GetNumberFieldDelegate getLineNumberDelegate = getLineNumberExpression.Compile();
-        private static readonly Expression getColumnNumberField = Expression.Field(readerParameter, "_bytePositionInLine");
-        private static readonly Expression returnColumnNumberConverted = Expression.ConvertChecked(getColumnNumberField, typeof(long?));
-        private static readonly Expression<GetNumberFieldDelegate> getColumnNumberExpression = Expression.Lambda<GetNumberFieldDelegate>(returnColumnNumberConverted, readerParameter);
-        private static readonly GetNumberFieldDelegate getColumnNumberDelegate = getColumnNumberExpression.Compile();
-        private static long? GetLineNumber(ref Utf8JsonReader reader)
-        {
-            var lineNumber = getLineNumberDelegate(reader);
-            if (lineNumber.HasValue)
-            {
-                return lineNumber.Value + 1;
+                return key switch
+                {
+                    "manifest_version" => ManifestItemKey.ManifestVersion,
+                    "options_ui" => ManifestItemKey.OptionsUi,
+                    "browser_action" => ManifestItemKey.BrowserAction,
+                    "background" => ManifestItemKey.Background,
+                    "content_security_policy" => ManifestItemKey.ContentSecurityPolicy,
+                    "content_scripts" => ManifestItemKey.ContentScripts,
+                    "web_accessible_resources" => ManifestItemKey.WebAccessibleResources,
+                    "permissions" => ManifestItemKey.Permissions,
+                    _ => null,
+                };
             }
-            return null;
-        }
 
-        private static long? GetColumnNumber(ref Utf8JsonReader reader)
-        {
-            return getColumnNumberDelegate(reader);
+            delegate long? GetNumberFieldDelegate(Utf8JsonReader reader);
+            private static readonly ParameterExpression readerParameter = Expression.Parameter(typeof(Utf8JsonReader), "reader");
+            private static readonly Expression getLineNumberField = Expression.Field(readerParameter, "_lineNumber");
+            private static readonly Expression returnLineNumberConverted = Expression.ConvertChecked(getLineNumberField, typeof(long?));
+            private static readonly Expression<GetNumberFieldDelegate> getLineNumberExpression = Expression.Lambda<GetNumberFieldDelegate>(returnLineNumberConverted, readerParameter);
+            private static readonly GetNumberFieldDelegate getLineNumberDelegate = getLineNumberExpression.Compile();
+            private static readonly Expression getColumnNumberField = Expression.Field(readerParameter, "_bytePositionInLine");
+            private static readonly Expression returnColumnNumberConverted = Expression.ConvertChecked(getColumnNumberField, typeof(long?));
+            private static readonly Expression<GetNumberFieldDelegate> getColumnNumberExpression = Expression.Lambda<GetNumberFieldDelegate>(returnColumnNumberConverted, readerParameter);
+            private static readonly GetNumberFieldDelegate getColumnNumberDelegate = getColumnNumberExpression.Compile();
+            private static long? GetLineNumber(ref Utf8JsonReader reader)
+            {
+                var lineNumber = getLineNumberDelegate(reader);
+                if (lineNumber.HasValue)
+                {
+                    return lineNumber.Value + 1;
+                }
+                return null;
+            }
+
+            private static long? GetColumnNumber(ref Utf8JsonReader reader)
+            {
+                return getColumnNumberDelegate(reader);
+            }
         }
     }
 }
