@@ -14,7 +14,10 @@ namespace Blazor.BrowserExtension.Build.Tasks.ExtensionManifest
         {
             if (jsonSerializerOptions is null)
             {
-                jsonSerializerOptions = new JsonSerializerOptions();
+                jsonSerializerOptions = new JsonSerializerOptions()
+                {
+                    ReadCommentHandling = JsonCommentHandling.Skip
+                };
                 jsonSerializerOptions.Converters.Add(new ManifestJsonConverter());
             }
 
