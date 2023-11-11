@@ -183,6 +183,14 @@
         <To>content</To>
         <IsOptional>true</IsOptional>
       </_BrowserExtension_BlazorBootJson_FileContentReplacements>
+      <!--
+        Define contents to replace in scoped CSS
+      -->
+      <_BrowserExtension_ScopedCss_FileContentReplacements Include="content path">
+        <From>_content/</From>
+        <To>content/</To>
+        <IsOptional>true</IsOptional>
+      </_BrowserExtension_ScopedCss_FileContentReplacements>
     </ItemGroup>
 
   </Target>
@@ -268,7 +276,7 @@
     <Copy SourceFiles="@(_BrowserExtension_Project_BuildOutput_BrowserExtension_RoutingFiles)"
           DestinationFiles="$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory)\%(_BrowserExtension_Project_BuildOutput_BrowserExtension_RoutingFiles.Route)"
           SkipUnchangedFiles="true" />
-    
+
     <ItemGroup>
       <_BrowserExtension_StaticWebAssets_ExcludePaths Include="$(_BrowserExtension_Project_Assets_Directory)" />
       <_BrowserExtension_StaticWebAssets_ExcludePaths Include="$(_BrowserExtension_Project_BuildOutput_Assets_Directory)" />
@@ -284,6 +292,15 @@
     <Copy SourceFiles="@(_BrowserExtension_Project_BuildOutput_StaticWebAssets_Files)"
           DestinationFolder="$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory)\%(_BrowserExtension_Project_BuildOutput_StaticWebAssets_Files.ContentRelativeDirectory)"
           SkipUnchangedFiles="true" />
+
+    <Message Importance="high" Text="  Replacing content of other asset files" />
+    <ItemGroup>
+      <_BrowserExtension_Project_BuildOutput_BrowserExtension_ScopedCss_FilePath Include="$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory)\$(PackageId).styles.css" />
+    </ItemGroup>
+    <Message Importance="high" Text="  Replacing content of '$(PackageId).styles.css'" Condition="'@(_BrowserExtension_Project_BuildOutput_BrowserExtension_ScopedCss_FilePath)' != ''" />
+    <BlazorToBrowserExtensionReplaceContent Files="@(_BrowserExtension_Project_BuildOutput_BrowserExtension_ScopedCss_FilePath)"
+                                            Replace="@(_BrowserExtension_ScopedCss_FileContentReplacements)"
+                                            Condition="'@(_BrowserExtension_Project_BuildOutput_BrowserExtension_ScopedCss_FilePath)' != ''" />
 
     <Message Importance="high" Text="Conversion completed from Blazor application to Browser Extension" />
 
@@ -402,6 +419,15 @@
              Condition="$(_BrowserExtension_Project_PublishOutput_BrowserExtension_HasRclContentDirectory)" />
     <RemoveDir Directories="$(_BrowserExtension_Project_PublishOutput_BrowserExtension_OriginalRclContent_Directory)"
                Condition="$(_BrowserExtension_Project_PublishOutput_BrowserExtension_HasRclContentDirectory)" />
+
+    <Message Importance="high" Text="  Replacing content of other asset files" />
+    <ItemGroup>
+      <_BrowserExtension_Project_PublishOutput_BrowserExtension_ScopedCss_FilePath Include="$(_BrowserExtension_Project_PublishOutput_BrowserExtension_Directory)\$(PackageId).styles.css" />
+    </ItemGroup>
+    <Message Importance="high" Text="  Replacing content of '$(PackageId).styles.css'" Condition="'@(_BrowserExtension_Project_PublishOutput_BrowserExtension_ScopedCss_FilePath)' != ''" />
+    <BlazorToBrowserExtensionReplaceContent Files="@(_BrowserExtension_Project_PublishOutput_BrowserExtension_ScopedCss_FilePath)"
+                                            Replace="@(_BrowserExtension_ScopedCss_FileContentReplacements)"
+                                            Condition="'@(_BrowserExtension_Project_PublishOutput_BrowserExtension_ScopedCss_FilePath)' != ''" />
 
     <Message Importance="high" Text="Conversion completed from Blazor application to Browser Extension" />
 
