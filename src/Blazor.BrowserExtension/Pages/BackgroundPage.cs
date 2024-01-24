@@ -42,7 +42,7 @@ namespace Blazor.BrowserExtension.Pages
             }
         }
 
-        private BlockingResponse HandleBeforeRequestChange(OnBeforeRequestEventAddListenerCallbackDetails details)
+        private BlockingResponse HandleBeforeRequestChange(OnBeforeRequestEventCallbackDetails details)
         {
             if (details.Url.StartsWith(prefixUri) && !IsStaticFile(details.Url))
             {
