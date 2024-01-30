@@ -25,20 +25,20 @@
       "datatype": "choice",
       "choices": [
         {
-          "choice": "net5.0",
-          "description": "Target .NET 5.0"
-        },
-        {
           "choice": "net6.0",
           "description": "Target .NET 6.0"
         },
         {
           "choice": "net7.0",
           "description": "Target .NET 7.0"
+        },
+        {
+          "choice": "net8.0",
+          "description": "Target .NET 8.0"
         }
       ],
-      "defaultValue": "net7.0",
-      "replaces": "net7.0"
+      "defaultValue": "net8.0",
+      "replaces": "net8.0"
     },
     "ManifestVersion": {
       "type": "parameter",
@@ -56,13 +56,13 @@
       ],
       "defaultValue": "3"
     },
-    "IsNet5": {
-      "type": "computed",
-      "value": "Framework == \"net5.0\""
-    },
     "IsNet6": {
       "type": "computed",
       "value": "Framework == \"net6.0\""
+    },
+    "IsNet7": {
+      "type": "computed",
+      "value": "Framework == \"net7.0\""
     }
   },
   "sources": [
