@@ -8,12 +8,12 @@ updates:
     open-pull-requests-limit: 5
   # Check for updates to NuGet packages every week
   - package-ecosystem: "nuget"
-    directory: "/test/JsBind.Net.Tests/"
+    directory: "/test/Blazor.BrowserExtension.IntegrationTest/"
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 5
   - package-ecosystem: "nuget"
-    directory: "/test/JsBind.Net.TestsRunner/"
+    directory: "/test/Blazor.BrowserExtension.IntegrationTestRunner/"
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 5
