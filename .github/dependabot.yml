@@ -9,11 +9,15 @@ updates:
   # Check for updates to NuGet packages every week
   - package-ecosystem: "nuget"
     directory: "/test/Blazor.BrowserExtension.IntegrationTest/"
+    allow:
+    - dependency-type: "direct"
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 5
   - package-ecosystem: "nuget"
     directory: "/test/Blazor.BrowserExtension.IntegrationTestRunner/"
+    allow:
+    - dependency-type: "direct"
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 5
