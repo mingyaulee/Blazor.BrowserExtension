@@ -22,10 +22,7 @@ Check out the [migration guide](ManifestV3Migration.md) from manifest V2 to V3.
 
 ## How to use this package
 
-> **Important for v0.\*.\*:**<br />
-> This package is still in pre-release stage so the versioning does not comply with semantic versioning. Feature and bug fix increments the patch version and breaking change increments the minor version. So be sure to check the release note before upgrading between minor version.
-
-This package imports two other packages, which are:
+This package imports three other packages, which are:
 1. [WebExtensions.Net](https://github.com/mingyaulee/WebExtensions.Net) - Provides interop for WebExtensions standard API.
 2. [JsBind.Net](https://github.com/mingyaulee/JsBind.Net) - Provides advanced JavaScript interop features used by WebExtensions.Net.
 3. Blazor.BrowserExtension.Build (in this repository) - Adds build targets and tasks to the project.
