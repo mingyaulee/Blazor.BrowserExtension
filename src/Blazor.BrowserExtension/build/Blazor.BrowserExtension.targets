@@ -49,11 +49,16 @@
   </Target>
 
   <!-- Target
-    Runs before the build happens.
+    Runs before the ResolveStaticWebAssetsInputs target during build.
     Writes the configuration file in the intermediate directory and add as StaticWebAsset.
   -->
+  <PropertyGroup>
+    <ResolveStaticWebAssetsInputsDependsOn>
+      $(ResolveStaticWebAssetsInputsDependsOn);
+      WriteBlazorToBrowserExtensionBuildConfigFile;
+    </ResolveStaticWebAssetsInputsDependsOn>
+  </PropertyGroup>
   <Target Name="WriteBlazorToBrowserExtensionBuildConfigFile"
-          BeforeTargets="BeforeBuild"
           Condition="'$(IncludeBrowserExtensionAssets)' == 'true' and '$(BuildBlazorToBrowserExtension)' == 'true'"
           DependsOnTargets="DefineBlazorToBrowserExtensionConfig">
 
