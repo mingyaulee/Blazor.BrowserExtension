@@ -5,5 +5,5 @@
     "checkJs": true
   },
   "include": [ "src/*.js", "src/Modules/**/*.js" ],
-  "exclude": [ "src/lib/*.js" ]
+  "exclude": [ "src/lib/*.*" ]
 }

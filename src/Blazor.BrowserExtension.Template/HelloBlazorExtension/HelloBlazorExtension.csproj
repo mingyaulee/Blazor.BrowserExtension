@@ -2,6 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
+<!--#if (HiddenProperties) -->
+    <!-- NU1504 - Duplicate package reference. Ignore for dotnet template. -->
+    <NoWarn>$(NoWarn);NU1504</NoWarn>
+<!--#endif -->
   </PropertyGroup>
 
   <ItemGroup>

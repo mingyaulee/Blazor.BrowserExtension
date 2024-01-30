@@ -61,6 +61,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- NU1902 - Package reference has known vulnerability. All Microsoft package references are the minimum supported versions. The consumer should update their own package references instead of being enforced by this package. -->
+    <PackageReference Update="Microsoft.*" NoWarn="NU1902" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Blazor.BrowserExtension.Build\Blazor.BrowserExtension.Build.csproj" PrivateAssets="contentfiles" />
   </ItemGroup>
 
