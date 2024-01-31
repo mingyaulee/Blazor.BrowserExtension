@@ -21,28 +21,14 @@ export default class BrowserExtension {
   /**
    * Initializes the browser extension.
    * @param {object} blazorStartOptions Blazor WebAssembly start options. Refer to https://github.com/dotnet/aspnetcore/blob/main/src/Components/Web.JS/src/Platform/WebAssemblyStartOptions.ts
-   * @returns {Promise<BrowserExtension>}
    */
-  async InitializeAsync(blazorStartOptions) {
+  async InitializeCoreAsync(blazorStartOptions) {
     // import JsBind.Net JS
     await import(`${this.Url}content/JsBind.Net/JsBindNet.js`);
 
     if (this.Config.CompressionEnabled) {
       // import brotli decode.js
       this.BrotliDecode = (await import("../lib/decode.min.js")).BrotliDecode;
-    }
-
-    // import blazor.webassembly.js
-    const blazorScript = globalThis.document.createElement("script");
-    blazorScript.src = `${this.Url}framework/blazor.webassembly.js`;
-    blazorScript.defer = true;
-    // Blazor is set to not auto start, so that we can start it with different start options
-    blazorScript.setAttribute("autostart", "false");
-    await this.AppendElementToDocumentAsync(blazorScript);
-
-    // Start Blazor
-    if (!blazorStartOptions) {
-      blazorStartOptions = {};
     }
 
     if (this.Config.EnvironmentName && !blazorStartOptions.environment) {
@@ -52,10 +38,31 @@ export default class BrowserExtension {
     if (this.Mode === BrowserExtensionModes.ContentScript || this.Config.CompressionEnabled) {
       blazorStartOptions.loadBootResource = this._loadBootResource.bind(this);
     }
-    const blazorStart = globalThis.Blazor.start(blazorStartOptions);
-    if (blazorStart && blazorStart instanceof Promise) {
-      await blazorStart;
+  }
+
+  /**
+   * Initializes the browser extension in content script.
+   * @param {object} blazorStartOptions Blazor WebAssembly start options. Refer to https://github.com/dotnet/aspnetcore/blob/main/src/Components/Web.JS/src/Platform/WebAssemblyStartOptions.ts
+   */
+  async InitializeContentScriptAsync(blazorStartOptions) {
+    await this.InitializeCoreAsync(blazorStartOptions);
+    await this._startBlazor(blazorStartOptions);
+  }
+
+  /**
+   * Initializes the browser extension.
+   * @deprecated InitializeAsync is deprecated. Use app.js as JS initializer to configure Blazor start options.
+   * @param {object} blazorStartOptions Blazor WebAssembly start options. Refer to https://github.com/dotnet/aspnetcore/blob/main/src/Components/Web.JS/src/Platform/WebAssemblyStartOptions.ts
+   * @returns {Promise<BrowserExtension>}
+   */
+  async InitializeAsync(blazorStartOptions) {
+    if (!blazorStartOptions) {
+      blazorStartOptions = {};
     }
+
+    await this.InitializeCoreAsync(blazorStartOptions);
+    await this._startBlazor(blazorStartOptions);
+
     return this;
   }
 
@@ -143,6 +150,26 @@ export default class BrowserExtension {
   }
 
   /**
+   * Imports blazor JS and wait for Blazor to start
+   * @param {any} blazorStartOptions
+   */
+  async _startBlazor(blazorStartOptions) {
+    // import blazor.webassembly.js
+    const blazorScript = globalThis.document.createElement("script");
+    blazorScript.src = `${this.Url}framework/blazor.webassembly.js`;
+    blazorScript.defer = true;
+    // Blazor is set to not auto start, so that we can start it with different start options
+    blazorScript.setAttribute("autostart", "false");
+    await this.AppendElementToDocumentAsync(blazorScript);
+
+    // Start Blazor
+    const blazorStart = globalThis.Blazor.start(blazorStartOptions);
+    if (blazorStart && blazorStart instanceof Promise) {
+      await blazorStart;
+    }
+  }
+
+  /**
    * Loads boot resource for Blazor application.
    * @param {any} resourceType
    * @param {any} resourceName
@@ -156,7 +183,7 @@ export default class BrowserExtension {
 
     if (this.Config.CompressionEnabled) {
       return (async () => {
-        const response = await this.FetchAsync(defaultUri + '.br', { cache: 'no-cache' });
+        const response = await this.FetchAsync(defaultUri + ".br", { cache: "no-cache" });
         if (!response.ok) {
           throw new Error(response.statusText);
         }

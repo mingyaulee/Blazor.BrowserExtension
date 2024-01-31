@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <!-- Build properties. -->
   <PropertyGroup>
@@ -8,6 +8,7 @@
     <HasReferenceAssembly>false</HasReferenceAssembly>
     <BuildBlazorToBrowserExtension>false</BuildBlazorToBrowserExtension>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
   </PropertyGroup>
 
   <!-- Package properties. -->
@@ -26,10 +27,6 @@
     <Content Include="build\**">
       <Pack>true</Pack>
       <PackagePath>build</PackagePath>
-    </Content>
-    <Content Include="content\dist\**">
-      <Pack>true</Pack>
-      <PackagePath>content\BrowserExtensionScripts</PackagePath>
     </Content>
     <Content Include="JsFetchHttpClient\JsHttpClient.js">
       <Pack>true</Pack>

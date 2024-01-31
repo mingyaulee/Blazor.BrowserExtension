@@ -3,9 +3,9 @@ import rollupNormalizeLineEndings from "./rollup-plugins/rollupNormalizeLineEndi
 
 export default [
   {
-    input: [ "src/ContentScript.js", "src/Core.js" ],
+    input: ["src/ContentScript.js", "src/Core.js", "src/Blazor.BrowserExtension.lib.module.js"],
     output: {
-      dir: "dist",
+      dir: "../wwwroot",
       chunkFileNames: "[name].js",
       format: "es" // ES module file
     },

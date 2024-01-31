@@ -18,6 +18,13 @@ export function initializeGlobalVariable(browserExtension) {
   if (!globalThis.hasOwnProperty("BlazorBrowserExtension")) {
     blazorBrowserExtension = new BlazorBrowserExtension();
     blazorBrowserExtension.Modes = BrowserExtensionModes;
+    blazorBrowserExtension.ImportJsInitializer = async (module) => {
+      if (module.startsWith(document.baseURI) && blazorBrowserExtension.BrowserExtension) {
+        // attempt to fix import path
+        module = new URL(module.substring(document.baseURI.length), blazorBrowserExtension.BrowserExtension.Url);
+      }
+      return await import(module);
+    };
     globalThis.BlazorBrowserExtension = blazorBrowserExtension;
   } else {
     blazorBrowserExtension = /** @type {BlazorBrowserExtension} */(globalThis.BlazorBrowserExtension);

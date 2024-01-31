@@ -47,31 +47,51 @@ Or check out the [GitHub dependency graph](https://github.com/mingyaulee/Blazor.
 ### Setup existing project
 Refer to [this guide](SetupExistingProject.md) for setting up existing project.
 
-## Pre-initialization script (app.js)
-A custom script can be run before the initialization of the Blazor application.
+## Pre/post startup events hook (app.js)
+A custom script can be run before the Blazor application starts and after the Blazor application is started.
 This is particularly useful for content scripts because we need to inject a `DIV` element as the container for the Blazor application before it is initialized.
 
 To do so, create a file named `app.js` under the directory `wwwroot` in your project.
-The file will automatically be detected during the build and the `app.js` file will be executed every time the Blazor application is going to be initialized.
+The file will automatically be detected during the build and the `app.js` file will be executed every time before and after the Blazor application is started.
+
+The script can have the following exports:
+
+```javascript
+/**
+ * Called before Blazor starts.
+ * @param {object} options Blazor WebAssembly start options. Refer to https://github.com/dotnet/aspnetcore/blob/main/src/Components/Web.JS/src/Platform/WebAssemblyStartOptions.ts
+ * @param {object} extensions Extensions added during publishing
+ * @param {object} blazorBrowserExtension Blazor browser extension instance
+ */
+export function beforeStart(options, extensions, blazorBrowserExtension) {
+}
+
+/**
+ * Called after Blazor is ready to receive calls from JS.
+ * @param {any} blazor The Blazor instance
+ */
+export function afterStarted(blazor) {
+}
+```
+
+The exported functions can be either asynchronous or synchronous.
+
+Refer to the documentation on [JavaScript Initializers](https://learn.microsoft.com/en-us/aspnet/core/blazor/fundamentals/startup?view=aspnetcore-8.0#javascript-initializers) to understand more on the usage parameters passed to the event hook function.
 
 > Note: the `app.js` file will need to be added to the `web_accessible_resources` in the `manifest.json` file
 
 ### Change initialization behaviour
 Using an `app.js`, you can set the following properties in the `BlazorBrowserExtension` global object to change the initialization behaviour.
 
-| Property Name               | Description                                                                                                                                                         |
-| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| ImportBrowserPolyfill       | Set to `false` to disable importing of the browser polyfill script.<br />Default: `true`                                                                            |
-| StartBlazorBrowserExtension | Set to `false` to prevent auto initialization of Blazor. Use `BlazorBrowserExtension.BrowserExtension.InitializeAsync` to initialize manually.<br />Default: `true` |
+| Property Name               | Description                                                                                                                                                                             |
+| --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ImportBrowserPolyfill       | Set to `false` to disable importing of the browser polyfill script.<br />Default: `true`                                                                                                |
+| StartBlazorBrowserExtension | **Deprecated**<br />Set to `false` to prevent auto initialization of Blazor. Use `BlazorBrowserExtension.BrowserExtension.InitializeAsync` to initialize manually.<br />Default: `true` |
 
 **Example:**
 
 ```javascript
 globalThis.BlazorBrowserExtension.ImportBrowserPolyfill = false;
-globalThis.BlazorBrowserExtension.StartBlazorBrowserExtension = false;
-globalThis.BlazorBrowserExtension.BrowserExtension.InitializeAsync({
-    environment: "Production"
-});
 ```
 
 ## Build and load extension
@@ -194,10 +214,18 @@ It should be unique enough that it does not collide with any existing element in
 3. Add a new file named `app.js` under the directory `wwwroot` (Skip this if it has been created already).
 4. Add the following code in the `app.js` file to inject a new `DIV` element with the matching ID into the current page.
    ```javascript
-   if (globalThis.BlazorBrowserExtension.BrowserExtension.Mode === globalThis.BlazorBrowserExtension.Modes.ContentScript) {
-     const appDiv = document.createElement("div");
-     appDiv.id = "My_Unique_Extension_App_Id";
-     document.body.appendChild(appDiv);
+   /**
+    * Called before Blazor starts.
+    * @param {object} options Blazor WebAssembly start options. Refer to https://github.com/dotnet/aspnetcore/blob/main/src/Components/Web.JS/src/Platform/WebAssemblyStartOptions.ts
+    * @param {object} extensions Extensions added during publishing
+    * @param {object} blazorBrowserExtension Blazor browser extension
+   */
+   export function beforeStart(options, extensions, blazorBrowserExtension) {
+     if (blazorBrowserExtension.BrowserExtension.Mode === blazorBrowserExtension.Modes.ContentScript) {
+       const appDiv = document.createElement("div");
+       appDiv.id = "My_Unique_Extension_App_Id";
+       document.body.appendChild(appDiv);
+     }
    }
    ```
 

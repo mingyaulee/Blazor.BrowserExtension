@@ -36,7 +36,7 @@ You can setup the project manually as well, if for some reason you encounter any
        <None Include="wwwroot\**\*" CopyToOutputDirectory="Always" />
      </ItemGroup>
    ```
-0. In `wwwroot/index.html` replace the script tag `<script src="_framework/blazor.webassembly.js"></script>` with `<script src="content/Blazor.BrowserExtension/Core.js"></script>`
+0. In `wwwroot/index.html` remove the `_` in the `_framework` script tag, which will then look like `<script src="framework/blazor.webassembly.js"></script>`
 0. In `Pages/Index.razor` replace the first line `@page "/"` with the following lines:
    ```razor
    @page "/index.html"
@@ -60,17 +60,6 @@ You can setup the project manually as well, if for some reason you encounter any
    {
        ...
        builder.Services.AddBrowserExtensionServices();
-       ...
-   }
-   ```
-   If you are targeting .Net 5.0 you will need to add replace the original `HttpClient` service registration with
-   ```csharp
-   public static async Task Main(string[] args)
-   {
-       ...
-       // workaround to use JavaScript fetch to bypass url validation
-       // see: https://github.com/dotnet/runtime/issues/52836 (fixed in .Net 6)
-       builder.Services.AddScoped<HttpClient>(sp => new JsHttpClient(sp) { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
        ...
    }
    ```

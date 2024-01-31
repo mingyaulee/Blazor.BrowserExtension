@@ -11,26 +11,13 @@ class BrowserExtension {
     this.Config = config;
   }
 
-  async InitializeAsync(blazorStartOptions) {
+  async InitializeCoreAsync(blazorStartOptions) {
     // import JsBind.Net JS
     await import(`${this.Url}content/JsBind.Net/JsBindNet.js`);
 
     if (this.Config.CompressionEnabled) {
       // import brotli decode.js
       this.BrotliDecode = (await import('./lib/decode.min.js')).BrotliDecode;
-    }
-
-    // import blazor.webassembly.js
-    const blazorScript = globalThis.document.createElement("script");
-    blazorScript.src = `${this.Url}framework/blazor.webassembly.js`;
-    blazorScript.defer = true;
-    // Blazor is set to not auto start, so that we can start it with different start options
-    blazorScript.setAttribute("autostart", "false");
-    await this.AppendElementToDocumentAsync(blazorScript);
-
-    // Start Blazor
-    if (!blazorStartOptions) {
-      blazorStartOptions = {};
     }
 
     if (this.Config.EnvironmentName && !blazorStartOptions.environment) {
@@ -40,10 +27,21 @@ class BrowserExtension {
     if (this.Mode === BrowserExtensionModes.ContentScript || this.Config.CompressionEnabled) {
       blazorStartOptions.loadBootResource = this._loadBootResource.bind(this);
     }
-    const blazorStart = globalThis.Blazor.start(blazorStartOptions);
-    if (blazorStart && blazorStart instanceof Promise) {
-      await blazorStart;
+  }
+
+  async InitializeContentScriptAsync(blazorStartOptions) {
+    await this.InitializeCoreAsync(blazorStartOptions);
+    await this._startBlazor(blazorStartOptions);
+  }
+
+  async InitializeAsync(blazorStartOptions) {
+    if (!blazorStartOptions) {
+      blazorStartOptions = {};
     }
+
+    await this.InitializeCoreAsync(blazorStartOptions);
+    await this._startBlazor(blazorStartOptions);
+
     return this;
   }
 
@@ -102,6 +100,22 @@ class BrowserExtension {
     });
   }
 
+  async _startBlazor(blazorStartOptions) {
+    // import blazor.webassembly.js
+    const blazorScript = globalThis.document.createElement("script");
+    blazorScript.src = `${this.Url}framework/blazor.webassembly.js`;
+    blazorScript.defer = true;
+    // Blazor is set to not auto start, so that we can start it with different start options
+    blazorScript.setAttribute("autostart", "false");
+    await this.AppendElementToDocumentAsync(blazorScript);
+
+    // Start Blazor
+    const blazorStart = globalThis.Blazor.start(blazorStartOptions);
+    if (blazorStart && blazorStart instanceof Promise) {
+      await blazorStart;
+    }
+  }
+
   _loadBootResource(resourceType, resourceName, defaultUri, _integrity) {
     if (resourceType === "dotnetjs" || resourceType === "manifest") {
       return `${this.Url}framework/${resourceName}`;
@@ -109,7 +123,7 @@ class BrowserExtension {
 
     if (this.Config.CompressionEnabled) {
       return (async () => {
-        const response = await this.FetchAsync(defaultUri + '.br', { cache: 'no-cache' });
+        const response = await this.FetchAsync(defaultUri + ".br", { cache: "no-cache" });
         if (!response.ok) {
           throw new Error(response.statusText);
         }
@@ -138,12 +152,14 @@ class BlazorBrowserExtension {
   StartBlazorBrowserExtension;
   Modes;
   BrowserExtension;
+  ImportJsInitializer;
 
   constructor() {
     this.ImportBrowserPolyfill = true;
     this.StartBlazorBrowserExtension = true;
     this.Modes = null;
     this.BrowserExtension = null;
+    this.ImportJsInitializer = null;
   }
 }
 
@@ -154,6 +170,13 @@ function initializeGlobalVariable(browserExtension) {
   if (!globalThis.hasOwnProperty("BlazorBrowserExtension")) {
     blazorBrowserExtension = new BlazorBrowserExtension();
     blazorBrowserExtension.Modes = BrowserExtensionModes;
+    blazorBrowserExtension.ImportJsInitializer = async (module) => {
+      if (module.startsWith(document.baseURI) && blazorBrowserExtension.BrowserExtension) {
+        // attempt to fix import path
+        module = new URL(module.substring(document.baseURI.length), blazorBrowserExtension.BrowserExtension.Url);
+      }
+      return await import(module);
+    };
     globalThis.BlazorBrowserExtension = blazorBrowserExtension;
   } else {
     blazorBrowserExtension = (globalThis.BlazorBrowserExtension);

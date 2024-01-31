@@ -112,6 +112,10 @@
         <From>fetch(</From>
         <To>globalThis.BlazorBrowserExtension.BrowserExtension.FetchAsync(</To>
       </_BrowserExtension_BlazorJs_FileContentReplacements>
+      <_BrowserExtension_BlazorJs_FileContentReplacements Include="import JS initializer module">
+        <From>=await import(</From>
+        <To>=await (globalThis.BlazorBrowserExtension?.ImportJsInitializer ?? function(m){return import(m);})(</To>
+      </_BrowserExtension_BlazorJs_FileContentReplacements>
       <_BrowserExtension_BlazorJs_FileContentReplacements Include="Module cwrap" Condition="'$(TargetFramework)' == 'net6.0'">
         <From>cwrap(</From>
         <To>globalThis.Module.cwrap(</To>

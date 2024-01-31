@@ -7,17 +7,8 @@
 
   const blazorBrowserExtension = initializeInternal(config, url, "ContentScript");
 
-  if (config.HasAppJs) {
-    await import(`${url}app.js`);
-  }
-
-  if (blazorBrowserExtension.ImportBrowserPolyfill) {
-    // import browser extension API polyfill
-    // @ts-ignore JS is not a module
-    await import('./lib/browser-polyfill.min.js');
-  }
-
-  if (blazorBrowserExtension.StartBlazorBrowserExtension) {
-    await blazorBrowserExtension.BrowserExtension.InitializeAsync();
-  }
+  await blazorBrowserExtension.BrowserExtension.InitializeContentScriptAsync({
+    IsContentScript: true,
+    BlazorBrowserExtension: blazorBrowserExtension
+  });
 })();

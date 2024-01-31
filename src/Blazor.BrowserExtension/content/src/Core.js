@@ -1,4 +1,6 @@
 ﻿(async () => {
+  console.warn("Core.js is deprecated. Use 'framework/blazor.webassembly.js' in the script tag.");
+
   let debugMode = false;
   const hasExtensionsApi = namespace => typeof globalThis[namespace] == "object" && globalThis[namespace]?.runtime?.id;
   if (!hasExtensionsApi("browser") && !hasExtensionsApi("chrome")) {
@@ -24,6 +26,9 @@
   const config = await configRequest.json();
 
   const blazorBrowserExtension = initializeInternal(config, url, browserExtensionMode);
+  // Clear the BrowserExtension property for the module initializer to initialize it
+  const browserExtension = blazorBrowserExtension.BrowserExtension;
+  blazorBrowserExtension.BrowserExtension = null;
 
   if (debugMode) {
     blazorBrowserExtension.ImportBrowserPolyfill = false;
@@ -40,6 +45,6 @@
   }
 
   if (blazorBrowserExtension.StartBlazorBrowserExtension) {
-    await blazorBrowserExtension.BrowserExtension.InitializeAsync();
+    await browserExtension.InitializeAsync();
   }
 })();
