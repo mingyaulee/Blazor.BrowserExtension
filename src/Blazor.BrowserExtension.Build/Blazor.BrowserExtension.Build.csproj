@@ -51,6 +51,7 @@
     <PackageReference Update="@(PackageReference)" PrivateAssets="All" />
     <PackageReference Update="Microsoft.Build.Framework" Version="17.8.3" />
     <PackageReference Update="Microsoft.Build.Utilities.Core" Version="17.8.3" />
+    <PackageReference Update="System.Text.Json" Version="8.0.1" />
   </ItemGroup>
 
 </Project>
