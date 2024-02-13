@@ -8,7 +8,6 @@
     <HasReferenceAssembly>false</HasReferenceAssembly>
     <BuildBlazorToBrowserExtension>false</BuildBlazorToBrowserExtension>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
   </PropertyGroup>
 
   <!-- Package properties. -->
@@ -28,14 +27,22 @@
       <Pack>true</Pack>
       <PackagePath>build</PackagePath>
     </Content>
+    <Content Include="content\dist\**">
+      <Pack>true</Pack>
+      <PackagePath>content\BrowserExtensionScripts</PackagePath>
+    </Content>
     <Content Include="content\src\lib\**">
       <Pack>true</Pack>
-      <PackagePath>content\staticwebassets\lib</PackagePath>
+      <PackagePath>content\BrowserExtensionScripts\lib</PackagePath>
     </Content>
     <Content Include="..\Icon\Icon.png">
       <Pack>true</Pack>
       <PackagePath></PackagePath>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\Blazor.BrowserExtension.lib.module.js" />
   </ItemGroup>
 
   <ItemGroup>

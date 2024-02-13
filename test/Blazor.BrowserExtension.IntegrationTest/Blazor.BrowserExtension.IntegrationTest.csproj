@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <!-- Link scripts according to the directory structure in the NuGet package -->
+  <PropertyGroup>
+    <_BrowserExtension_Package_Contents_Scripts_Directory>$(MSBuildThisFileDirectory)..\..\src\Blazor.BrowserExtension\content\dist</_BrowserExtension_Package_Contents_Scripts_Directory>
+  </PropertyGroup>
+
   <ItemGroup>
     <StaticWebAsset Include="$(MSBuildThisFileDirectory)..\..\src\Blazor.BrowserExtension\content\src\lib\*.*">
       <SourceType>Package</SourceType>

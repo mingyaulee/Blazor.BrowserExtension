@@ -5,7 +5,7 @@ export default [
   {
     input: ["src/ContentScript.js", "src/Core.js", "src/Blazor.BrowserExtension.lib.module.js"],
     output: {
-      dir: "../wwwroot",
+      dir: "dist",
       chunkFileNames: "[name].js",
       format: "es" // ES module file
     },
