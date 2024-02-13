@@ -1,24 +1,6 @@
 ﻿<!-- build/Blazor.BrowserExtension.targets -->
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-  <!-- Region
-    Adds the content JavaScript files from the NuGet package to the project.
-  -->
-  <PropertyGroup>
-    <_BrowserExtension_Package_Contents_Scripts_Directory Condition="'$(_BrowserExtension_Package_Contents_Scripts_Directory)' == ''">$(MSBuildThisFileDirectory)..\content\BrowserExtensionScripts</_BrowserExtension_Package_Contents_Scripts_Directory>
-  </PropertyGroup>
-
-  <ItemGroup Condition="'$(IncludeBrowserExtensionAssets)' == 'true'">
-    <StaticWebAsset Include="$(_BrowserExtension_Package_Contents_Scripts_Directory)\**\*.*">
-      <SourceType>Package</SourceType>
-      <SourceId>Blazor.BrowserExtension</SourceId>
-      <ContentRoot>$(_BrowserExtension_Package_Contents_Scripts_Directory)</ContentRoot>
-      <BasePath>_content/Blazor.BrowserExtension</BasePath>
-      <RelativePath>%(RecursiveDir)%(Filename)%(Extension)</RelativePath>
-    </StaticWebAsset>
-  </ItemGroup>
-  <!-- EndRegion -->
-
   <!-- Target
     Runs only when another target depends on this target.
     Defines the config for browser extension.

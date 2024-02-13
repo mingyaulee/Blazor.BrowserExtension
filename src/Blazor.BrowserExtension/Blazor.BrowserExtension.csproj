@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Razor">
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <!-- Build properties. -->
   <PropertyGroup>
@@ -28,13 +28,9 @@
       <Pack>true</Pack>
       <PackagePath>build</PackagePath>
     </Content>
-    <Content Include="JsFetchHttpClient\JsHttpClient.js">
-      <Pack>true</Pack>
-      <PackagePath>content\BrowserExtensionScripts</PackagePath>
-    </Content>
     <Content Include="content\src\lib\**">
       <Pack>true</Pack>
-      <PackagePath>content\BrowserExtensionScripts\lib</PackagePath>
+      <PackagePath>content\staticwebassets\lib</PackagePath>
     </Content>
     <Content Include="..\Icon\Icon.png">
       <Pack>true</Pack>
