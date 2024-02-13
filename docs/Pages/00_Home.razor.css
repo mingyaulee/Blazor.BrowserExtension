@@ -1,0 +1,13 @@
+﻿h1 {
+    -webkit-text-fill-color: transparent;
+    background: linear-gradient(128.87deg,#512bd4 14.05%,#d600aa 89.3%);
+    background-clip: text;
+    -webkit-background-clip: text;
+}
+
+.landing {
+    min-height: calc(100vh - 130px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}

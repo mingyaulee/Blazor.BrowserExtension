@@ -1,0 +1,98 @@
+.top-row {
+    background: radial-gradient(150% 128px at 0px 56px, #005b96 0%, #03396c 50%, #03396c 100%);
+}
+
+.navbar-toggler {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.navbar-brand {
+    font-size: 1.2rem;
+    font-weight: 700;
+    position: relative;
+}
+
+    .navbar-brand::after {
+        content: "";
+        bottom: 4px;
+        left: 0;
+        right: 0;
+        position: absolute;
+        pointer-events: none;
+        background: linear-gradient(128.87deg,#512bd4 14.05%,#d600aa 89.3%);
+        height: 4px;
+        border-radius: 4px;
+    }
+
+    .navbar-brand .dot {
+        display: inline-block;
+        margin: 0 3px;
+        width: 8px;
+        height: 8px;
+        background: radial-gradient(circle, #6924cd 0%, #9b13bc 100%);
+        position: relative;
+        bottom: 3px;
+        border-radius: 50%;
+    }
+
+.bi {
+    display: inline-block;
+    position: relative;
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-right: 0.75rem;
+    top: -1px;
+    background-size: cover;
+}
+
+.nav-item {
+    font-size: 0.9rem;
+    padding-bottom: 0.5rem;
+}
+
+    .nav-item:first-of-type {
+        padding-top: 1rem;
+    }
+
+    .nav-item:last-of-type {
+        padding-bottom: 1rem;
+    }
+
+    .nav-item ::deep a {
+        color: inherit;
+        border-radius: 4px;
+        height: 3rem;
+        display: flex;
+        align-items: center;
+        line-height: 3rem;
+    }
+
+        .nav-item ::deep a.active {
+            background-color: rgba(255,255,255,0.37);
+        }
+
+        .nav-item ::deep a:hover {
+            background-color: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+@media (min-width: 768px) {
+    .top-row {
+        background: radial-gradient(560px 128px at 0px 56px, #005b96 0%, #03396c 50%, #03396c 100%);
+    }
+
+    .navbar-toggler {
+        display: none;
+    }
+
+    .collapse {
+        /* Never collapse the sidebar for wide screens */
+        display: block;
+    }
+
+    .nav-scrollable {
+        /* Allow sidebar to scroll for tall menus */
+        height: calc(100vh - 3.5rem);
+        overflow-y: auto;
+    }
+}

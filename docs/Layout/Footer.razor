@@ -1,0 +1,44 @@
+﻿@using Docs.Routing
+@inject DocumentRouteEvent DocumentRouteEvent
+@inject NavigationManager Navigation
+<footer class="col-md-10 col-lg-8 col-xl-6 mx-auto p-3 mt-5">
+    <h3>Found a content problem with this page?</h3>
+    <ul>
+        @if (!string.IsNullOrEmpty(fileName))
+        {
+            <li>
+                <a target="_blank" href="https://github.com/mingyaulee/Blazor.BrowserExtension/edit/main/docs/Pages/@fileName">Edit the page on GitHub.</a>
+            </li>
+            <li>
+                <a target="_blank" href="https://github.com/mingyaulee/Blazor.BrowserExtension/blob/main/docs/Pages/@fileName">View the source on GitHub.</a>
+            </li>
+        }
+        <li>
+            <a target="_blank" href="@($"https://github.com/mingyaulee/Blazor.BrowserExtension/issues/new?title={Uri.EscapeDataString($"[Content] {fileName ?? Navigation.Uri}")}")">Report the content issue.</a>
+        </li>
+    </ul>
+    <p>Want to get more involved? <a target="_blank" href="https://github.com/mingyaulee/Blazor.BrowserExtension/blob/main/CONTRIBUTING.md">Learn how to contribute.</a></p>
+    <p><a class="btn btn-success" target="_blank" href="https://github.com/sponsors/mingyaulee"><i class="fa-solid fa-hand-holding-heart"></i> Become a sponsor</a></p>
+</footer>
+
+@code {
+    private string? fileName;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        GetFileName();
+        DocumentRouteEvent.OnChange += OnDocumentChanged;
+    }
+
+    private void OnDocumentChanged()
+    {
+        GetFileName();
+        StateHasChanged();
+    }
+
+    private void GetFileName()
+    {
+        fileName = DocumentRouteEvent.CurrentDocument?.FileName;
+    }
+}

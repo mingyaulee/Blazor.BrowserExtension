@@ -1,0 +1,14 @@
+﻿footer {
+    border: 1px solid #ccc;
+    background-color: rgba(var(--bs-secondary-bg-rgb), 0.3);
+}
+
+[data-bs-theme=dark] footer {
+    background-color: rgba(var(--bs-secondary-rgb),0.3);
+}
+
+@media (min-width: 768px) {
+    footer {
+        max-width: calc(100vw - 280px);
+    }
+}

@@ -1,0 +1,14 @@
+﻿@inject DocumentRouteEvent DocumentRouteEvent
+
+@if (DocumentRouteEvent.CurrentDocument?.Name is not null)
+{
+    <PageTitle>@DocumentRouteEvent.CurrentDocument?.Name | Blazor.BrowserExtension</PageTitle>
+}
+
+@code {
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        DocumentRouteEvent.OnChange += StateHasChanged;
+    }
+}

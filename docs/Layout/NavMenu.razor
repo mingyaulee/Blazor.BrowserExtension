@@ -1,0 +1,32 @@
+﻿@using Docs.Routing
+<div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="">Blazor<span class="dot"></span>BrowserExtension</a>
+        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+</div>
+
+<div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
+    <nav class="flex-column" id="navMenu">
+        @foreach (var metadata in DocumentRouteProvider.DocumentRoutes)
+        {
+            <div class="nav-item">
+                <NavLink class="@($"nav-link px-{metadata.Depth + 3}")" href="@metadata.WebPath" Match="@(string.IsNullOrEmpty(metadata.WebPath) ? NavLinkMatch.All : NavLinkMatch.Prefix)">
+                    @metadata.Name
+                </NavLink>
+            </div>
+        }
+    </nav>
+</div>
+
+@code {
+    private bool collapseNavMenu = true;
+    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+}

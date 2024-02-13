@@ -1,7 +1,21 @@
-﻿# Migrate from Manifest V2 to V3
+# Manifest V3 is supported
 
-1. Update the `Blazor.BrowserExtension` NuGet package version to at least `v0.10.0`.
-0. Update target framework to `net7.0` and all .Net packages to .Net 7.
+What is Manifest V3? Read more about manifext V3 [here](https://developer.chrome.com/docs/extensions/develop/migrate/what-is-mv3).
+
+At the moment, Chromium based browsers (Chrome & Edge) has support for the manifest V3 specification and manifest V2 is deprecated.
+
+Firefox's implementation has slight difference with Chromium based browsers in the [manifest format](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json).
+
+> **Important Note**
+>
+> - .Net 6 is not supported for manifest V3.
+> - We are using a custom version of `dotnet.js` runtime to overcome the CSP compliance issue in .Net 7.
+> - .Net 8 and above is CSP compliant and is recommended for new projects.
+
+## Migrate from Manifest V2 to V3
+
+1. Update the `Blazor.BrowserExtension` NuGet package version to the latest version.
+0. Update target framework to `net8.0` and all .Net packages to .Net 8.
 0. Update the `manifest.json` file
    - Update `manifest_version`
      ```json
@@ -42,3 +56,7 @@
    - Remove `Background.razor`
    - Refer to [this guide](https://developer.chrome.com/docs/extensions/mv3/migrating_to_service_workers/) for migrating from background page to background service worker.
 
+
+# Reference
+
+- [Chrome for Developers](https://developer.chrome.com/docs/extensions/develop/migrate)

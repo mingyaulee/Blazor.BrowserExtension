@@ -1,0 +1,20 @@
+﻿@using Docs.Routing
+@inject DocumentRouteEvent DocumentRouteEvent
+
+<Router AppAssembly="@typeof(App).Assembly">
+    <Found Context="routeData">
+        @if (routeData.PageType != typeof(RoutingPage))
+        {
+            DocumentRouteEvent.TriggerChange(DocumentRouteProvider.GetDocumentRouteMetadataFromResourceName(routeData.PageType.FullName));
+        }
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+        <DocumentRoutePageTitle />
+    </Found>
+    <NotFound>
+        <PageTitle>Not found</PageTitle>
+        <LayoutView Layout="@typeof(MainLayout)">
+            <p role="alert">Sorry, there's nothing at this address.</p>
+        </LayoutView>
+    </NotFound>
+</Router>

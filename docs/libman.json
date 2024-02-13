@@ -1,0 +1,65 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "bootstrap@5.3.2",
+      "destination": "wwwroot/lib/bootstrap/",
+      "files": [
+        "js/bootstrap.min.js",
+        "js/bootstrap.min.js.map",
+        "js/bootstrap.js.map",
+        "js/bootstrap.js",
+        "css/bootstrap.css",
+        "css/bootstrap.css.map",
+        "css/bootstrap.min.css",
+        "css/bootstrap.min.css.map"
+      ]
+    },
+    {
+      "provider": "jsdelivr",
+      "library": "@fortawesome/fontawesome-free@6.5.1",
+      "destination": "wwwroot/lib/fortawesome/fontawesome-free/",
+      "files": [
+        "css/all.min.css",
+        "css/all.css",
+        "webfonts/fa-brands-400.ttf",
+        "webfonts/fa-brands-400.woff2",
+        "webfonts/fa-regular-400.ttf",
+        "webfonts/fa-regular-400.woff2",
+        "webfonts/fa-solid-900.ttf",
+        "webfonts/fa-solid-900.woff2",
+        "webfonts/fa-v4compatibility.ttf",
+        "webfonts/fa-v4compatibility.woff2"
+      ]
+    },
+    {
+      "library": "prism@1.29.0",
+      "destination": "wwwroot/lib/prism/",
+      "files": [
+        "prism.min.js",
+        "prism.js",
+        "themes/prism.css",
+        "themes/prism.min.css",
+        "plugins/line-numbers/prism-line-numbers.css",
+        "plugins/line-numbers/prism-line-numbers.js",
+        "plugins/line-numbers/prism-line-numbers.min.css",
+        "plugins/line-numbers/prism-line-numbers.min.js",
+        "plugins/toolbar/prism-toolbar.css",
+        "plugins/toolbar/prism-toolbar.js",
+        "plugins/toolbar/prism-toolbar.min.css",
+        "plugins/toolbar/prism-toolbar.min.js",
+        "plugins/copy-to-clipboard/prism-copy-to-clipboard.js",
+        "plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js",
+        "components/prism-json.js",
+        "components/prism-json.min.js",
+        "components/prism-bash.js",
+        "components/prism-bash.min.js",
+        "components/prism-csharp.js",
+        "components/prism-csharp.min.js",
+        "components/prism-cshtml.js",
+        "components/prism-cshtml.min.js"
+      ]
+    }
+  ]
+}

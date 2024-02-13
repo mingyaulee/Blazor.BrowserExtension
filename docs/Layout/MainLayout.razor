@@ -1,0 +1,41 @@
+﻿@inherits LayoutComponentBase
+@inject IJSInProcessRuntime JsRuntime
+
+<div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <main>
+        <div class="top-row px-4">
+            <a class="dark-mode-toggle" href="#" @onclick="@(() => ToggleDarkMode())" @onclick:preventDefault="true">
+                <i class="fa-solid fa-sun"></i>
+                <i class="fa-solid fa-moon"></i>
+            </a>
+            <a href="https://github.com/mingyaulee/Blazor.BrowserExtension" target="_blank">
+                <i class="fa-brands fa-github"></i>
+            </a>
+            <a href="https://github.com/sponsors/mingyaulee" target="_blank">
+                <i class="fa-solid fa-hand-holding-heart"></i>
+            </a>
+        </div>
+
+        <article class="content p-5">
+            @Body
+            <Footer />
+        </article>
+    </main>
+</div>
+
+@code {
+    void ToggleDarkMode()
+    {
+        JsRuntime.InvokeVoid("globalThis.appUtils.toggleDarkMode");
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        JsRuntime.InvokeVoid("globalThis.appUtils.initializeMode");
+    }
+}
