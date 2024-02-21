@@ -11,6 +11,12 @@ namespace Docs
     {
         public static async Task Main(string[] args)
         {
+            if (args.Length == 2 && args[0] == "--after-publish")
+            {
+                AfterPublish.Run(args[1]);
+                return;
+            }
+
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
             builder.RootComponents.Add<HeadOutlet>("head::after");

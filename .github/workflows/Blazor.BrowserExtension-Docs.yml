@@ -27,9 +27,25 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore docs
     - name: Build
-      run: dotnet build docs --no-restore --configuration Release
+      run: dotnet build docs --no-restore --configuration Release -p:OutDir=$PWD/docs/bin/BuildOutput
     - name: Publish
       run: dotnet publish docs --no-restore --no-build --configuration Release -p:PublishDir=$PWD/PublishOutput
+    - name: Create runtimeconfig.json
+      run: |
+           cat <<EOF > $PWD/docs/bin/BuildOutput/Docs.runtimeconfig.json
+           {
+             "runtimeOptions": {
+               "tfm": "net8.0",
+               "framework": {
+                 "name": "Microsoft.AspNetCore.App",
+                 "version": "8.0.1"
+               },
+               "rollForwardOnNoCandidateFx": 2
+             }
+           }
+           EOF
+    - name: After Publish
+      run: dotnet docs/bin/BuildOutput/Docs.dll --after-publish $PWD/PublishOutput/wwwroot
     - name: Configure GitHub Pages
       uses: actions/configure-pages@v3
     - name: Upload GitHub Pages artifact
