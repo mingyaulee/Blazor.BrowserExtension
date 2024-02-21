@@ -9,6 +9,9 @@
     <Content Include="..\src\Icon\Icon.png">
       <Link>wwwroot\favicon.png</Link>
     </Content>
+    <Content Include="..\src\Blazor.BrowserExtension\content\src\lib\decode.min.js">
+      <Link>wwwroot\lib\decode.min.js</Link>
+    </Content>
     <EmbeddedResource Include="Pages/**/*.md" />
   </ItemGroup>
 
