@@ -179,3 +179,7 @@ div.code-toolbar > .toolbar {
     .copy-to-clipboard-button[data-copy-state=copy-error] > span::before {
         content: "\f00d";
     }
+
+.DocSearch-Hit-content-wrapper {
+    min-height: 40px;
+}

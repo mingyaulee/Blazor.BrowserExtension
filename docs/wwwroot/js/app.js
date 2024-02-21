@@ -23,7 +23,33 @@ const initializeMode = () => {
   }
 };
 
+let isFirstPageRender = true;
+const onFirstPageRender = () => {
+  const basePath = "/Blazor.BrowserExtension/";
+  docsearch({
+    appId: "DR5IM4IQW5",
+    apiKey: "78b993a6335b6e371d9f2ce6a7c1a207",
+    indexName: "blazor-browserextension",
+    insights: false,
+    container: '#search',
+    debug: false,
+    transformItems: (items) => {
+      return items.map(item => {
+        if (item.url.includes(basePath)) {
+          item.url = item.url.substring(item.url.indexOf(basePath) + basePath.length);
+        }
+        return item;
+      });
+    }
+  });
+};
+
 const onPageRender = () => {
+  if (isFirstPageRender) {
+    isFirstPageRender = false;
+    onFirstPageRender();
+  }
+
   document.getElementsByTagName("article")[0]
     .querySelectorAll("div.code-toolbar")
     .forEach(toolbar => toolbar.childElementCount === 1 && toolbar.remove());

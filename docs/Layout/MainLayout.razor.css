@@ -21,7 +21,7 @@ main {
     align-items: center;
 }
 
-    .top-row a {
+    .top-row > a {
         display: flex;
         color: inherit;
         height: calc(3.5rem - 1px);
@@ -33,15 +33,55 @@ main {
         margin-bottom: 1px;
     }
 
-        .top-row a:hover {
+        .top-row > a:hover {
             background-color: rgba(var(--bs-body-bg-rgb), 0.5);
         }
+
+    .top-row > #search ::deep .DocSearch-Button-Placeholder {
+        min-width: 200px;
+    }
 
 @media (max-width: 767.98px) {
     .top-row {
         justify-content: space-between;
         background: radial-gradient(150% 128px at 0px 0px, #005b96 0%, #03396c 50%, #03396c 100%);
     }
+
+        .top-row > #search {
+            height: calc(3.5rem - 1px);
+            width: 3.5rem;
+        }
+
+            .top-row > #search ::deep > button {
+                display: flex;
+                height: 100%;
+                width: 100%;
+                align-items: center;
+                justify-content: center;
+                margin: 0;
+                background-color: transparent;
+                border: 0;
+                border-radius: 0;
+                color: inherit;
+            }
+
+                .top-row > #search ::deep > button:hover {
+                    border: 0;
+                    box-shadow: none;
+                }
+
+            .top-row > #search:hover {
+                background-color: rgba(var(--bs-body-bg-rgb), 0.5);
+            }
+
+            .top-row > #search ::deep .DocSearch-Button-Container svg {
+                display: none;
+            }
+
+            .top-row > #search ::deep .DocSearch-Button-Container::before {
+                font: var(--fa-font-solid);
+                content: "\f002";
+            }
 }
 
 @media (min-width: 768px) {
