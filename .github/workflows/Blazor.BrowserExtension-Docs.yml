@@ -3,6 +3,7 @@ name: Deploy documentation to GitHub Pages
 on:
   push:
     branches: [ main ]
+    paths: [ docs/** ]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
