@@ -68,10 +68,23 @@ Additional changes are required for content scripts to not have conflict of the 
 First of all, decide on a unique ID to be used for the application `DIV` container, such as `My_Unique_Extension_App_Id` (**this ID is used in the steps below, replace with your own unique ID**).
 It should be unique enough that it does not collide with any existing element in the pages where the content scripts are going to be injected.
 
-1. In `index.html` change the line `<div id="app">` to `<div id="My_Unique_Extension_App_Id">`.
-2. In `Program.cs` change the line `builder.RootComponents.Add<App>("#app");` to `builder.RootComponents.Add<App>("#My_Unique_Extension_App_Id");`.
-3. If you don't have an [`app.js`](03_01_app.js.md) file yet, add a new file named `app.js` under the directory `wwwroot`.
-4. Add the following code in the `app.js` file to inject a new `DIV` element with the matching ID into the current page.
+1. In `Program.cs`, add a condition to the existing `RootComponents` setup.
+   ```csharp
+   builder.UseBrowserExtension(browserExtension =>
+   {
+       if (browserExtension.Mode == BrowserExtensionMode.ContentScript)
+       {
+           builder.RootComponents.Add<ContentScript>("#My_Unique_Extension_App_Id");
+       }
+       else
+       {
+           builder.RootComponents.Add<App>("#app");
+           builder.RootComponents.Add<HeadOutlet>("head::after");
+       }
+   });
+   ```
+0. If you don't have an [`app.js`](03_01_app.js.md) file yet, add a new file named `app.js` under the directory `wwwroot`.
+0. Add the following code in the `app.js` file to inject a new `DIV` element with the matching ID into the current page.
    ```javascript
    /**
     * Called before Blazor starts.
@@ -87,25 +100,6 @@ It should be unique enough that it does not collide with any existing element in
      }
    }
    ```
-
-In `App.razor`, add the following `if` statement to opt out of routing only for content scripts.
-
-```razor
-@using MyBlazorExtension.Pages;
-@using Blazor.BrowserExtension;
-@inject IBrowserExtensionEnvironment BrowserExtensionEnvironment
-
-@if (BrowserExtensionEnvironment.Mode == BrowserExtensionMode.ContentScript)
-{
-    <ContentScript></ContentScript>
-}
-else
-{
-    <Router ...>
-        ...
-    </Router>
-}
-```
 
 > **Tips**
 >

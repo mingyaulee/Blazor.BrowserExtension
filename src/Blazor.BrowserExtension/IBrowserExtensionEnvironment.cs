@@ -3,5 +3,6 @@
     public interface IBrowserExtensionEnvironment
     {
         BrowserExtensionMode Mode { get; }
+        static IBrowserExtensionEnvironment Instance { get; internal set; }
     }
 }

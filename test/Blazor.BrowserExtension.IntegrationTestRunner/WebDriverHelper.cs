@@ -31,12 +31,13 @@ namespace Blazor.BrowserExtension.IntegrationTestRunner
             return $"{ExtensionBaseUrl}index.html?path={path}";
         }
 
-        public async Task<string> GetPageContent()
+        public async Task<string> GetPageContent(bool isContentScript = false)
         {
+            var appId = isContentScript ? "#Blazor_BrowserExtension_IntegrationTest_app" : "#app";
             await Retry(
-                () => (bool)WebDriver.ExecuteScript("return document.querySelector(\"#Blazor_BrowserExtension_IntegrationTest_app h3\") != null;"),
+                () => (bool)WebDriver.ExecuteScript($"""return document.querySelector("{appId} h3") != null;"""),
                 TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(10));
-            return WebDriver.FindElement(By.CssSelector("#Blazor_BrowserExtension_IntegrationTest_app h3"))?.Text;
+            return WebDriver.FindElement(By.CssSelector($"{appId} h3"))?.Text;
         }
 
         public async Task<bool> Retry(Func<bool> action, TimeSpan interval, TimeSpan timeout)

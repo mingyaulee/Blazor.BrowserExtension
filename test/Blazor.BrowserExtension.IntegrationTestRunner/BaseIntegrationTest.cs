@@ -61,7 +61,7 @@ namespace Blazor.BrowserExtension.IntegrationTestRunner
         public async Task ContentScriptIsLoaded()
         {
             await webDriverHelper.NavigateToUrl($"https://developer.chrome.com/");
-            Assert.Equal("ContentScript", await webDriverHelper.GetPageContent());
+            Assert.Equal("ContentScript", await webDriverHelper.GetPageContent(true));
         }
     }
 }

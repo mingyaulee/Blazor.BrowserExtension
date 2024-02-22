@@ -19,6 +19,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             var browserExtensionEnvironment = new BrowserExtensionEnvironment(GetBrowserExtensionMode(jsRuntime));
 #endif
+            IBrowserExtensionEnvironment.Instance = browserExtensionEnvironment;
             services.AddSingleton<IBrowserExtensionEnvironment>(browserExtensionEnvironment);
 
             if (browserExtensionEnvironment.Mode == BrowserExtensionMode.Debug)

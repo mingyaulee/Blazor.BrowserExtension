@@ -9,20 +9,24 @@ namespace Blazor.BrowserExtension.Build.Tasks.Bootstrap
         {
             var isUpdated = false;
 
-            // Insert
-            // builder.Services.AddBrowserExtensionServices();
-            // before await builder.Build().RunAsync();
-            var registerServicesIndex = fileLines.FindIndex(fileLine => fileLine.Contains(".AddBrowserExtensionServices"));
-            if (registerServicesIndex == -1)
+            // Wrap RootComponents setup
+            // builder.UseBrowserExtension(environment =>
+            // {
+            //     builder.RootComponents.Add<App>("#app");
+            //     builder.RootComponents.Add<HeadOutlet>("head::after");
+            // });
+            var useBrowserExtensionIndex = fileLines.FindIndex(fileLine => fileLine.Contains(".UseBrowserExtension"));
+            if (useBrowserExtensionIndex == -1)
             {
-                var buildHostIndex = fileLines.FindIndex(fileLine => fileLine.Contains(".Build().RunAsync()"));
-                if (buildHostIndex == -1)
+                var rootComponentsFirstIndex = fileLines.FindIndex(fileLine => fileLine.Contains(".RootComponents."));
+
+                if (rootComponentsFirstIndex == -1)
                 {
-                    throw new InvalidOperationException("Unable to find builder.Build().RunAsync() in Program.cs file.");
+                    throw new InvalidOperationException("Unable to find builder.RootComponents.Add<>() in Program.cs file.");
                 }
 
                 var indentCount = 0;
-                foreach (var character in fileLines[buildHostIndex])
+                foreach (var character in fileLines[rootComponentsFirstIndex])
                 {
                     if (character != ' ')
                     {
@@ -31,9 +35,21 @@ namespace Blazor.BrowserExtension.Build.Tasks.Bootstrap
                     indentCount++;
                 }
 
+                var rootComponentsLastIndex = fileLines.FindLastIndex(fileLine => fileLine.Contains(".RootComponents."));
                 var indent = "".PadLeft(indentCount, ' ');
-                fileLines.Insert(buildHostIndex + 0, $"{indent}builder.Services.AddBrowserExtensionServices();");
-                fileLines.Insert(buildHostIndex + 1, "");
+                fileLines.Insert(rootComponentsFirstIndex + 0, $"{indent}builder.UseBrowserExtension(browserExtension =>");
+                fileLines.Insert(rootComponentsFirstIndex + 1, $"{indent}{{");
+                for (var i = rootComponentsFirstIndex + 2; i <= rootComponentsLastIndex + 2; i++)
+                {
+                    fileLines[i] = "    " + fileLines[i];
+                }
+                fileLines.Insert(rootComponentsLastIndex + 3, $"{indent}}});");
+
+                if (!string.IsNullOrWhiteSpace(fileLines[rootComponentsFirstIndex - 1]))
+                {
+                    fileLines.Insert(rootComponentsFirstIndex - 1, string.Empty);
+                }
+
                 isUpdated = true;
             }
 

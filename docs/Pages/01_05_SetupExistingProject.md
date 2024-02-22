@@ -62,12 +62,16 @@ You can setup the project manually as well, if for some reason you encounter any
      });
    });
    ```
-0. Add the following into `Program.cs` file.
+0. Add the following into `Program.cs` file to wrap the `RootComponents` setup.
    ```csharp
    public static async Task Main(string[] args)
    {
        ...
-       builder.Services.AddBrowserExtensionServices();
+       builder.UseBrowserExtension(browserExtension =>
+       {
+           builder.RootComponents.Add<App>("#app");
+           builder.RootComponents.Add<HeadOutlet>("head::after");
+       });
        ...
    }
    ```
