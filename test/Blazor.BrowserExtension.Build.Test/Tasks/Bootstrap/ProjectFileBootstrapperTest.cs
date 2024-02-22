@@ -1,0 +1,44 @@
+﻿using Blazor.BrowserExtension.Build.Tasks.Bootstrap;
+
+namespace Blazor.BrowserExtension.Build.Test.Tasks.Bootstrap
+{
+    public class ProjectFileBootstrapperTest : BaseFileBootstrapperTest<ProjectFileBootstrapper>
+    {
+        protected override string OriginalFileContent => """
+            <Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+              <PropertyGroup>
+                <TargetFramework>net8.0</TargetFramework>
+                <BrowserExtensionBootstrap>true</BrowserExtensionBootstrap>
+              </PropertyGroup>
+
+              <ItemGroup>
+                <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.2" />
+                <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.2" PrivateAssets="all" />
+                <PackageReference Include="System.Net.Http.Json" Version="8.0.0" />
+              </ItemGroup>
+
+            </Project>
+            """;
+
+        protected override string BootstrappedFileContent => """
+            <Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+            
+              <PropertyGroup>
+                <TargetFramework>net8.0</TargetFramework>
+              </PropertyGroup>
+            
+              <ItemGroup>
+                <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.2" />
+                <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.2" PrivateAssets="all" />
+                <PackageReference Include="System.Net.Http.Json" Version="8.0.0" />
+              </ItemGroup>
+            
+              <ItemGroup>
+                <None Include="wwwroot\**\*" CopyToOutputDirectory="Always" />
+              </ItemGroup>
+            
+            </Project>
+            """;
+    }
+}
