@@ -49,9 +49,9 @@
     <PackageReference Include="System.Text.Json" Version="7.0.2" Condition="'$(TargetFramework)' == 'net472'" />
     <!-- marks all packages as 'local only' so they don't end up in the nuspec -->
     <PackageReference Update="@(PackageReference)" PrivateAssets="All" />
-    <PackageReference Update="Microsoft.Build.Framework" Version="17.8.3" />
-    <PackageReference Update="Microsoft.Build.Utilities.Core" Version="17.8.3" />
-    <PackageReference Update="System.Text.Json" Version="8.0.1" />
+    <PackageReference Update="Microsoft.Build.Framework" Version="17.9.5" />
+    <PackageReference Update="Microsoft.Build.Utilities.Core" Version="17.9.5" />
+    <PackageReference Update="System.Text.Json" Version="8.0.2" />
   </ItemGroup>
 
 </Project>
