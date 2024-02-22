@@ -77,7 +77,7 @@ jobs:
       run: |
         .\.sonar\scanner\dotnet-sonarscanner begin /k:"Blazor.BrowserExtension" /o:"mingyaulee" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /v:"v${{ needs.version.outputs.NuGetVersion }}"/d:sonar.cs.xunit.reportsPaths="test/TestResults/*.xml" /d:sonar.cs.opencover.reportsPaths="test/TestResults/**/*.opencover.xml"
         dotnet build --no-restore --configuration Release
-        dotnet test --no-restore --no-build --configuration Release --results-directory ./test/TestResults --logger "console;verbosity=detailed" --logger xunit --collect "XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+        dotnet test --no-restore --no-build --configuration Release --results-directory ./test/TestResults --logger "console;verbosity=detailed" --logger "xunit;LogFileName={assembly}-test-result.xml" --collect "XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
         .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
   tag:
