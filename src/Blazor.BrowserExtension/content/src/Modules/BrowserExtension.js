@@ -31,12 +31,18 @@ export default class BrowserExtension {
       this.BrotliDecode = (await import("../lib/decode.min.js")).BrotliDecode;
     }
 
+    // Workaround for https://github.com/dotnet/aspnetcore/issues/54358
+    // Import dotnet to change the environment and boot resource loader
+    const { dotnet } = await import(`${this.Url}framework/dotnet.js`);
+
     if (this.Config.EnvironmentName && !blazorStartOptions.environment) {
       blazorStartOptions.environment = this.Config.EnvironmentName;
+      dotnet.withApplicationEnvironment(this.Config.EnvironmentName);
     }
 
     if (this.Mode === BrowserExtensionModes.ContentScript || this.Config.CompressionEnabled) {
       blazorStartOptions.loadBootResource = this._loadBootResource.bind(this);
+      dotnet.withResourceLoader(this._loadBootResource.bind(this));
     }
   }
 
