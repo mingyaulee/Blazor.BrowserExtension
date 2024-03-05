@@ -312,13 +312,13 @@
 
   <!--
     Removes unnecessary compressed files from the resolved files to publish.
-    Runs after the '_BlazorCompressPublishFiles' target defined in
-    - Current/.Net 8 https://github.com/dotnet/sdk/blob/main/src/BlazorWasmSdk/Targets/Microsoft.NET.Sdk.BlazorWebAssembly.6_0.targets
+    Runs after the '_CompressFilesForPublish' target defined in
+    - Current/.Net 8 https://github.com/dotnet/sdk/blob/release/8.0.3xx/src/StaticWebAssetsSdk/Targets/Microsoft.NET.Sdk.StaticWebAssets.Compression.targets
+    or '_BlazorCompressPublishFiles' target before net8.0 defined in
     - .Net 7 https://github.com/dotnet/sdk/blob/v7.0.402/src/BlazorWasmSdk/Targets/Microsoft.NET.Sdk.BlazorWebAssembly.6_0.targets
     - .Net 6 https://github.com/dotnet/sdk/blob/v6.0.415/src/BlazorWasmSdk/Targets/Microsoft.NET.Sdk.BlazorWebAssembly.6_0.targets
   -->
-  <Target Name="ProcessBlazorToBrowserExtensionPublishFiles"
-          AfterTargets="_BlazorCompressPublishFiles">
+  <Target Name="ProcessBlazorToBrowserExtensionPublishFiles">
 
     <Message Importance="high" Text="Processing files to publish Blazor application as Browser Extension" />
 
@@ -331,6 +331,16 @@
       <StaticWebAsset Remove="@(_BrowserExtension_Project_PublishFiles_FilesToRemove)" />
     </ItemGroup>
 
+  </Target>
+
+  <Target Name="ProcessBlazorToBrowserExtensionPublishFilesNet7"
+          AfterTargets="_BlazorCompressPublishFiles">
+    <CallTarget Targets="ProcessBlazorToBrowserExtensionPublishFiles"/>
+  </Target>
+
+  <Target Name="ProcessBlazorToBrowserExtensionPublishFilesNet8"
+          AfterTargets="_CompressFilesForPublish">
+    <CallTarget Targets="ProcessBlazorToBrowserExtensionPublishFiles"/>
   </Target>
 
   <!--
