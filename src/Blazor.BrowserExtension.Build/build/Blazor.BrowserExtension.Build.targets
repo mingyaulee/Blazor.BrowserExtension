@@ -15,6 +15,10 @@
     </_ConvertBlazorToBrowserExtensionDependsOn>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Include="$(BrowserExtensionAssetsPath)\**\*" CopyToOutputDirectory="Always" />
+  </ItemGroup>
+
   <!-- Target
     Runs before the build happens.
     Bootstraps the project to be compatible for building into a browser extension.

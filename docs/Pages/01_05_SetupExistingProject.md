@@ -34,12 +34,6 @@ You can setup the project manually as well, if for some reason you encounter any
      ]
    }
    ```
-0. Add the following to the `.csproj` file to make sure that all the files under `wwwroot` will always be copied to the output.
-   ```xml
-     <ItemGroup>
-       <None Include="wwwroot\**\*" CopyToOutputDirectory="Always" />
-     </ItemGroup>
-   ```
 0. In `wwwroot/index.html` remove the `_` in the `_framework` script tag, which will then look like
    ```html
    <script src="framework/blazor.webassembly.js"></script>

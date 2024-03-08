@@ -15,7 +15,6 @@ namespace Blazor.BrowserExtension.Build.Test.Tasks.Bootstrap
               <ItemGroup>
                 <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.2" />
                 <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.2" PrivateAssets="all" />
-                <PackageReference Include="System.Net.Http.Json" Version="8.0.0" />
               </ItemGroup>
 
             </Project>
@@ -31,11 +30,6 @@ namespace Blazor.BrowserExtension.Build.Test.Tasks.Bootstrap
               <ItemGroup>
                 <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.2" />
                 <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.2" PrivateAssets="all" />
-                <PackageReference Include="System.Net.Http.Json" Version="8.0.0" />
-              </ItemGroup>
-            
-              <ItemGroup>
-                <None Include="wwwroot\**\*" CopyToOutputDirectory="Always" />
               </ItemGroup>
             
             </Project>

@@ -35,8 +35,4 @@
   <Import Project="..\..\src\Blazor.BrowserExtension.Build\build\Blazor.BrowserExtension.Build.props" />
   <Import Project="..\..\src\Blazor.BrowserExtension.Build\build\Blazor.BrowserExtension.Build.targets" />
 
-  <ItemGroup>
-    <None Include="wwwroot\**\*" CopyToOutputDirectory="Always" />
-  </ItemGroup>
-
 </Project>
