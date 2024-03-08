@@ -21,6 +21,7 @@ bld/
 [Ll]ogs/
 [Bb]uild[Oo]utput/
 [Pp]ackage[Oo]utput/
+PackagesCache/
 
 # Test results
 [Tt]est[Rr]esults/

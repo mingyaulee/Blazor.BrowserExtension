@@ -1,0 +1,11 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <RestoreSources>
+      https://api.nuget.org/v3/index.json;
+      $(MSBuildThisFileDirectory)/../../../src/PackageOutput
+    </RestoreSources>
+    <RestorePackagesPath>$(MSBuildThisFileDirectory)/../../../PackagesCache</RestorePackagesPath>
+  </PropertyGroup>
+
+</Project>

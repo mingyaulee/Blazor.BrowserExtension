@@ -27,3 +27,10 @@ updates:
     groups:
       mstest:
         patterns: [ MSTest.* ]
+  - package-ecosystem: "nuget"
+    directory: "/test/Blazor.BrowserExtension.Build.Test/"
+    allow:
+    - dependency-type: "direct"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
