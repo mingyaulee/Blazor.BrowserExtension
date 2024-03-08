@@ -12,12 +12,12 @@ namespace Blazor.BrowserExtension.Build.Tasks.Bootstrap
             // @page "/"
             // with
             // @page "/index.html"
-            // @inherits Blazor.BrowserExtension.Pages.IndexPage
+            // @inherits IndexPage
             var pageDirectiveIndex = fileLines.FindIndex(fileLine => fileLine.Contains("@page \"/\""));
             if (pageDirectiveIndex > -1)
             {
                 fileLines[pageDirectiveIndex] = "@page \"/index.html\"";
-                fileLines.Insert(pageDirectiveIndex + 1, "@inherits Blazor.BrowserExtension.Pages.IndexPage");
+                fileLines.Insert(pageDirectiveIndex + 1, "@inherits IndexPage");
                 isUpdated = true;
             }
 

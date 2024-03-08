@@ -12,7 +12,7 @@ namespace Blazor.BrowserExtension.Build.Test.Tasks.Bootstrap
 
         protected override string BootstrappedFileContent => """
             @page "/index.html"
-            @inherits Blazor.BrowserExtension.Pages.IndexPage
+            @inherits IndexPage
             
             <h1>Hello, from Blazor.</h1>
             """;

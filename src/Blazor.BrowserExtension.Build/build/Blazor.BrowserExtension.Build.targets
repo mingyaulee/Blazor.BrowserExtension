@@ -40,6 +40,7 @@
       <_BrowserExtension_Package_Contents_BackgroundWorker_FilePath>$(_BrowserExtension_Package_Contents_Directory)\BackgroundWorker.js</_BrowserExtension_Package_Contents_BackgroundWorker_FilePath>
       <_BrowserExtension_Project_Assets_BackgroundWorker_FilePath>$(_BrowserExtension_Project_Assets_Directory)\BackgroundWorker.js</_BrowserExtension_Project_Assets_BackgroundWorker_FilePath>
       <_BrowserExtension_Project_RazorPages_IndexRazor_FilePath>$(_BrowserExtension_Project_RazorPages_Directory)\Index.razor</_BrowserExtension_Project_RazorPages_IndexRazor_FilePath>
+      <_BrowserExtension_Project_ImportsRazor_FilePath>$(_BrowserExtension_Project_Directory)_Imports.razor</_BrowserExtension_Project_ImportsRazor_FilePath>
       <_BrowserExtension_Project_ProgramCs_FilePath>$(_BrowserExtension_Project_Directory)Program.cs</_BrowserExtension_Project_ProgramCs_FilePath>
     </PropertyGroup>
 
@@ -73,6 +74,10 @@
     <ItemGroup>
       <None Include="wwwroot\**\*" CopyToOutputDirectory="Always" />
     </ItemGroup>
+
+    <Message Importance="high" Text="  Bootstrapping _Imports.razor file '$(_BrowserExtension_Project_ImportsRazor_FilePath)'" />
+    <BlazorToBrowserExtensionBootstrapFile FilePath="$(_BrowserExtension_Project_ImportsRazor_FilePath)"
+                                           FileType="ImportsRazor" />
 
     <Message Importance="high" Text="  Bootstrapping Program.cs file '$(_BrowserExtension_Project_ProgramCs_FilePath)'" />
     <BlazorToBrowserExtensionBootstrapFile FilePath="$(_BrowserExtension_Project_ProgramCs_FilePath)"

@@ -5,6 +5,7 @@
         Project,
         IndexHtml,
         IndexRazor,
+        ImportsRazor,
         ProgramCs
     }
 }

@@ -11,6 +11,7 @@ namespace Blazor.BrowserExtension.Build.Tasks.Bootstrap
                 BootstrapFileType.Project => new ProjectFileBootstrapper(),
                 BootstrapFileType.IndexHtml => new IndexHtmlFileBootstrapper(),
                 BootstrapFileType.IndexRazor => new IndexRazorFileBootstrapper(),
+                BootstrapFileType.ImportsRazor => new ImportsRazorFileBootstrapper(),
                 BootstrapFileType.ProgramCs => new ProgramCsFileBootstrapper(),
                 _ => throw new InvalidOperationException($"Bootstrap file type '{bootstrapFileType}' is not supported.")
             };
