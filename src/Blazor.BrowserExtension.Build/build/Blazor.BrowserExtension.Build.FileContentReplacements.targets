@@ -1,0 +1,124 @@
+﻿<!-- build/Blazor.BrowserExtension.Build.FileContentReplacements.targets -->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!--
+    Defines the properties required for replacing blazor.webassembly.js, dotnet.*.js and blazor.boot.json.
+  -->
+  <Target Name="DefineBlazorToBrowserExtensionFrameworkJsFileContentReplacements">
+
+    <ItemGroup>
+      <!--
+        Define contents to replace in blazor.webassembly.js
+        Source:
+        - Current/.Net 8 https://github.com/dotnet/aspnetcore/tree/main/src/Components/Web.JS/src/Platform
+        - .Net 7 https://github.com/dotnet/aspnetcore/tree/release/7.0/src/Components/Web.JS/src/Platform
+        - .Net 6 https://github.com/dotnet/aspnetcore/tree/release/6.0/src/Components/Web.JS/src/Platform
+      -->
+      <_BrowserExtension_BlazorJs_FileContentReplacements Include="append element to document body" Condition="'$(TargetFramework)' == 'net6.0'">
+        <From>document.body.appendChild</From>
+        <To>globalThis.BlazorBrowserExtension.BrowserExtension.AppendElementToDocumentAsync</To>
+      </_BrowserExtension_BlazorJs_FileContentReplacements>
+      <_BrowserExtension_BlazorJs_FileContentReplacements Include="append element to document head" Condition="'$(TargetFramework)' == 'net7.0'">
+        <From>document.head.appendChild</From>
+        <To>globalThis.BlazorBrowserExtension.BrowserExtension.AppendElementToDocumentAsync</To>
+      </_BrowserExtension_BlazorJs_FileContentReplacements>
+      <_BrowserExtension_BlazorJs_FileContentReplacements Include="framework path">
+        <From>_framework</From>
+        <To>framework</To>
+      </_BrowserExtension_BlazorJs_FileContentReplacements>
+      <_BrowserExtension_BlazorJs_FileContentReplacements Include="framework debug path">
+        <From>framework/debug</From>
+        <To>_framework/debug</To>
+      </_BrowserExtension_BlazorJs_FileContentReplacements>
+      <_BrowserExtension_BlazorJs_FileContentReplacements Include="fetch url">
+        <From>fetch(</From>
+        <To>globalThis.BlazorBrowserExtension.BrowserExtension.FetchAsync(</To>
+      </_BrowserExtension_BlazorJs_FileContentReplacements>
+      <_BrowserExtension_BlazorJs_FileContentReplacements Include="import JS initializer module">
+        <From>=await import(</From>
+        <To>=await (globalThis.BlazorBrowserExtension?.ImportJsInitializer ?? function(m){return import(m);})(</To>
+      </_BrowserExtension_BlazorJs_FileContentReplacements>
+      <_BrowserExtension_BlazorJs_FileContentReplacements Include="Module cwrap" Condition="'$(TargetFramework)' == 'net6.0'">
+        <From>cwrap(</From>
+        <To>globalThis.Module.cwrap(</To>
+      </_BrowserExtension_BlazorJs_FileContentReplacements>
+      <_BrowserExtension_BlazorJs_FileContentReplacements Include="Module addRunDependency" Condition="'$(TargetFramework)' == 'net6.0'">
+        <From>addRunDependency(</From>
+        <To>globalThis.Module.addRunDependency(</To>
+      </_BrowserExtension_BlazorJs_FileContentReplacements>
+      <_BrowserExtension_BlazorJs_FileContentReplacements Include="Module removeRunDependency" Condition="'$(TargetFramework)' == 'net6.0'">
+        <From>removeRunDependency(</From>
+        <To>globalThis.Module.removeRunDependency(</To>
+      </_BrowserExtension_BlazorJs_FileContentReplacements>
+      <!--
+        Define contents to replace in dotnet.*.js
+        Source:
+        - Current/.Net 8 https://github.com/dotnet/runtime/tree/main/src/mono/wasm/runtime
+        - .Net 7 https://github.com/dotnet/runtime/tree/v7.0.12/src/mono/wasm/runtime
+        - .Net 6 https://github.com/dotnet/runtime/tree/v6.0.23/src/mono/wasm/runtime
+      -->
+      <_BrowserExtension_DotNetJs_FileContentReplacements Include="fetch url" Condition="'$(TargetFramework)' == 'net6.0'">
+        <From>fetch(</From>
+        <To>globalThis.BlazorBrowserExtension.BrowserExtension.FetchAsync(</To>
+      </_BrowserExtension_DotNetJs_FileContentReplacements>
+      <_BrowserExtension_DotNetJs_FileContentReplacements Include="fetch url" Condition="'$(TargetFramework)' == 'net7.0'">
+        <From>globalThis.fetch(</From>
+        <To>globalThis.BlazorBrowserExtension.BrowserExtension.FetchAsync(</To>
+      </_BrowserExtension_DotNetJs_FileContentReplacements>
+      <_BrowserExtension_DotNetJs_FileContentReplacements Include="module reference" Condition="'$(TargetFramework)' == 'net6.0'">
+        <From>Module!=="undefined"?Module</From>
+        <To>globalThis.Module!=="undefined"?globalThis.Module</To>
+      </_BrowserExtension_DotNetJs_FileContentReplacements>
+      <_BrowserExtension_DotNetJs_FileContentReplacements Include="MONO declaration" Condition="'$(TargetFramework)' == 'net6.0'">
+        <From>var MONO=</From>
+        <To>globalThis.MONO=</To>
+      </_BrowserExtension_DotNetJs_FileContentReplacements>
+      <_BrowserExtension_DotNetJs_FileContentReplacements Include="BINDING declaration" Condition="'$(TargetFramework)' == 'net6.0'">
+        <From>var BINDING=</From>
+        <To>globalThis.BINDING=</To>
+      </_BrowserExtension_DotNetJs_FileContentReplacements>
+      <_BrowserExtension_DotNetJs_FileContentReplacements Include="bodyJs variable declaration" Condition="'$(TargetFramework)' == 'net6.0'">
+        <From>bodyJs=body.join("\r\n");if(friendly_name)</From>
+        <To>var bodyJs=body.join("\r\n");if(friendly_name)</To>
+        <IsOptional>true</IsOptional>
+      </_BrowserExtension_DotNetJs_FileContentReplacements>
+      <_BrowserExtension_DotNetJs_FileContentReplacements Include="result variable declaration 1" Condition="'$(TargetFramework)' == 'net6.0'">
+        <From>if(is_result_marshaled)result=this._unbox_mono_obj_root</From>
+        <To>let result;if(is_result_marshaled)result=this._unbox_mono_obj_root</To>
+        <IsOptional>true</IsOptional>
+      </_BrowserExtension_DotNetJs_FileContentReplacements>
+      <_BrowserExtension_DotNetJs_FileContentReplacements Include="result variable declaration 2" Condition="'$(TargetFramework)' == 'net6.0'">
+        <From>case typeof js_obj==="number":{if((js_obj|0)===js_obj)</From>
+        <To>case typeof js_obj==="number":{let result;if((js_obj|0)===js_obj)</To>
+        <IsOptional>true</IsOptional>
+      </_BrowserExtension_DotNetJs_FileContentReplacements>
+      <_BrowserExtension_DotNetJs_FileContentReplacements Include="accessing mono_set_timeout_exec" Condition="'$(TargetFramework)' == 'net6.0'">
+        <From>this.mono_set_timeout_exec</From>
+        <To>globalThis.mono_set_timeout_exec</To>
+      </_BrowserExtension_DotNetJs_FileContentReplacements>
+      <!--
+        Define contents to replace in blazor.boot.json
+      -->
+      <_BrowserExtension_BlazorBootJson_FileContentReplacements Include="framework path">
+        <From>_framework</From>
+        <To>framework</To>
+        <IsOptional>true</IsOptional>
+      </_BrowserExtension_BlazorBootJson_FileContentReplacements>
+      <_BrowserExtension_BlazorBootJson_FileContentReplacements Include="content path">
+        <From>_content</From>
+        <To>content</To>
+        <IsOptional>true</IsOptional>
+      </_BrowserExtension_BlazorBootJson_FileContentReplacements>
+      <!--
+        Define contents to replace in scoped CSS
+      -->
+      <_BrowserExtension_ScopedCss_FileContentReplacements Include="content path">
+        <From>_content/</From>
+        <To>content/</To>
+        <IsOptional>true</IsOptional>
+      </_BrowserExtension_ScopedCss_FileContentReplacements>
+    </ItemGroup>
+
+  </Target>
+
+</Project>

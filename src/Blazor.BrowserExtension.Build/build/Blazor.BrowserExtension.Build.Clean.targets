@@ -1,0 +1,52 @@
+﻿<!-- build/Blazor.BrowserExtension.Build.Clean.targets -->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!--
+    Cleans the output of the browser extension project.
+  -->
+  <Target Name="CleanBlazorBrowserExtension">
+
+    <PropertyGroup>
+      <_BrowserExtension_Project_BuildOutput_Assets_Directory>$(TargetDir)$(BrowserExtensionAssetsPath)</_BrowserExtension_Project_BuildOutput_Assets_Directory>
+      <_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory>$(TargetDir)$(BrowserExtensionOutputPath)</_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory>
+      <_BrowserExtension_Project_PublishOutput_Assets_Directory>$(TargetDir)publish\$(BrowserExtensionAssetsPath)</_BrowserExtension_Project_PublishOutput_Assets_Directory>
+      <_BrowserExtension_Project_PublishOutput_BrowserExtension_Directory>$(TargetDir)publish\$(BrowserExtensionOutputPath)</_BrowserExtension_Project_PublishOutput_BrowserExtension_Directory>
+      <_BrowserExtension_Project_PublishDir_Assets_Directory>$(PublishDir)$(BrowserExtensionAssetsPath)</_BrowserExtension_Project_PublishDir_Assets_Directory>
+      <_BrowserExtension_Project_PublishDir_BrowserExtension_Directory>$(PublishDir)$(BrowserExtensionOutputPath)</_BrowserExtension_Project_PublishDir_BrowserExtension_Directory>
+    </PropertyGroup>
+
+    <Message Importance="high" Text="Cleaning browser extension output." />
+
+    <Message Importance="high" Text="  Cleaning '$(_BrowserExtension_Project_BuildOutput_Assets_Directory)'"
+             Condition="Exists('$(_BrowserExtension_Project_BuildOutput_Assets_Directory)')" />
+    <RemoveDir Directories="$(_BrowserExtension_Project_BuildOutput_Assets_Directory)"
+               Condition="Exists('$(_BrowserExtension_Project_BuildOutput_Assets_Directory)')" />
+
+    <Message Importance="high" Text="  Cleaning '$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory)'"
+             Condition="Exists('$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory)')" />
+    <RemoveDir Directories="$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory)"
+               Condition="Exists('$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory)')" />
+
+    <Message Importance="high" Text="  Cleaning '$(_BrowserExtension_Project_PublishOutput_Assets_Directory)'"
+             Condition="Exists('$(_BrowserExtension_Project_PublishOutput_Assets_Directory)')" />
+    <RemoveDir Directories="$(_BrowserExtension_Project_PublishOutput_Assets_Directory)"
+               Condition="Exists('$(_BrowserExtension_Project_PublishOutput_Assets_Directory)')" />
+
+    <Message Importance="high" Text="  Cleaning '$(_BrowserExtension_Project_PublishOutput_BrowserExtension_Directory)'"
+             Condition="Exists('$(_BrowserExtension_Project_PublishOutput_BrowserExtension_Directory)')" />
+    <RemoveDir Directories="$(_BrowserExtension_Project_PublishOutput_BrowserExtension_Directory)"
+               Condition="Exists('$(_BrowserExtension_Project_PublishOutput_BrowserExtension_Directory)')" />
+
+    <Message Importance="high" Text="  Cleaning '$(_BrowserExtension_Project_PublishDir_Assets_Directory)'"
+             Condition="Exists('$(_BrowserExtension_Project_PublishDir_Assets_Directory)')" />
+    <RemoveDir Directories="$(_BrowserExtension_Project_PublishDir_Assets_Directory)"
+               Condition="Exists('$(_BrowserExtension_Project_PublishDir_Assets_Directory)')" />
+
+    <Message Importance="high" Text="  Cleaning '$(_BrowserExtension_Project_PublishDir_BrowserExtension_Directory)'"
+             Condition="Exists('$(_BrowserExtension_Project_PublishDir_BrowserExtension_Directory)')" />
+    <RemoveDir Directories="$(_BrowserExtension_Project_PublishDir_BrowserExtension_Directory)"
+               Condition="Exists('$(_BrowserExtension_Project_PublishDir_BrowserExtension_Directory)')" />
+
+  </Target>
+
+</Project>

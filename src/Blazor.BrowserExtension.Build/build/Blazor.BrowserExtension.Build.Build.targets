@@ -1,0 +1,111 @@
+﻿<!-- build/Blazor.BrowserExtension.Build.Build.targets -->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!--
+    Converts the build output of the project to browser extension.
+  -->
+  <Target Name="RunBuildBlazorToBrowserExtension">
+
+    <PropertyGroup>
+      <_BrowserExtension_Project_Assets_Directory>$(ProjectDir)$(BrowserExtensionAssetsPath)</_BrowserExtension_Project_Assets_Directory>
+      <_BrowserExtension_Project_Assets_ManifestJson_FilePath>$(_BrowserExtension_Project_Assets_Directory)\manifest.json</_BrowserExtension_Project_Assets_ManifestJson_FilePath>
+      <_BrowserExtension_Project_BuildOutput_Assets_Directory>$(TargetDir)$(BrowserExtensionAssetsPath)</_BrowserExtension_Project_BuildOutput_Assets_Directory>
+      <_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory>$(TargetDir)$(BrowserExtensionOutputPath)</_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory>
+      <_BrowserExtension_Project_BuildOutput_BrowserExtension_OriginalFramework_Directory>$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory)\_framework</_BrowserExtension_Project_BuildOutput_BrowserExtension_OriginalFramework_Directory>
+      <_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_Directory>$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory)\framework</_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_Directory>
+      <!-- StaticWebAssets
+        The StaticWebAssets manifest is created by the dotnet SDK and read by the DevServer.
+        Source:
+        - Current/.Net 8 https://github.com/dotnet/aspnetcore/blob/main/src/Components/WebAssembly/DevServer/src/Server/Program.cs
+        - .Net 7 https://github.com/dotnet/aspnetcore/blob/v7.0.12/src/Components/WebAssembly/DevServer/src/Server/Program.cs
+        - .Net 6 https://github.com/dotnet/aspnetcore/blob/v6.0.23/src/Components/WebAssembly/DevServer/src/Server/Program.cs
+      -->
+      <_BrowserExtension_Project_BuildOutput_StaticWebAssets_Manifest_FilePath>$(TargetDir)$(ProjectName).staticwebassets.runtime.json</_BrowserExtension_Project_BuildOutput_StaticWebAssets_Manifest_FilePath>
+      <!-- TODO: To remove this custom dotnet runtime when .Net 7.0 support is removed -->
+      <_BrowserExtension_Package_Contents_Directory>$(MSBuildThisFileDirectory)..\content</_BrowserExtension_Package_Contents_Directory>
+      <_BrowserExtension_Package_Contents_DotNet70Js_FilePath>$(_BrowserExtension_Package_Contents_Directory)\dotnet-7.0.js</_BrowserExtension_Package_Contents_DotNet70Js_FilePath>
+    </PropertyGroup>
+
+    <Message Importance="high" Text="Validating Browser Extension manifest.json" />
+    <BlazorToBrowserExtensionValidateManifest FileName="$(_BrowserExtension_Project_Assets_ManifestJson_FilePath)" />
+
+    <Message Importance="high" Text="Converting Blazor application to Browser Extension" />
+
+    <Message Importance="high" Text="  Copying all files from '$(_BrowserExtension_Project_BuildOutput_Assets_Directory)' to '$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory)'" />
+    <ItemGroup>
+      <_BrowserExtension_Project_BuildOutput_Assets_FilesToCopy Include="$(_BrowserExtension_Project_BuildOutput_Assets_Directory)\**\*.*" Exclude="$(_BrowserExtension_Project_BuildOutput_Assets_Directory)\framework\**\*.*" />
+    </ItemGroup>
+    <RemoveDir Directories="$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory)" Condition="Exists('$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory)')" />
+    <Copy SourceFiles="@(_BrowserExtension_Project_BuildOutput_Assets_FilesToCopy)"
+          DestinationFolder="$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory)\%(RecursiveDir)" />
+
+    <Message Importance="high" Text="  Moving all files from '$(_BrowserExtension_Project_BuildOutput_BrowserExtension_OriginalFramework_Directory)' to '$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_Directory)'" />
+    <ItemGroup>
+      <_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_FilesToMove Include="$(_BrowserExtension_Project_BuildOutput_BrowserExtension_OriginalFramework_Directory)\**\*.*" />
+    </ItemGroup>
+    <Move SourceFiles="@(_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_FilesToMove)"
+          DestinationFolder="$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_Directory)\%(RecursiveDir)" />
+
+    <Message Importance="high" Text="  Removing directory '$(_BrowserExtension_Project_BuildOutput_BrowserExtension_OriginalFramework_Directory)'" />
+    <RemoveDir Directories="$(_BrowserExtension_Project_BuildOutput_BrowserExtension_OriginalFramework_Directory)" />
+
+    <Message Importance="high" Text="  Replacing content of 'blazor.webassembly.js', 'dotnet.*.js' and 'blazor.boot.json'" />
+    <ItemGroup>
+      <_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_BlazorJs_FilePath Include="$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_Directory)\blazor.webassembly.js" />
+      <_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_DotNetJs_FilePath Include="$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_Directory)\dotnet.*.js" />
+      <_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_BlazorBootJson_FilePath Include="$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_Directory)\blazor.boot.json" />
+    </ItemGroup>
+    <!-- TODO: To remove this custom dotnet runtime when .Net 7.0 support is removed -->
+    <Message Importance="high" Text="  Replacing 'dotnet.*.js' with custom CSP compliant version" Condition="'$(TargetFramework)' == 'net7.0'" />
+    <Copy SourceFiles="$(_BrowserExtension_Package_Contents_DotNet70Js_FilePath)"
+          DestinationFiles="@(_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_DotNetJs_FilePath)"
+          Condition="'$(TargetFramework)' == 'net7.0'" />
+    <BlazorToBrowserExtensionReplaceContent Files="@(_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_BlazorJs_FilePath)"
+                                            Replace="@(_BrowserExtension_BlazorJs_FileContentReplacements)" />
+    <BlazorToBrowserExtensionReplaceContent Files="@(_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_DotNetJs_FilePath)"
+                                            Replace="@(_BrowserExtension_DotNetJs_FileContentReplacements)" />
+    <BlazorToBrowserExtensionReplaceContent Files="@(_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_BlazorBootJson_FilePath)"
+                                            Replace="@(_BrowserExtension_BlazorBootJson_FileContentReplacements)" />
+
+    <Message Importance="high" Text="  Processing routing files" />
+    <BlazorToBrowserExtensionProcessRoutingFiles Input="@(RazorComponent)"
+                                                 AssetsPath="$(_BrowserExtension_Project_Assets_Directory)"
+                                                 EntryFile="$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory)\$(BrowserExtensionRoutingEntryFile)">
+      <Output TaskParameter="Output" ItemName="_BrowserExtension_Project_BuildOutput_BrowserExtension_RoutingFiles" />
+    </BlazorToBrowserExtensionProcessRoutingFiles>
+
+    <Message Importance="high" Text="  Copying routing file %(_BrowserExtension_Project_BuildOutput_BrowserExtension_RoutingFiles.Route)" />
+    <Copy SourceFiles="@(_BrowserExtension_Project_BuildOutput_BrowserExtension_RoutingFiles)"
+          DestinationFiles="$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory)\%(_BrowserExtension_Project_BuildOutput_BrowserExtension_RoutingFiles.Route)"
+          SkipUnchangedFiles="true" />
+
+    <ItemGroup>
+      <_BrowserExtension_StaticWebAssets_ExcludePaths Include="$(_BrowserExtension_Project_Assets_Directory)" />
+      <_BrowserExtension_StaticWebAssets_ExcludePaths Include="$(_BrowserExtension_Project_BuildOutput_Assets_Directory)" />
+    </ItemGroup>
+    <Message Importance="high" Text="  Processing static web assets from manifest files '$(_BrowserExtension_Project_BuildOutput_StaticWebAssets_Manifest_FilePath)'" />
+    <BlazorToBrowserExtensionProcessStaticWebAssetsManifest Input="$(_BrowserExtension_Project_BuildOutput_StaticWebAssets_Manifest_FilePath)"
+                                                            Exclude="@(_BrowserExtension_StaticWebAssets_ExcludePaths)"
+                                                            OutputPath="$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory)">
+      <Output TaskParameter="Output" ItemName="_BrowserExtension_Project_BuildOutput_StaticWebAssets_Files" />
+    </BlazorToBrowserExtensionProcessStaticWebAssetsManifest>
+
+    <Message Importance="high" Text="  Copying static web asset files" />
+    <Copy SourceFiles="@(_BrowserExtension_Project_BuildOutput_StaticWebAssets_Files)"
+          DestinationFolder="$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory)\%(_BrowserExtension_Project_BuildOutput_StaticWebAssets_Files.ContentRelativeDirectory)"
+          SkipUnchangedFiles="true" />
+
+    <Message Importance="high" Text="  Replacing content of other asset files" />
+    <PropertyGroup>
+      <_BrowserExtension_Project_BuildOutput_BrowserExtension_ScopedCss_FilePath Condition="Exists('$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory)\$(PackageId).styles.css')">$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory)\$(PackageId).styles.css</_BrowserExtension_Project_BuildOutput_BrowserExtension_ScopedCss_FilePath>
+    </PropertyGroup>
+    <Message Importance="high" Text="  Replacing content of '$(PackageId).styles.css'" Condition="'$(_BrowserExtension_Project_BuildOutput_BrowserExtension_ScopedCss_FilePath)' != ''" />
+    <BlazorToBrowserExtensionReplaceContent Files="$(_BrowserExtension_Project_BuildOutput_BrowserExtension_ScopedCss_FilePath)"
+                                            Replace="@(_BrowserExtension_ScopedCss_FileContentReplacements)"
+                                            Condition="'$(_BrowserExtension_Project_BuildOutput_BrowserExtension_ScopedCss_FilePath)' != ''" />
+
+    <Message Importance="high" Text="Conversion completed from Blazor application to Browser Extension" />
+
+  </Target>
+
+</Project>

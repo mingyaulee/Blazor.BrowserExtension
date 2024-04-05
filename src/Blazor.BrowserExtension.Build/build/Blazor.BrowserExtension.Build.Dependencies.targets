@@ -1,0 +1,58 @@
+﻿<!-- build/Blazor.BrowserExtension.Build.Dependencies.targets -->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <!--
+      The target 'ResolveRazorComponentInputs' resolves the item group RazorComponent.
+      Source:
+      - Current/.Net 8 https://github.com/dotnet/sdk/blob/main/src/RazorSdk/Targets/Sdk.Razor.CurrentVersion.targets
+      - .Net 7 https://github.com/dotnet/sdk/blob/release/7.0.4xx/src/RazorSdk/Targets/Sdk.Razor.CurrentVersion.targets
+      - .Net 6 https://github.com/dotnet/sdk/blob/release/6.0.4xx/src/RazorSdk/Targets/Sdk.Razor.CurrentVersion.targets
+    -->
+    <_ConvertBlazorToBrowserExtensionDependsOn>
+      DefineBlazorToBrowserExtensionFrameworkJsFileContentReplacements;
+      ResolveRazorComponentInputs
+    </_ConvertBlazorToBrowserExtensionDependsOn>
+  </PropertyGroup>
+
+  <!-- Bootstrap -->
+  <Target Name="CallRunBootstrapBlazorToBrowserExtension"
+          BeforeTargets="BeforeBuild"
+          Condition="'$(BrowserExtensionBootstrap)' == 'true'">
+    <CallTarget Targets="RunBootstrapBlazorToBrowserExtension"/>
+  </Target>
+
+  <!-- Build -->
+  <Target Name="CallRunBuildBlazorToBrowserExtension"
+          AfterTargets="AfterBuild"
+          Condition="'$(BuildBlazorToBrowserExtension)' == 'true'"
+          DependsOnTargets="$(_ConvertBlazorToBrowserExtensionDependsOn)">
+    <CallTarget Targets="RunBuildBlazorToBrowserExtension"/>
+  </Target>
+
+  <!-- Publish -->
+  <Target Name="CallProcessBlazorToBrowserExtensionPublishFilesNet7"
+          AfterTargets="_BlazorCompressPublishFiles">
+    <CallTarget Targets="ProcessBlazorToBrowserExtensionPublishFiles"/>
+  </Target>
+
+  <Target Name="CallProcessBlazorToBrowserExtensionPublishFilesNet8"
+          AfterTargets="_CompressFilesForPublish">
+    <CallTarget Targets="ProcessBlazorToBrowserExtensionPublishFiles"/>
+  </Target>
+
+  <Target Name="CallRunPublishBlazorToBrowserExtension"
+          AfterTargets="AfterPublish"
+          Condition="'$(PublishBlazorToBrowserExtension)' == 'true'"
+          DependsOnTargets="$(_ConvertBlazorToBrowserExtensionDependsOn)">
+    <CallTarget Targets="RunPublishBlazorToBrowserExtension"/>
+  </Target>
+
+  <!-- Clean -->
+  <Target Name="CallCleanBlazorBrowserExtension"
+          AfterTargets="AfterClean">
+    <CallTarget Targets="CleanBlazorBrowserExtension"/>
+  </Target>
+
+
+</Project>

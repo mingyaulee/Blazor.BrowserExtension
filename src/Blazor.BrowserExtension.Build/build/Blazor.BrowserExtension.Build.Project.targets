@@ -1,0 +1,8 @@
+﻿<!-- build/Blazor.BrowserExtension.Build.Project.targets -->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <ItemGroup>
+    <None Include="$(BrowserExtensionAssetsPath)\**\*" CopyToOutputDirectory="Always" />
+  </ItemGroup>
+
+</Project>
