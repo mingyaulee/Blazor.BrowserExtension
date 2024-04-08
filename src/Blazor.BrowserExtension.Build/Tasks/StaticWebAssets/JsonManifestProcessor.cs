@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using Blazor.BrowserExtension.Build.Tasks.Helpers;
 
 namespace Blazor.BrowserExtension.Build.Tasks.StaticWebAssets
 {
@@ -38,15 +39,10 @@ namespace Blazor.BrowserExtension.Build.Tasks.StaticWebAssets
                 return;
             }
 
-            if (staticWebAssetManifest.Root.Children.ContainsKey("_framework"))
+            var pathMappings = OutputHelper.PathMappings.Where(pathMapping => staticWebAssetManifest.Root.Children.ContainsKey(pathMapping.Key));
+            foreach (var pathMapping in pathMappings)
             {
-                MoveNode(staticWebAssetManifest.Root.Children, "_framework", "framework");
-                isUpdated = true;
-            }
-
-            if (staticWebAssetManifest.Root.Children.ContainsKey("_content"))
-            {
-                MoveNode(staticWebAssetManifest.Root.Children, "_content", "content");
+                MoveNode(staticWebAssetManifest.Root.Children, pathMapping.Key, pathMapping.Value);
                 isUpdated = true;
             }
 

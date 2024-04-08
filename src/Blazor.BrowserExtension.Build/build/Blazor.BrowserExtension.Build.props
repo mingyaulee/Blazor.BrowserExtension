@@ -23,6 +23,7 @@
 
   <!-- Register the tasks from this assembly -->
   <UsingTask TaskName="Blazor.BrowserExtension.Build.Tasks.BlazorToBrowserExtensionBootstrapFile" AssemblyFile="$(_BrowserExtensionBuildTaskAssembly)" />
+  <UsingTask TaskName="Blazor.BrowserExtension.Build.Tasks.BlazorToBrowserExtensionProcessOutputFiles" AssemblyFile="$(_BrowserExtensionBuildTaskAssembly)" />
   <UsingTask TaskName="Blazor.BrowserExtension.Build.Tasks.BlazorToBrowserExtensionProcessPublishFiles" AssemblyFile="$(_BrowserExtensionBuildTaskAssembly)" />
   <UsingTask TaskName="Blazor.BrowserExtension.Build.Tasks.BlazorToBrowserExtensionProcessRoutingFiles" AssemblyFile="$(_BrowserExtensionBuildTaskAssembly)" />
   <UsingTask TaskName="Blazor.BrowserExtension.Build.Tasks.BlazorToBrowserExtensionProcessStaticWebAssetsManifest" AssemblyFile="$(_BrowserExtensionBuildTaskAssembly)" />
