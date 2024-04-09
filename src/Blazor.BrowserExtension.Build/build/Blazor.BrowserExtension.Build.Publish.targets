@@ -70,26 +70,24 @@
           SkipUnchangedFiles="true" />
 
     <!-- Replace content -->
-    <Message Importance="normal" Text="  Replacing content of 'blazor.webassembly.js', 'dotnet.*.js' and 'blazor.boot.json'" />
+    <Message Importance="normal" Text="  Replacing content of 'blazor.webassembly.js' and 'dotnet.*.js'" />
     <ItemGroup>
       <_BrowserExtension_Project_PublishOutput_BrowserExtension_Framework_BlazorJs_FilePath Include="$(_BrowserExtension_Project_PublishOutput_BrowserExtension_Framework_Directory)\blazor.webassembly.js" />
       <_BrowserExtension_Project_PublishOutput_BrowserExtension_Framework_DotnetJs_FilePath Include="$(_BrowserExtension_Project_PublishOutput_BrowserExtension_Framework_Directory)\dotnet.*.js" />
-      <_BrowserExtension_Project_PublishOutput_BrowserExtension_Framework_BlazorBootJson_FilePath Include="$(_BrowserExtension_Project_PublishOutput_BrowserExtension_Framework_Directory)\blazor.boot.json" />
     </ItemGroup>
     <BlazorToBrowserExtensionReplaceContent Files="@(_BrowserExtension_Project_PublishOutput_BrowserExtension_Framework_BlazorJs_FilePath)"
                                             Replace="@(_BrowserExtension_BlazorJs_FileContentReplacements)" />
     <BlazorToBrowserExtensionReplaceContent Files="@(_BrowserExtension_Project_PublishOutput_BrowserExtension_Framework_DotnetJs_FilePath)"
                                             Replace="@(_BrowserExtension_DotNetJs_FileContentReplacements)" />
-    <BlazorToBrowserExtensionReplaceContent Files="@(_BrowserExtension_Project_PublishOutput_BrowserExtension_Framework_BlazorBootJson_FilePath)"
-                                            Replace="@(_BrowserExtension_BlazorBootJson_FileContentReplacements)" />
 
     <Message Importance="normal" Text="  Replacing content of other asset files" />
-    <PropertyGroup>
-      <_BrowserExtension_Project_PublishOutput_BrowserExtension_ScopedCss_FilePath Condition="Exists('$(_BrowserExtension_Project_PublishOutput_BrowserExtension_Directory)\$(PackageId).styles.css')">$(_BrowserExtension_Project_PublishOutput_BrowserExtension_Directory)\$(PackageId).styles.css</_BrowserExtension_Project_PublishOutput_BrowserExtension_ScopedCss_FilePath>
-    </PropertyGroup>
-    <BlazorToBrowserExtensionReplaceContent Files="$(_BrowserExtension_Project_PublishOutput_BrowserExtension_ScopedCss_FilePath)"
-                                            Replace="@(_BrowserExtension_ScopedCss_FileContentReplacements)"
-                                            Condition="'$(_BrowserExtension_Project_PublishOutput_BrowserExtension_ScopedCss_FilePath)' != ''" />
+    <ItemGroup>
+      <_BrowserExtension_Project_PublishOutput_BrowserExtension_FilesToReplaceContent Include="$(_BrowserExtension_Project_PublishOutput_BrowserExtension_Framework_Directory)\blazor.boot.json" />
+      <_BrowserExtension_Project_PublishOutput_BrowserExtension_FilesToReplaceContent Include="$(_BrowserExtension_Project_PublishOutput_BrowserExtension_Directory)\$(PackageId).styles.css"
+                                                                                      Condition="Exists('$(_BrowserExtension_Project_PublishOutput_BrowserExtension_Directory)\$(PackageId).styles.css')" />
+    </ItemGroup>
+    <BlazorToBrowserExtensionReplaceContent Files="@(_BrowserExtension_Project_PublishOutput_BrowserExtension_FilesToReplaceContent)"
+                                            Replace="@(_BrowserExtension_Other_FileContentReplacements)" />
 
     <!-- Duplicate entry files to support routing -->
     <Message Importance="normal" Text="  Processing routing files" />

@@ -97,26 +97,18 @@
         <To>globalThis.mono_set_timeout_exec</To>
       </_BrowserExtension_DotNetJs_FileContentReplacements>
       <!--
-        Define contents to replace in blazor.boot.json
+        Define contents to replace in other files
       -->
-      <_BrowserExtension_BlazorBootJson_FileContentReplacements Include="framework path">
-        <From>_framework</From>
-        <To>framework</To>
-        <IsOptional>true</IsOptional>
-      </_BrowserExtension_BlazorBootJson_FileContentReplacements>
-      <_BrowserExtension_BlazorBootJson_FileContentReplacements Include="content path">
-        <From>_content</From>
-        <To>content</To>
-        <IsOptional>true</IsOptional>
-      </_BrowserExtension_BlazorBootJson_FileContentReplacements>
-      <!--
-        Define contents to replace in scoped CSS
-      -->
-      <_BrowserExtension_ScopedCss_FileContentReplacements Include="content path">
+      <_BrowserExtension_Other_FileContentReplacements Include="content path">
         <From>_content/</From>
         <To>content/</To>
         <IsOptional>true</IsOptional>
-      </_BrowserExtension_ScopedCss_FileContentReplacements>
+      </_BrowserExtension_Other_FileContentReplacements>
+      <_BrowserExtension_Other_FileContentReplacements Include="framework path">
+        <From>_framework/</From>
+        <To>framework/</To>
+        <IsOptional>true</IsOptional>
+      </_BrowserExtension_Other_FileContentReplacements>
     </ItemGroup>
 
   </Target>
