@@ -37,6 +37,7 @@ namespace Docs.Routing
                     var unformattedDocumentName = ExtractDocumentNameWithoutOrder(fileName.Substring(0, fileName.Length - ResourceNameSuffix.Length));
                     var formattedDocumentName = FormatName(unformattedDocumentName, ' ');
                     var webPath = FormatName(unformattedDocumentName, '-', char.ToLowerInvariant);
+                    webPath = EnsureValidWebPath(webPath);
 
                     return new DocumentRouteMetadata()
                     {
@@ -96,6 +97,11 @@ namespace Docs.Routing
                 sb.Append(transform?.Invoke(c) ?? c);
             }
             return sb.ToString();
+        }
+
+        private static string EnsureValidWebPath(string webPath)
+        {
+            return webPath.Replace('.', '-');
         }
 
         public static DocumentRouteMetadata? GetDocumentRouteMetadataFromResourceName(string? resourceName)
