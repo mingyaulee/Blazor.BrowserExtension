@@ -24,6 +24,13 @@ namespace Blazor.BrowserExtension.Build.Test
             var currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
             rootTestDirectory = currentDirectory[..currentDirectory.LastIndexOf(Path.DirectorySeparatorChar + "bin")];
             rootSolutionDirectory = rootTestDirectory[..rootTestDirectory.LastIndexOf(Path.DirectorySeparatorChar + "test")];
+
+            var packagesCacheDirectory = Path.Combine(rootSolutionDirectory, "PackagesCache");
+            if (Directory.Exists(packagesCacheDirectory))
+            {
+                Directory.Delete(packagesCacheDirectory, true);
+            }
+
             CommandHelper.ExecuteCommandVoid(DotNetCommand, $"pack --no-build --no-restore --configuration {CurrentConfiguration}", rootSolutionDirectory);
             try
             {
