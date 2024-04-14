@@ -1,0 +1,25 @@
+﻿<!-- build/Blazor.BrowserExtension.Dependencies.targets -->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- Config -->
+  <PropertyGroup>
+    <ResolveStaticWebAssetsInputsDependsOn>
+      $(ResolveStaticWebAssetsInputsDependsOn);
+      CallWriteBlazorToBrowserExtensionBuildConfigFile;
+    </ResolveStaticWebAssetsInputsDependsOn>
+  </PropertyGroup>
+
+  <Target Name="CallWriteBlazorToBrowserExtensionBuildConfigFile"
+          Condition="'$(IncludeBrowserExtensionAssets)' == 'true' and '$(BuildBlazorToBrowserExtension)' == 'true'"
+          DependsOnTargets="DefineBlazorToBrowserExtensionConfig">
+    <CallTarget Targets="WriteBlazorToBrowserExtensionBuildConfigFile"/>
+  </Target>
+
+  <Target Name="CallWriteBlazorToBrowserExtensionPublishConfigFile"
+          BeforeTargets="BeforePublish"
+          Condition="'$(IncludeBrowserExtensionAssets)' == 'true' and '$(BuildBlazorToBrowserExtension)' == 'true'"
+          DependsOnTargets="DefineBlazorToBrowserExtensionConfig">
+    <CallTarget Targets="WriteBlazorToBrowserExtensionPublishConfigFile"/>
+  </Target>
+
+</Project>

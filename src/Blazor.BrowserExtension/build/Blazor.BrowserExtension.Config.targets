@@ -1,0 +1,101 @@
+﻿<!-- build/Blazor.BrowserExtension.Config.targets -->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!--
+    Defines the config for browser extension.
+  -->
+  <Target Name="DefineBlazorToBrowserExtensionConfig">
+
+    <PropertyGroup>
+      <_BrowserExtension_Config_HasAppJs Condition="Exists('$(ProjectDir)$(BrowserExtensionAssetsPath)\app.js')">true</_BrowserExtension_Config_HasAppJs>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <BrowserExtensionConfig Include="Environment name">
+        <Key>EnvironmentName</Key>
+        <Value>$(BrowserExtensionEnvironment)</Value>
+      </BrowserExtensionConfig>
+      <BrowserExtensionConfig Include="Compression enabled">
+        <Key>CompressionEnabled</Key>
+        <Value>$(BrowserExtensionEnableCompression)</Value>
+        <Type>bool</Type>
+      </BrowserExtensionConfig>
+      <BrowserExtensionConfig Include="Has app.js">
+        <Key>HasAppJs</Key>
+        <Value>$(_BrowserExtension_Config_HasAppJs)</Value>
+        <Type>bool</Type>
+      </BrowserExtensionConfig>
+    </ItemGroup>
+
+  </Target>
+
+  <!--
+    Writes the configuration file in the intermediate directory and add as StaticWebAsset.
+  -->
+  <Target Name="WriteBlazorToBrowserExtensionBuildConfigFile">
+
+    <PropertyGroup>
+      <_BrowserExtension_Project_IntermediateOutput_ConfigFile_Directory>$(ProjectDir)$(IntermediateOutputPath)browserextension\build</_BrowserExtension_Project_IntermediateOutput_ConfigFile_Directory>
+      <_BrowserExtension_Project_IntermediateOutput_ConfigFile_FilePath>$(_BrowserExtension_Project_IntermediateOutput_ConfigFile_Directory)\browserextension.config.json</_BrowserExtension_Project_IntermediateOutput_ConfigFile_FilePath>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <!-- Force disable compression when build -->
+      <BrowserExtensionConfig Condition="'%(BrowserExtensionConfig.Key)' == 'CompressionEnabled'">
+        <Value>false</Value>
+      </BrowserExtensionConfig>
+    </ItemGroup>
+
+    <Message Importance="normal" Text="Creating configuration file '$(_BrowserExtension_Project_IntermediateOutput_ConfigFile_FilePath)'" />
+    <BlazorToBrowserExtensionWriteConfigFile Input="@(BrowserExtensionConfig)"
+                                             FilePath="$(_BrowserExtension_Project_IntermediateOutput_ConfigFile_FilePath)" />
+
+    <ItemGroup>
+      <StaticWebAsset Include="$(_BrowserExtension_Project_IntermediateOutput_ConfigFile_FilePath)">
+        <SourceType>Computed</SourceType>
+        <SourceId>Blazor.BrowserExtension</SourceId>
+        <ContentRoot>$(_BrowserExtension_Project_IntermediateOutput_ConfigFile_Directory)</ContentRoot>
+        <BasePath>_content</BasePath>
+        <RelativePath>_content/browserextension.config.json</RelativePath>
+        <OriginalItemSpec>$(_BrowserExtension_Project_IntermediateOutput_ConfigFile_FilePath)</OriginalItemSpec>
+        <AssetKind>All</AssetKind>
+        <AssetMode>All</AssetMode>
+        <AssetRole>Primary</AssetRole>
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+        <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+      </StaticWebAsset>
+    </ItemGroup>
+
+  </Target>
+
+  <!--
+    Writes the configuration file in the intermediate directory and add as ResolvedFileToPublish.
+  -->
+  <Target Name="WriteBlazorToBrowserExtensionPublishConfigFile">
+
+    <PropertyGroup>
+      <_BrowserExtension_Project_IntermediateOutput_ConfigFile_Directory>$(ProjectDir)$(IntermediateOutputPath)browserextension\publish</_BrowserExtension_Project_IntermediateOutput_ConfigFile_Directory>
+      <_BrowserExtension_Project_IntermediateOutput_ConfigFile_FilePath>$(_BrowserExtension_Project_IntermediateOutput_ConfigFile_Directory)\browserextension.config.json</_BrowserExtension_Project_IntermediateOutput_ConfigFile_FilePath>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <!-- Restore force disable compression changed by build -->
+      <BrowserExtensionConfig Condition="'%(BrowserExtensionConfig.Key)' == 'CompressionEnabled'">
+        <Value>$(BrowserExtensionEnableCompression)</Value>
+      </BrowserExtensionConfig>
+    </ItemGroup>
+
+    <Message Importance="normal" Text="Creating configuration file '$(_BrowserExtension_Project_IntermediateOutput_ConfigFile_FilePath)'" />
+    <BlazorToBrowserExtensionWriteConfigFile Input="@(BrowserExtensionConfig)"
+                                             FilePath="$(_BrowserExtension_Project_IntermediateOutput_ConfigFile_FilePath)" />
+
+    <ItemGroup>
+      <ResolvedFileToPublish Include="$(_BrowserExtension_Project_IntermediateOutput_ConfigFile_FilePath)"
+                             ExcludeFromSingleFile="true"
+                             CopyToPublishDirectory="Always"
+                             RelativePath="$(BrowserExtensionAssetsPath)\_content\browserextension.config.json" />
+    </ItemGroup>
+
+  </Target>
+
+</Project>
