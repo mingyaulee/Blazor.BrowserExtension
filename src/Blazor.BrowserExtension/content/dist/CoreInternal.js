@@ -22,7 +22,7 @@ class BrowserExtension {
 
     // Workaround for https://github.com/dotnet/aspnetcore/issues/54358
     // Import dotnet to change the environment and boot resource loader
-    const { dotnet } = await import(`${this.Url}framework/dotnet.js`);
+    const { dotnet } = await import(`${this.Url}_framework/dotnet.js`);
 
     if (this.Config.EnvironmentName && !blazorStartOptions.environment) {
       blazorStartOptions.environment = this.Config.EnvironmentName;
@@ -54,7 +54,7 @@ class BrowserExtension {
   FetchAsync(input, init) {
     if (typeof (input) === "string") {
       if (input === "dotnet.wasm") {
-        input = "framework/" + input;
+        input = "_framework/" + input;
       }
       input = this._getUrl(input);
     }
@@ -109,7 +109,7 @@ class BrowserExtension {
   async _startBlazor(blazorStartOptions) {
     // import blazor.webassembly.js
     const blazorScript = globalThis.document.createElement("script");
-    blazorScript.src = `${this.Url}framework/blazor.webassembly.js`;
+    blazorScript.src = `${this.Url}_framework/blazor.webassembly.js`;
     blazorScript.defer = true;
     // Blazor is set to not auto start, so that we can start it with different start options
     blazorScript.setAttribute("autostart", "false");
@@ -124,7 +124,7 @@ class BrowserExtension {
 
   _loadBootResource(resourceType, resourceName, defaultUri, _integrity) {
     if (resourceType === "dotnetjs" || resourceType === "manifest") {
-      return `${this.Url}framework/${resourceName}`;
+      return `${this.Url}_framework/${resourceName}`;
     }
 
     if (this.Config.CompressionEnabled) {

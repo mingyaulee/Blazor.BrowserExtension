@@ -102,9 +102,11 @@
 
     <Message Importance="normal" Text="  Replacing content of other asset files" />
     <ItemGroup>
-      <_BrowserExtension_Project_BuildOutput_BrowserExtension_FilesToReplaceContent Include="$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_Directory)\blazor.boot.json" />
-      <_BrowserExtension_Project_BuildOutput_BrowserExtension_FilesToReplaceContent Include="$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory)\$(PackageId).styles.css"
-                                                                                    Condition="Exists('$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory)\$(PackageId).styles.css')" />
+      <_BrowserExtension_Project_BuildOutput_BrowserExtension_FilesToReplaceContent Include="$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory)\**\*.css" />
+      <_BrowserExtension_Project_BuildOutput_BrowserExtension_FilesToReplaceContent Include="$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory)\**\*.json" />
+      <_BrowserExtension_Project_BuildOutput_BrowserExtension_FilesToReplaceContent Include="$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory)\**\*.html" />
+      <_BrowserExtension_Project_BuildOutput_BrowserExtension_FilesToReplaceContent Include="$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Directory)\**\*.js"
+                                                                                    Exclude="$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_Directory)\**\*.js" />
     </ItemGroup>
     <BlazorToBrowserExtensionReplaceContent Files="@(_BrowserExtension_Project_BuildOutput_BrowserExtension_FilesToReplaceContent)"
                                             Replace="@(_BrowserExtension_Other_FileContentReplacements)" />

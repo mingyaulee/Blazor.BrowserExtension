@@ -9,7 +9,6 @@ namespace Blazor.BrowserExtension.Build.Tasks.Bootstrap
             return bootstrapFileType switch
             {
                 BootstrapFileType.Project => new ProjectFileBootstrapper(),
-                BootstrapFileType.IndexHtml => new IndexHtmlFileBootstrapper(),
                 BootstrapFileType.IndexRazor => new IndexRazorFileBootstrapper(),
                 BootstrapFileType.ImportsRazor => new ImportsRazorFileBootstrapper(),
                 BootstrapFileType.ProgramCs => new ProgramCsFileBootstrapper(),

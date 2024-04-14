@@ -3,7 +3,6 @@
     public enum BootstrapFileType
     {
         Project,
-        IndexHtml,
         IndexRazor,
         ImportsRazor,
         ProgramCs

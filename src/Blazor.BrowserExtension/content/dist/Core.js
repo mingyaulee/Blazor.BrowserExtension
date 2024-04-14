@@ -1,5 +1,5 @@
 (async () => {
-  console.warn("Core.js is deprecated. Use 'framework/blazor.webassembly.js' in the script tag.");
+  console.warn("Core.js is deprecated. Use '_framework/blazor.webassembly.js' in the script tag.");
 
   let debugMode = false;
   const hasExtensionsApi = namespace => typeof globalThis[namespace] == "object" && globalThis[namespace]?.runtime?.id;

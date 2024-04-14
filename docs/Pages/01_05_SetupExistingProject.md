@@ -34,10 +34,6 @@ You can setup the project manually as well, if for some reason you encounter any
      ]
    }
    ```
-0. In `wwwroot/index.html` remove the `_` in the `_framework` script tag, which will then look like
-   ```html
-   <script src="framework/blazor.webassembly.js"></script>
-   ```
 0. Add `@using Blazor.BrowserExtension.Pages` into `_Imports.razor` file.
 0. In `Pages/Index.razor` replace the first line `@page "/"` with the following lines:
    ```razor
