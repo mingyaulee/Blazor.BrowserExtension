@@ -38,7 +38,16 @@
     <CallTarget Targets="RunPublishBlazorToBrowserExtension"/>
   </Target>
 
-  <!-- Compression for publish -->
+  <!-- Compression -->
+  <!--
+      Source:
+      - .Net 8 https://github.com/dotnet/sdk/blob/release/8.0.3xx/src/StaticWebAssetsSdk/Targets/Microsoft.NET.Sdk.StaticWebAssets.Compression.targets
+    -->
+  <PropertyGroup>
+    <ResolveCompressedFilesDependsOn>$(ResolveCompressedFilesDependsOn);BeforeBlazorToBrowserExtensionCompression</ResolveCompressedFilesDependsOn>
+    <ResolveCompressedFilesForPublishDependsOn>$(ResolveCompressedFilesForPublishDependsOn);BeforeBlazorToBrowserExtensionCompression</ResolveCompressedFilesForPublishDependsOn>
+  </PropertyGroup>
+
   <!--
       The target '_CompressFilesForPublish' compresses the files during publish and we attempt to make publishing faster by removing unnecessary files before compression.
       Source:

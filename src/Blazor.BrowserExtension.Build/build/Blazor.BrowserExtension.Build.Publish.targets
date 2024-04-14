@@ -2,24 +2,6 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <!--
-    Removes unnecessary compressed files from the resolved files to publish.
-  -->
-  <Target Name="ProcessBlazorToBrowserExtensionPublishFiles">
-
-    <Message Importance="high" Text="Processing files to publish Blazor application as Browser Extension" />
-
-    <BlazorToBrowserExtensionProcessPublishFiles Input="@(StaticWebAsset)"
-                                                 CompressionEnabled="$(BrowserExtensionEnableCompression)">
-      <Output TaskParameter="Output" ItemName="_BrowserExtension_Project_PublishFiles_FilesToRemove" />
-    </BlazorToBrowserExtensionProcessPublishFiles>
-
-    <ItemGroup>
-      <StaticWebAsset Remove="@(_BrowserExtension_Project_PublishFiles_FilesToRemove)" />
-    </ItemGroup>
-
-  </Target>
-
-  <!--
     Converts the publish output of the project to browser extension.
   -->
   <Target Name="RunPublishBlazorToBrowserExtension">

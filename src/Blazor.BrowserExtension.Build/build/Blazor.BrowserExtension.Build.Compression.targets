@@ -1,0 +1,35 @@
+﻿<!-- build/Blazor.BrowserExtension.Build.Compression.targets -->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!--
+    Adjust compression configurations to speed up build and publish.
+  -->
+  <Target Name="BeforeBlazorToBrowserExtensionCompression">
+
+    <PropertyGroup>
+      <BuildCompressionFormats></BuildCompressionFormats>
+      <PublishCompressionFormats>brotli</PublishCompressionFormats>
+      <CompressionExcludePatterns>_framework/**/*.js;_framework/**/*.json</CompressionExcludePatterns>
+    </PropertyGroup>
+
+  </Target>
+
+  <!--
+    Removes unused compressed/uncompressed files from the static web assets.
+  -->
+  <Target Name="ProcessBlazorToBrowserExtensionPublishFiles">
+
+    <Message Importance="normal" Text="Processing files to publish Blazor application as Browser Extension" />
+
+    <BlazorToBrowserExtensionProcessPublishFiles Input="@(StaticWebAsset)"
+                                                 CompressionEnabled="$(BrowserExtensionEnableCompression)">
+      <Output TaskParameter="Output" ItemName="_BrowserExtension_Project_PublishFiles_FilesToRemove" />
+    </BlazorToBrowserExtensionProcessPublishFiles>
+
+    <ItemGroup>
+      <StaticWebAsset Remove="@(_BrowserExtension_Project_PublishFiles_FilesToRemove)" />
+    </ItemGroup>
+
+  </Target>
+
+</Project>

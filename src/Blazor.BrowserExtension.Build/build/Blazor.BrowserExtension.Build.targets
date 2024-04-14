@@ -5,6 +5,7 @@
     <Import Project="$(MSBuildThisFileDirectory)Blazor.BrowserExtension.Build.Project.targets" />
     <Import Project="$(MSBuildThisFileDirectory)Blazor.BrowserExtension.Build.Bootstrap.targets" />
     <Import Project="$(MSBuildThisFileDirectory)Blazor.BrowserExtension.Build.FileContentReplacements.targets" />
+    <Import Project="$(MSBuildThisFileDirectory)Blazor.BrowserExtension.Build.Compression.targets" />
     <Import Project="$(MSBuildThisFileDirectory)Blazor.BrowserExtension.Build.Build.targets" />
     <Import Project="$(MSBuildThisFileDirectory)Blazor.BrowserExtension.Build.Publish.targets" />
     <Import Project="$(MSBuildThisFileDirectory)Blazor.BrowserExtension.Build.Clean.targets" />
