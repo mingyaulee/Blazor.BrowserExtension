@@ -9,15 +9,19 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddBrowserExtensionServices(this IServiceCollection services)
         {
+            var iJsRuntimeService = services.FirstOrDefault(service => service.ServiceType == typeof(IJSRuntime));
+            if (iJsRuntimeService?.ImplementationInstance is not IJSRuntime jsRuntime)
+            {
+                throw new NotSupportedException("An instance of IJSRuntime must be registered by Blazor.");
+            }
+
+            services.Remove(iJsRuntimeService);
+            services.AddSingleton<IJSRuntime>(new ProxyJsRuntime(jsRuntime));
+
 #if NET7_0_OR_GREATER
             var browserExtensionEnvironment = new BrowserExtensionEnvironment(GetBrowserExtensionMode());
 #else
-            if (services.FirstOrDefault(service => service.ServiceType == typeof(IJSRuntime))?.ImplementationInstance is not IJSUnmarshalledRuntime jsRuntime)
-            {
-                throw new NotSupportedException("An instance of IJSUnmarshalledRuntime must be registered by Blazor.");
-            }
-
-            var browserExtensionEnvironment = new BrowserExtensionEnvironment(GetBrowserExtensionMode(jsRuntime));
+            var browserExtensionEnvironment = new BrowserExtensionEnvironment(GetBrowserExtensionMode((IJSUnmarshalledRuntime)jsRuntime));
 #endif
             IBrowserExtensionEnvironment.Instance = browserExtensionEnvironment;
             services.AddSingleton<IBrowserExtensionEnvironment>(browserExtensionEnvironment);

@@ -23,6 +23,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Update="content\*.json" CopyToOutputDirectory="Never" />
     <Content Include="build\**">
       <Pack>true</Pack>
       <PackagePath>build</PackagePath>
