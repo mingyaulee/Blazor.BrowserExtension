@@ -23,6 +23,16 @@
         <RelativePath>$([MSBuild]::MakeRelative($(_BrowserExtension_Project_PublishOutput_Assets_Directory), %(_BrowserExtension_Project_PublishOutput_Assets_Files.FullPath)))</RelativePath>
       </_BrowserExtension_Project_PublishOutput_Assets_Files>
     </ItemGroup>
+
+    <BlazorToBrowserExtensionProcessPublishFiles Input="@(_BrowserExtension_Project_PublishOutput_Assets_Files)"
+                                                 CompressionEnabled="$(BrowserExtensionEnableCompression)">
+      <Output TaskParameter="Output" ItemName="_BrowserExtension_Project_PublishOutput_Assets_FilesToRemove" />
+    </BlazorToBrowserExtensionProcessPublishFiles>
+
+    <ItemGroup>
+      <_BrowserExtension_Project_PublishOutput_Assets_Files Remove="@(_BrowserExtension_Project_PublishOutput_Assets_FilesToRemove)" />
+    </ItemGroup>
+    
     <BlazorToBrowserExtensionProcessOutputFiles Input="@(_BrowserExtension_Project_PublishOutput_Assets_Files)">
       <Output TaskParameter="Output" ItemName="_BrowserExtension_Project_PublishOutput_Assets_FilesToCopy" />
     </BlazorToBrowserExtensionProcessOutputFiles>
