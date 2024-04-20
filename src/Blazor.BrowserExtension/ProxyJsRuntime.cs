@@ -27,6 +27,7 @@ namespace Blazor.BrowserExtension
             return instance.InvokeAsync<TValue>(identifier, cancellationToken, InterceptArgs(identifier, args));
         }
 
+        [RequiresUnreferencedCode("JSON serialization and deserialization might require types that cannot be statically analyzed.")]
         public TResult Invoke<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.PublicProperties)] TResult>(string identifier, params object[] args)
         {
             return inProcessInstance.Invoke<TResult>(identifier, args);
