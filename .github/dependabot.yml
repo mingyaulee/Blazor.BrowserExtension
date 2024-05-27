@@ -27,6 +27,8 @@ updates:
     groups:
       mstest:
         patterns: [ MSTest.* ]
+      xunit:
+        patterns: [ xunit, xunit.* ]
   - package-ecosystem: "nuget"
     directory: "/test/Blazor.BrowserExtension.Build.Test/"
     allow:
@@ -34,3 +36,6 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 5
+    groups:
+      xunit:
+        patterns: [ xunit, xunit.* ]
