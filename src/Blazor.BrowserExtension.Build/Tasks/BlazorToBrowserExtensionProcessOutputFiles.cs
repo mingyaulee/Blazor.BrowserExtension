@@ -25,7 +25,7 @@ namespace Blazor.BrowserExtension.Build.Tasks
             return true;
         }
 
-        private void ProcessItem(ITaskItem input, List<ITaskItem> output)
+        private static void ProcessItem(ITaskItem input, List<ITaskItem> output)
         {
             var itemPath = input.ItemSpec;
             var relativePath = OutputHelper.GetOutputRelativePath(GetRelativePath(input));
