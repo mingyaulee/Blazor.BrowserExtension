@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components.Web;
+﻿using Blazor.BrowserExtension.IntegrationTest.Pages;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -17,7 +18,7 @@ namespace Blazor.BrowserExtension.IntegrationTest
             {
                 if (browserExtension.Mode == BrowserExtensionMode.ContentScript)
                 {
-                    builder.RootComponents.Add<App>("#Blazor_BrowserExtension_IntegrationTest_app");
+                    builder.RootComponents.Add<ContentScript>("#Blazor_BrowserExtension_IntegrationTest_app");
                 }
                 else
                 {
