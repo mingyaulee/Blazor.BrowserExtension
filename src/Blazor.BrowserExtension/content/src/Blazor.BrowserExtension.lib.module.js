@@ -27,7 +27,7 @@ let appJs;
  * @param {object} extensions Extensions added during publishing
  */
 export async function beforeStart(options, extensions) {
-  const configUrl = `${url}content/browserextension.config.json`;
+  const configUrl = `${url}_content/browserextension.config.json`;
   const configRequest = await fetch(configUrl);
 
   /** @type {import("./Modules/BrowserExtensionConfig.js").default} */

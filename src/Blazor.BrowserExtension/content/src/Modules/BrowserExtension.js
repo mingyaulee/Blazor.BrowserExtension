@@ -24,7 +24,7 @@ export default class BrowserExtension {
    */
   async InitializeCoreAsync(blazorStartOptions) {
     // import JsBind.Net JS
-    await import(`${this.Url}content/JsBind.Net/JsBindNet.js`);
+    await import(`${this.Url}_content/JsBind.Net/JsBindNet.js`);
 
     if (this.Config.CompressionEnabled) {
       // import brotli decode.js

@@ -29,7 +29,6 @@ namespace Blazor.BrowserExtension.Build.Tasks
             var processor = new JsonManifestProcessor(excludePaths);
             processor.ReadFromFile(filePath);
             processor.Process(outputPath);
-            processor.WriteToFile(filePath);
             var output = processor.GetOutput()
                 .Select(staticWebAssetFile =>
                     new TaskItem(staticWebAssetFile.FilePath, new Dictionary<string, string>()

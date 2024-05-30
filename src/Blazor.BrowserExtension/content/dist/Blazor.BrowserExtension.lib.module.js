@@ -20,7 +20,7 @@ let config;
 let appJs;
 
 async function beforeStart(options, extensions) {
-  const configUrl = `${url}content/browserextension.config.json`;
+  const configUrl = `${url}_content/browserextension.config.json`;
   const configRequest = await fetch(configUrl);
 
   config = await configRequest.json();
