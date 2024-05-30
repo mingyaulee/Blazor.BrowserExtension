@@ -51,7 +51,7 @@ namespace Blazor.BrowserExtension.Build.Tasks
 
         private void ProcessCompressedItem(string relativePath, ITaskItem input, List<ITaskItem> output, bool compressionEnabled)
         {
-#if NET5_0_OR_GREATER
+#if NET
             var uncompressedItemRelativePath = relativePath[0..^3];
 #else
             var uncompressedItemRelativePath = relativePath.Substring(0, relativePath.Length - 3);
