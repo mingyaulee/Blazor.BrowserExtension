@@ -2,7 +2,7 @@
 
 Different browsers have different support for [background script and extension service worker](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/background#browser_support).
 
-Chrome calls it extension service worker in manifest V3 whereas Mozilla calls it background scripts, but both are declared by.the `background` key in `manifest.json`. For simplicity, we will just call them background worker in this page.
+Chrome calls it extension service worker in manifest V3 whereas Mozilla calls it background scripts, but both are declared by.the `background` key in `manifest.json`. For simplicity, we will just call them "background worker" in this page.
 
 Background worker can be used to support the complexity in browser extensions. The pattern of content scripts, popup, or any other page communicating with the background worker to get data or instructions resembles a client-server communication.
 
@@ -36,7 +36,7 @@ In the manifest, the background worker is declared in the `background` key.
 
 ## Mozilla Firefox
 
-The implementation in Firefox requires a small adjustments in the `manifest.json`.
+The implementation in Firefox requires a small adjustment in the `manifest.json`.
 
 ```json
 {

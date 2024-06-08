@@ -3,11 +3,11 @@
 1. Install the latest `Blazor.BrowserExtension` NuGet package to the Blazor project.
 0. Add `<BrowserExtensionBootstrap>true</BrowserExtensionBootstrap>` under the `<PropertyGroup>` node in your `.csproj` project file.
 0. Build the project.
-0. This should automatically setup the project files to be compatible for building into browser extension and the `BrowserExtensionBootstrap` property is removed from the `.csproj` project file.
+0. This should automatically set up the project files to be compatible for building into browser extension and the `BrowserExtensionBootstrap` property is removed from the `.csproj` project file.
 
 ## Manual Setting Up
 
-You can setup the project manually as well, if for some reason you encounter any problem with the bootstrapping step above.
+You can set up the project manually as well, if for some reason you encounter any problem with the bootstrapping step above.
 
 1. Add a new file `manifest.json` under the `wwwroot` directory. An example of minimal `manifest.json` file:
    ```json
@@ -34,7 +34,7 @@ You can setup the project manually as well, if for some reason you encounter any
      ]
    }
    ```
-0. Add `@using Blazor.BrowserExtension.Pages` into `_Imports.razor` file.
+0. Add `@using Blazor.BrowserExtension.Pages` into the `_Imports.razor` file.
 0. In `Pages/Index.razor` replace the first line `@page "/"` with the following lines:
    ```razor
    @page "/index.html"
@@ -52,7 +52,7 @@ You can setup the project manually as well, if for some reason you encounter any
      });
    });
    ```
-0. Add the following into `Program.cs` file to wrap the `RootComponents` setup.
+0. Add the following into the `Program.cs` file to wrap the `RootComponents` setup.
    ```csharp
    public static async Task Main(string[] args)
    {

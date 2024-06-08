@@ -1,10 +1,10 @@
 # Manifest V3 is supported
 
-What is Manifest V3? Read more about manifext V3 [here](https://developer.chrome.com/docs/extensions/develop/migrate/what-is-mv3).
+What is Manifest V3? Read more about manifest V3 [here](https://developer.chrome.com/docs/extensions/develop/migrate/what-is-mv3).
 
-At the moment, Chromium based browsers (Chrome & Edge) has support for the manifest V3 specification and manifest V2 is deprecated.
+At the moment, Chromium based browsers (Chrome & Edge) have support for the manifest V3 specification and manifest V2 is deprecated.
 
-Firefox's implementation has slight difference with Chromium based browsers in the [manifest format](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json).
+Firefox's implementation has slight differences with Chromium based browsers in the [manifest format](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json).
 
 > **Important Note**
 >

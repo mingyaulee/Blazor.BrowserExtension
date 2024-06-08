@@ -21,7 +21,8 @@ When you create a new Razor page, add `@inherits BasePage` on top to get access 
 }
 ```
 
-Each of the property in the `IWebExtensionsApi` class provides a set of APIs for different functionalities that can be implemented by an extension. These property sometimes include description of additional setup required to use the API.
+Each of the properties in the `IWebExtensionsApi` class provides a set of APIs for different functionalities that can be implemented by an extension.
+These properties sometimes include description of additional setup required to use the API.
 
 For example, the `Alarms` API shows that it requires manifest permission `alarms`.
 

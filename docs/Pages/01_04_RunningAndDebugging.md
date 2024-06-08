@@ -36,13 +36,14 @@ MockResolvers.Configure(configure =>
 });
 ```
 
-The [WebExtensions.Net page](https://github.com/mingyaulee/WebExtensions.Net) shows more example of configuring the `MockResolvers`. Some APIs have been mocked by default in [WebExtensions.Net `DefaultMockResolver`](https://github.com/mingyaulee/WebExtensions.Net/blob/09eb19608f5310f3d5b1b9b889f8d3378a13eb06/src/WebExtensions.Net/Mock/Resolvers/DefaultMockResolver.cs#L56).
+The [WebExtensions.Net page](https://github.com/mingyaulee/WebExtensions.Net) shows more examples of configuring the `MockResolvers`.
+Some APIs have been mocked by default in [WebExtensions.Net `DefaultMockResolver`](https://github.com/mingyaulee/WebExtensions.Net/blob/09eb19608f5310f3d5b1b9b889f8d3378a13eb06/src/WebExtensions.Net/Mock/Resolvers/DefaultMockResolver.cs#L56).
 
 > **Important Note**
 >
 > At the moment, debugging when the application is loaded as an extension in the browser is not possible.
 >
-> This is because debugging requires a NodeJs debugging proxy launched by the DevServer, which is not available when loaded as extension in the browser.
+> This is because debugging requires a NodeJs debugging proxy launched by the DevServer, which is not available when loaded as an extension in the browser.
 >
 > The best way to debug when loaded as an extension is to use `Console.WriteLine` which writes the logs to the browser console window, accessible from the Developer Tools window (`F12`).
 
