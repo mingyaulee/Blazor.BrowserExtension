@@ -3,6 +3,7 @@
   <!-- Build properties. -->
   <PropertyGroup>
     <TargetFrameworks>net8.0;net7.0;net6.0</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
     <GenerateDependencyFile>false</GenerateDependencyFile>
     <IsShippingPackage>true</IsShippingPackage>
     <HasReferenceAssembly>false</HasReferenceAssembly>

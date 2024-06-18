@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
     <_BrowserExtensionBuildOutputFolder>bin\$(Configuration)</_BrowserExtensionBuildOutputFolder>
   </PropertyGroup>
 
