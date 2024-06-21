@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -6,16 +7,9 @@ using Microsoft.JSInterop;
 
 namespace Blazor.BrowserExtension
 {
-    internal class ProxyJsRuntime : IJSInProcessRuntime
+    internal class ProxyJsRuntime(IJSRuntime instance, BrowserExtensionEnvironment browserExtensionEnvironment) : IJSInProcessRuntime
     {
-        private readonly IJSRuntime instance;
-        private readonly IJSInProcessRuntime inProcessInstance;
-
-        public ProxyJsRuntime(IJSRuntime instance)
-        {
-            this.instance = instance;
-            inProcessInstance = instance as IJSInProcessRuntime;
-        }
+        private readonly IJSInProcessRuntime inProcessInstance = instance as IJSInProcessRuntime;
 
         public ValueTask<TValue> InvokeAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.PublicProperties)] TValue>(string identifier, object[] args)
         {
@@ -33,7 +27,7 @@ namespace Blazor.BrowserExtension
             return inProcessInstance.Invoke<TResult>(identifier, args);
         }
 
-        static object[] InterceptArgs(string identifier, object[] args)
+        object[] InterceptArgs(string identifier, object[] args)
         {
             if (identifier == "import")
             {
@@ -42,10 +36,17 @@ namespace Blazor.BrowserExtension
             return args;
         }
 
-        static string ReplaceImportPath(string importPath)
+        string ReplaceImportPath(string importPath)
         {
             var splitPaths = importPath.Split('/');
-            return string.Join('/', splitPaths.Select((path, index) => index < splitPaths.Length - 1 && path.StartsWith('_') ? path[1..] : path));
+            var replacedImportPath = string.Join('/', splitPaths.Select((path, index) => index < splitPaths.Length - 1 && path.StartsWith('_') ? path[1..] : path));
+            
+            if (browserExtensionEnvironment.Mode == BrowserExtensionMode.ContentScript)
+            {
+                return Path.Combine(browserExtensionEnvironment.BaseUrl, replacedImportPath);
+            }
+
+            return replacedImportPath;
         }
     }
 }

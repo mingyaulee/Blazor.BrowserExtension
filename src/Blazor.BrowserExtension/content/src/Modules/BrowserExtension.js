@@ -205,11 +205,11 @@ export default class BrowserExtension {
   }
 
   /**
-   * Gets the browser extension mode. Called during initialization in DotNet.
+   * Gets the browser extension environment. Called during initialization in DotNet.
    * @returns {any}
    */
-  _getBrowserExtensionMode() {
-    return this.Mode;
+  _getBrowserExtensionEnvironment() {
+    return `${this.Mode}|${this.Url}`;
   }
 
   /**

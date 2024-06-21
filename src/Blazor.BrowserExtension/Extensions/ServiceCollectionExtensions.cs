@@ -15,16 +15,16 @@ namespace Microsoft.Extensions.DependencyInjection
                 throw new NotSupportedException("An instance of IJSRuntime must be registered by Blazor.");
             }
 
-            services.Remove(iJsRuntimeService);
-            services.AddSingleton<IJSRuntime>(new ProxyJsRuntime(jsRuntime));
-
 #if NET7_0_OR_GREATER
-            var browserExtensionEnvironment = new BrowserExtensionEnvironment(GetBrowserExtensionMode());
+            var browserExtensionEnvironment = GetBrowserExtensionEnvironment();
 #else
-            var browserExtensionEnvironment = new BrowserExtensionEnvironment(GetBrowserExtensionMode((IJSUnmarshalledRuntime)jsRuntime));
+            var browserExtensionEnvironment = GetBrowserExtensionEnvironment((IJSUnmarshalledRuntime)jsRuntime);
 #endif
             IBrowserExtensionEnvironment.Instance = browserExtensionEnvironment;
             services.AddSingleton<IBrowserExtensionEnvironment>(browserExtensionEnvironment);
+
+            services.Remove(iJsRuntimeService);
+            services.AddSingleton<IJSRuntime>(new ProxyJsRuntime(jsRuntime, browserExtensionEnvironment));
 
             if (browserExtensionEnvironment.Mode == BrowserExtensionMode.Debug)
             {
@@ -39,30 +39,35 @@ namespace Microsoft.Extensions.DependencyInjection
         }
 
 #if NET7_0_OR_GREATER
-        private static BrowserExtensionMode GetBrowserExtensionMode()
+        private static BrowserExtensionEnvironment GetBrowserExtensionEnvironment()
 #else
-        private static BrowserExtensionMode GetBrowserExtensionMode(IJSUnmarshalledRuntime jsRuntime)
+        private static BrowserExtensionEnvironment GetBrowserExtensionEnvironment(IJSUnmarshalledRuntime jsRuntime)
 #endif
         {
 #if NET7_0_OR_GREATER
-            var browserExtensionModeString = GetBrowserExtensionModeInterop();
+            var browserExtensionEnvironmentValues = GetBrowserExtensionEnvironmentInterop().Split('|');
+            var browserExtensionModeString = browserExtensionEnvironmentValues[0];
+            var baseUrl = browserExtensionEnvironmentValues[1];
 #else
             var browserExtensionModeString = jsRuntime.InvokeUnmarshalled<string>($"BlazorBrowserExtension.BrowserExtension._getBrowserExtensionModeLegacy");
+            var baseUrl = "BaseUrl is not supported in .Net 6";
 #endif
-            if (Enum.TryParse<BrowserExtensionMode>(browserExtensionModeString, out var result))
+            if (!Enum.TryParse<BrowserExtensionMode>(browserExtensionModeString, out var mode))
             {
-                return result;
+                mode = BrowserExtensionMode.Standard;
             }
-            else
+
+            return new BrowserExtensionEnvironment()
             {
-                return BrowserExtensionMode.Standard;
-            }
+                Mode = mode,
+                BaseUrl = baseUrl
+            };
         }
 
 #if NET7_0_OR_GREATER
 
-        [System.Runtime.InteropServices.JavaScript.JSImport("globalThis.BlazorBrowserExtension.BrowserExtension._getBrowserExtensionMode")]
-        private static partial string GetBrowserExtensionModeInterop();
+        [System.Runtime.InteropServices.JavaScript.JSImport("globalThis.BlazorBrowserExtension.BrowserExtension._getBrowserExtensionEnvironment")]
+        private static partial string GetBrowserExtensionEnvironmentInterop();
 #endif
     }
 }

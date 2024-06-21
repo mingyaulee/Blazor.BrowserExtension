@@ -2,11 +2,7 @@
 {
     public class BrowserExtensionEnvironment : IBrowserExtensionEnvironment
     {
-        public BrowserExtensionEnvironment(BrowserExtensionMode mode)
-        {
-            Mode = mode;
-        }
-
-        public BrowserExtensionMode Mode { get; }
+        public BrowserExtensionMode Mode { get; init; }
+        public string BaseUrl { get; init; }
     }
 }

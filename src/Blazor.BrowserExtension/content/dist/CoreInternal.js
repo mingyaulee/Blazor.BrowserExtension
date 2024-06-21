@@ -144,8 +144,8 @@ class BrowserExtension {
     return defaultUri;
   }
 
-  _getBrowserExtensionMode() {
-    return this.Mode;
+  _getBrowserExtensionEnvironment() {
+    return `${this.Mode}|${this.Url}`;
   }
 
   _getBrowserExtensionModeLegacy() {
