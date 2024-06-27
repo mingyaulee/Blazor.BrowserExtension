@@ -40,10 +40,10 @@ namespace Blazor.BrowserExtension
         {
             var splitPaths = importPath.Split('/');
             var replacedImportPath = string.Join('/', splitPaths.Select((path, index) => index < splitPaths.Length - 1 && path.StartsWith('_') ? path[1..] : path));
-            
+
             if (browserExtensionEnvironment.Mode == BrowserExtensionMode.ContentScript)
             {
-                return Path.Combine(browserExtensionEnvironment.BaseUrl, replacedImportPath);
+                return Path.Combine(browserExtensionEnvironment.BaseUrl, replacedImportPath.TrimStart('/', '.'));
             }
 
             return replacedImportPath;
