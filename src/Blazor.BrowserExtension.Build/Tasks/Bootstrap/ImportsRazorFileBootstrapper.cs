@@ -10,11 +10,11 @@ namespace Blazor.BrowserExtension.Build.Tasks.Bootstrap
 
             // Add
             // @using Blazor.BrowserExtension.Pages
-            var insertLine = "@using Blazor.BrowserExtension.Pages";
-            var bootstrapPropertyTagIndex = fileLines.FindIndex(fileLine => fileLine.Contains("@using Blazor.BrowserExtension.Pages"));
-            if (bootstrapPropertyTagIndex == -1)
+            var usingStatement = "@using Blazor.BrowserExtension.Pages";
+            var usingStatementIndex = fileLines.FindIndex(fileLine => fileLine.Contains(usingStatement));
+            if (usingStatementIndex == -1)
             {
-                fileLines.Insert(fileLines.FindLastIndex(line => !string.IsNullOrEmpty(line)) + 1, insertLine);
+                fileLines.Insert(fileLines.FindLastIndex(line => !string.IsNullOrEmpty(line)) + 1, usingStatement);
                 isUpdated = true;
             }
 

@@ -1,0 +1,93 @@
+﻿<!-- build/Blazor.BrowserExtension.BackgroundWorker.targets -->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- 
+    Defines the variables for use in the subsequent targets.
+  -->
+  <Target Name="PrepareForBlazorToBrowserExtensionBackgroundWorkerFile">
+
+    <PropertyGroup>
+      <_BrowserExtension_Project_Assets_Directory>$(ProjectDir)$(BrowserExtensionAssetsPath)</_BrowserExtension_Project_Assets_Directory>
+      <_BrowserExtension_Project_Assets_ManifestJson_FilePath>$(_BrowserExtension_Project_Assets_Directory)\manifest.json</_BrowserExtension_Project_Assets_ManifestJson_FilePath>
+      <_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerMainJsFile_FilePath Condition="Exists('$(ProjectDir)obj/BackgroundWorkerMain.generated.js')">$(ProjectDir)obj/BackgroundWorkerMain.generated.js</_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerMainJsFile_FilePath>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <BrowserExtensionBackgroundWorkerImportIgnore Include="content/Blazor.BrowserExtension/ContentScript.js" />
+      <BrowserExtensionBackgroundWorkerImportIgnore Include="content/Blazor.BrowserExtension/Core.js" />
+      <BrowserExtensionBackgroundWorkerImportIgnore Include="content/BackgroundWorker.js" />
+    </ItemGroup>
+
+  </Target>
+
+  <!--
+    Writes the background worker file in the intermediate build directory and add as StaticWebAsset.
+  -->
+  <Target Name="WriteBlazorToBrowserExtensionBuildBackgroundWorkerFile">
+
+    <PropertyGroup>
+      <_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerFile_Directory>$(ProjectDir)$(IntermediateOutputPath)browserextension\build</_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerFile_Directory>
+      <_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerFile_FilePath>$(_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerFile_Directory)\BackgroundWorker.js</_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerFile_FilePath>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <_StaticWebAsset_Build_JsAssets Include="@(StaticWebAsset)" Condition="$([System.String]::new('%(RelativePath)').EndsWith('.js'))" />
+    </ItemGroup>
+
+    <Message Importance="normal" Text="Generating background worker file '$(_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerFile_FilePath)'" />
+    <BlazorToBrowserExtensionWriteBackgroundWorkerFile BackgroundWorkerMainJsFilePath="$(_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerMainJsFile_FilePath)"
+                                                       JsAssets="@(_StaticWebAsset_Build_JsAssets)"
+                                                       IgnoreJsAssets="@(BrowserExtensionBackgroundWorkerImportIgnore)"
+                                                       ManifestFilePath="$(_BrowserExtension_Project_Assets_ManifestJson_FilePath)"
+                                                       FilePath="$(_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerFile_FilePath)" />
+
+    <ItemGroup>
+      <StaticWebAsset Include="$(_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerFile_FilePath)">
+        <SourceType>Computed</SourceType>
+        <SourceId>Blazor.BrowserExtension</SourceId>
+        <ContentRoot>$(_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerFile_Directory)</ContentRoot>
+        <BasePath>_content</BasePath>
+        <RelativePath>_content/BackgroundWorker.js</RelativePath>
+        <OriginalItemSpec>$(_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerFile_FilePath)</OriginalItemSpec>
+        <AssetKind>All</AssetKind>
+        <AssetMode>All</AssetMode>
+        <AssetRole>Primary</AssetRole>
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+        <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+      </StaticWebAsset>
+    </ItemGroup>
+
+  </Target>
+
+  <!--
+    Writes the background worker file in the intermediate publish directory and add as ResolvedFileToPublish.
+  -->
+  <Target Name="WriteBlazorToBrowserExtensionPublishBackgroundWorkerFile">
+
+    <PropertyGroup>
+      <_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerFile_Directory>$(ProjectDir)$(IntermediateOutputPath)browserextension\publish</_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerFile_Directory>
+      <_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerFile_FilePath>$(_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerFile_Directory)\BackgroundWorker.js</_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerFile_FilePath>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <StaticWebAsset Remove="@(StaticWebAsset)" Condition="%(StaticWebAsset.RelativePath) == '_content/BackgroundWorker.js'" />
+      <_StaticWebAsset_Publish_JsAssets Include="@(StaticWebAsset)" Condition="$([System.String]::new('%(StaticWebAsset.RelativePath)').EndsWith('.js')) AND ('%(StaticWebAsset.AssetKind)' == 'All' OR '%(StaticWebAsset.AssetKind)' == 'Publish')" />
+    </ItemGroup>
+
+    <Message Importance="normal" Text="Generating background worker file '$(_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerFile_FilePath)'" />
+    <BlazorToBrowserExtensionWriteBackgroundWorkerFile BackgroundWorkerMainJsFilePath="$(_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerMainJsFile_FilePath)"
+                                                       JsAssets="@(_StaticWebAsset_Publish_JsAssets)"
+                                                       IgnoreJsAssets="@(BrowserExtensionBackgroundWorkerImportIgnore)"
+                                                       ManifestFilePath="$(_BrowserExtension_Project_Assets_ManifestJson_FilePath)"
+                                                       FilePath="$(_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerFile_FilePath)" />
+
+    <ItemGroup>
+      <ResolvedFileToPublish Include="$(_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerFile_FilePath)"
+                             ExcludeFromSingleFile="true"
+                             CopyToPublishDirectory="Always"
+                             RelativePath="$(BrowserExtensionAssetsPath)\_content\BackgroundWorker.js" />
+    </ItemGroup>
+
+  </Target>
+
+</Project>

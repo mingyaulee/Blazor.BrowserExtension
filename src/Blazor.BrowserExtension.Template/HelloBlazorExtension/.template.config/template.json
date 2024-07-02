@@ -77,7 +77,7 @@
           "condition": "ManifestVersion == \"3\""
         },
         {
-          "exclude": [ "wwwroot/BackgroundWorker.js" ],
+          "exclude": [ "BackgroundWorker.cs" ],
           "condition": "ManifestVersion == \"2\""
         }
       ]

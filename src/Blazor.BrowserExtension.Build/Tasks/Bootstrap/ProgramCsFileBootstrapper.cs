@@ -9,11 +9,28 @@ namespace Blazor.BrowserExtension.Build.Tasks.Bootstrap
         {
             var isUpdated = false;
 
+            // Add
+            // using Blazor.BrowserExtension;
+            var usingStatement = "using Blazor.BrowserExtension;";
+            var usingStatementIndex = fileLines.FindIndex(fileLine => fileLine.Contains(usingStatement));
+            if (usingStatementIndex == -1)
+            {
+                fileLines.Insert(0, usingStatement);
+                isUpdated = true;
+            }
+
             // Wrap RootComponents setup
             // builder.UseBrowserExtension(environment =>
             // {
-            //     builder.RootComponents.Add<App>("#app");
-            //     builder.RootComponents.Add<HeadOutlet>("head::after");
+            //     if (browserExtension.Mode == BrowserExtensionMode.Background)
+            //     {
+            //         builder.RootComponents.AddBackgroundWorker<BackgroundWorker>();
+            //     }
+            //     else
+            //     {
+            //         builder.RootComponents.Add<App>("#app");
+            //         builder.RootComponents.Add<HeadOutlet>("head::after");
+            //     }
             // });
             var useBrowserExtensionIndex = fileLines.FindIndex(fileLine => fileLine.Contains(".UseBrowserExtension"));
             if (useBrowserExtensionIndex == -1)
@@ -39,11 +56,18 @@ namespace Blazor.BrowserExtension.Build.Tasks.Bootstrap
                 var indent = "".PadLeft(indentCount, ' ');
                 fileLines.Insert(rootComponentsFirstIndex + 0, $"{indent}builder.UseBrowserExtension(browserExtension =>");
                 fileLines.Insert(rootComponentsFirstIndex + 1, $"{indent}{{");
-                for (var i = rootComponentsFirstIndex + 2; i <= rootComponentsLastIndex + 2; i++)
+                fileLines.Insert(rootComponentsFirstIndex + 2, $"{indent}    if (browserExtension.Mode == BrowserExtensionMode.Background)");
+                fileLines.Insert(rootComponentsFirstIndex + 3, $"{indent}    {{");
+                fileLines.Insert(rootComponentsFirstIndex + 4, $"{indent}        builder.RootComponents.AddBackgroundWorker<BackgroundWorker>();");
+                fileLines.Insert(rootComponentsFirstIndex + 5, $"{indent}    }}");
+                fileLines.Insert(rootComponentsFirstIndex + 6, $"{indent}    else");
+                fileLines.Insert(rootComponentsFirstIndex + 7, $"{indent}    {{");
+                for (var i = rootComponentsFirstIndex + 8; i <= rootComponentsLastIndex + 8; i++)
                 {
-                    fileLines[i] = "    " + fileLines[i];
+                    fileLines[i] = "        " + fileLines[i];
                 }
-                fileLines.Insert(rootComponentsLastIndex + 3, $"{indent}}});");
+                fileLines.Insert(rootComponentsLastIndex + 9, $"{indent}    }}");
+                fileLines.Insert(rootComponentsLastIndex + 10, $"{indent}}});");
 
                 if (!string.IsNullOrWhiteSpace(fileLines[rootComponentsFirstIndex - 1]))
                 {

@@ -24,7 +24,7 @@ Firefox's implementation has slight differences with Chromium based browsers in 
    - Update `background`
      ```json
      "background": {
-       "service_worker": "BackgroundWorker.js",
+       "service_worker": "content/BackgroundWorker.js",
        "type": "module"
      },
      ```
@@ -51,8 +51,9 @@ Firefox's implementation has slight differences with Chromium based browsers in 
        }
      ]
      ```
-0. Move all the codes from `Background.razor` to `BackgroundWorker.js`
-   - Create a new file `BackgroundWorker.js` in `wwwroot`.
+0. Move all the codes from `Background.razor` to `BackgroundWorker.cs`
+   - Create a new file `BackgroundWorker.cs`.
+   - Refer to the [Background Worker page](03_02_BackgroundWorker.md) for the sample class.
    - Remove `Background.razor`
    - Refer to [this guide](https://developer.chrome.com/docs/extensions/mv3/migrating_to_service_workers/) for migrating from background page to background service worker.
 

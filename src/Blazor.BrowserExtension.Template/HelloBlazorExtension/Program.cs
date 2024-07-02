@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Blazor.BrowserExtension;
+using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.Web;
@@ -15,8 +16,15 @@ namespace HelloBlazorExtension
             
             builder.UseBrowserExtension(browserExtension =>
             {
-                builder.RootComponents.Add<App>("#app");
-                builder.RootComponents.Add<HeadOutlet>("head::after");
+                if (browserExtension.Mode == BrowserExtensionMode.Background)
+                {
+                    builder.RootComponents.AddBackgroundWorker<BackgroundWorker>();
+                }
+                else
+                {
+                    builder.RootComponents.Add<App>("#app");
+                    builder.RootComponents.Add<HeadOutlet>("head::after");
+                }
             });
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });

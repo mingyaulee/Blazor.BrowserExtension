@@ -97,7 +97,15 @@ namespace Blazor.BrowserExtension.Build.Test
             }
 
             var extension = new WebDriverExtensionHelper(webDriver);
-            await extension.WaitForExtensionPage();
+            try
+            {
+                await extension.WaitForExtensionPage();
+            }
+            catch
+            {
+                extension.Dispose();
+                throw;
+            }
             return extension;
         }
 

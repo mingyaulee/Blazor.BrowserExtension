@@ -29,6 +29,7 @@
 
   <!-- Import project reference and build props and targets as if we are referencing the built NuGet package -->
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Blazor.BrowserExtension.Analyzer\Blazor.BrowserExtension.Analyzer.csproj" PrivateAssets="all" OutputItemType="Analyzer" />
     <ProjectReference Include="..\..\src\Blazor.BrowserExtension\Blazor.BrowserExtension.csproj"></ProjectReference>
   </ItemGroup>
   <Import Project="..\..\src\Blazor.BrowserExtension\build\Blazor.BrowserExtension.props" />

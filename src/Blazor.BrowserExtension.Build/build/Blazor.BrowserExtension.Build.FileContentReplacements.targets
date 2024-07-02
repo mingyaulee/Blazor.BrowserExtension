@@ -7,6 +7,23 @@
   <Target Name="DefineBlazorToBrowserExtensionFrameworkJsFileContentReplacements">
 
     <ItemGroup>
+      <!-- Import proxy -->
+      <_Import_FileContentReplacements Include="await import">
+        <From>await import(</From>
+        <To>await (globalThis.importProxy ?? (m => import(m)))(</To>
+        <IsOptional>true</IsOptional>
+      </_Import_FileContentReplacements>
+      <_Import_FileContentReplacements Include="import assigned to variable">
+        <From>=import(</From>
+        <To>=(globalThis.importProxy ?? (m => import(m)))(</To>
+        <IsOptional>true</IsOptional>
+      </_Import_FileContentReplacements>
+      <_Import_FileContentReplacements Include="import assigned to variable comma separated">
+        <From>,import(</From>
+        <To>,(globalThis.importProxy ?? (m => import(m)))(</To>
+        <IsOptional>true</IsOptional>
+      </_Import_FileContentReplacements>
+
       <!--
         Define contents to replace in blazor.webassembly.js
         Source:
@@ -34,10 +51,11 @@
         <From>fetch(</From>
         <To>globalThis.BlazorBrowserExtension.BrowserExtension.FetchAsync(</To>
       </_BrowserExtension_BlazorJs_FileContentReplacements>
-      <_BrowserExtension_BlazorJs_FileContentReplacements Include="import JS initializer module">
-        <From>=await import(</From>
-        <To>=await (globalThis.BlazorBrowserExtension?.ImportJsInitializer ?? function(m){return import(m);})(</To>
+      <_BrowserExtension_BlazorJs_FileContentReplacements Include="window in JSObject constructor">
+        <From>(window)</From>
+        <To>(globalThis)</To>
       </_BrowserExtension_BlazorJs_FileContentReplacements>
+      <_BrowserExtension_BlazorJs_FileContentReplacements Include="@(_Import_FileContentReplacements)" />
       <_BrowserExtension_BlazorJs_FileContentReplacements Include="Module cwrap" Condition="'$(TargetFramework)' == 'net6.0'">
         <From>cwrap(</From>
         <To>globalThis.Module.cwrap(</To>
@@ -96,6 +114,7 @@
         <From>this.mono_set_timeout_exec</From>
         <To>globalThis.mono_set_timeout_exec</To>
       </_BrowserExtension_DotNetJs_FileContentReplacements>
+      <_BrowserExtension_DotNetJs_FileContentReplacements Include="@(_Import_FileContentReplacements)" />
       <!--
         Define contents to replace in other files
       -->
@@ -109,6 +128,7 @@
         <To>framework/</To>
         <IsOptional>true</IsOptional>
       </_BrowserExtension_Other_FileContentReplacements>
+      <_BrowserExtension_Other_FileContentReplacements Include="@(_Import_FileContentReplacements)" />
     </ItemGroup>
 
   </Target>

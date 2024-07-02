@@ -3,7 +3,8 @@
     public enum BrowserExtensionMode
     {
         Standard,
+        Background,
         ContentScript,
-        Debug
+        Debug,
     }
 }

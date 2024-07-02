@@ -20,6 +20,10 @@ namespace Blazor.BrowserExtension.IntegrationTest
                 {
                     builder.RootComponents.Add<ContentScript>("#Blazor_BrowserExtension_IntegrationTest_app");
                 }
+                else if (browserExtension.Mode == BrowserExtensionMode.Background)
+                {
+                    builder.RootComponents.AddBackgroundWorker<BackgroundWorker>();
+                }
                 else
                 {
                     builder.RootComponents.Add<App>("#app");

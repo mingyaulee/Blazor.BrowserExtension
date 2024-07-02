@@ -1,5 +1,6 @@
 const BrowserExtensionModes = {
   Standard: "Standard",
+  Background: "Background",
   ContentScript: "ContentScript",
   Debug: "Debug"
 };
@@ -158,14 +159,12 @@ class BlazorBrowserExtension {
   StartBlazorBrowserExtension;
   Modes;
   BrowserExtension;
-  ImportJsInitializer;
 
   constructor() {
     this.ImportBrowserPolyfill = true;
     this.StartBlazorBrowserExtension = true;
     this.Modes = null;
     this.BrowserExtension = null;
-    this.ImportJsInitializer = null;
   }
 }
 
@@ -176,13 +175,6 @@ function initializeGlobalVariable(browserExtension) {
   if (!globalThis.hasOwnProperty("BlazorBrowserExtension")) {
     blazorBrowserExtension = new BlazorBrowserExtension();
     blazorBrowserExtension.Modes = BrowserExtensionModes;
-    blazorBrowserExtension.ImportJsInitializer = async (module) => {
-      if (module.startsWith(document.baseURI) && blazorBrowserExtension.BrowserExtension) {
-        // attempt to fix import path
-        module = new URL(module.substring(document.baseURI.length), blazorBrowserExtension.BrowserExtension.Url);
-      }
-      return await import(module);
-    };
     globalThis.BlazorBrowserExtension = blazorBrowserExtension;
   } else {
     blazorBrowserExtension = (globalThis.BlazorBrowserExtension);

@@ -33,10 +33,15 @@
       <Pack>true</Pack>
       <PackagePath>tasks/net472</PackagePath>
     </Content>
+    <Content Include="../Blazor.BrowserExtension.Analyzer/bin/$(Configuration)/netstandard2.0/Blazor.BrowserExtension.Analyzer.dll">
+      <Pack>true</Pack>
+      <PackagePath>analyzers/dotnet/cs</PackagePath>
+    </Content>
     <Content Include="content\**">
       <Pack>true</Pack>
       <PackagePath>content</PackagePath>
     </Content>
+    <Compile Remove="content\**" />
     <Content Include="..\Icon\Icon.png">
       <Pack>true</Pack>
       <PackagePath></PackagePath>
@@ -49,6 +54,11 @@
     <PackageReference Include="System.Text.Json" Version="8.0.2" Condition="'$(TargetFramework)' == 'net472'" />
     <!-- marks all packages as 'local only' so they don't end up in the nuspec -->
     <PackageReference Update="@(PackageReference)" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Make sure analzyer project is built first before including the build output in this package -->
+    <ProjectReference Include="..\Blazor.BrowserExtension.Analyzer\Blazor.BrowserExtension.Analyzer.csproj" PrivateAssets="all" />
   </ItemGroup>
 
 </Project>

@@ -22,4 +22,25 @@
     <CallTarget Targets="WriteBlazorToBrowserExtensionPublishConfigFile"/>
   </Target>
 
+  <!-- Background Worker -->
+  <PropertyGroup>
+    <StaticWebAssetsPrepareForRunDependsOn>
+      $(StaticWebAssetsPrepareForRunDependsOn)
+      CallWriteBlazorToBrowserExtensionBuildBackgroundWorkerFile;
+    </StaticWebAssetsPrepareForRunDependsOn>
+  </PropertyGroup>
+
+  <Target Name="CallWriteBlazorToBrowserExtensionBuildBackgroundWorkerFile"
+          Condition="'$(GenerateBrowserExtensionBackgroundWorker)' == 'true' and '$(BuildBlazorToBrowserExtension)' == 'true'"
+          DependsOnTargets="PrepareForBlazorToBrowserExtensionBackgroundWorkerFile">
+    <CallTarget Targets="WriteBlazorToBrowserExtensionBuildBackgroundWorkerFile"/>
+  </Target>
+
+  <Target Name="CallWriteBlazorToBrowserExtensionPublishBackgroundWorkerFile"
+          AfterTargets="GeneratePublishWasmBootJson"
+          Condition="'$(GenerateBrowserExtensionBackgroundWorker)' == 'true' and '$(BuildBlazorToBrowserExtension)' == 'true'"
+          DependsOnTargets="PrepareForBlazorToBrowserExtensionBackgroundWorkerFile">
+    <CallTarget Targets="WriteBlazorToBrowserExtensionPublishBackgroundWorkerFile"/>
+  </Target>
+
 </Project>

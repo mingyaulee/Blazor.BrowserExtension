@@ -2,6 +2,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <ImportGroup>
+    <Import Project="$(MSBuildThisFileDirectory)Blazor.BrowserExtension.BackgroundWorker.targets" />
     <Import Project="$(MSBuildThisFileDirectory)Blazor.BrowserExtension.Config.targets" />
     <Import Project="$(MSBuildThisFileDirectory)Blazor.BrowserExtension.StaticWebAssets.targets" />
     <Import Project="$(MSBuildThisFileDirectory)Blazor.BrowserExtension.Dependencies.targets" />

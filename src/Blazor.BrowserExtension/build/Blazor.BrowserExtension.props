@@ -5,6 +5,7 @@
     <BrowserExtensionEnvironment Condition="'$(BrowserExtensionEnvironment)' == ''"></BrowserExtensionEnvironment>
     <IncludeBrowserExtensionAssets Condition="'$(IncludeBrowserExtensionAssets)' == ''">true</IncludeBrowserExtensionAssets>
     <BrowserExtensionAssetsPath Condition="'$(BrowserExtensionAssetsPath)' == ''">wwwroot</BrowserExtensionAssetsPath>
+    <GenerateBrowserExtensionBackgroundWorker Condition="'$(GenerateBrowserExtensionBackgroundWorker)' == ''">true</GenerateBrowserExtensionBackgroundWorker>
   </PropertyGroup>
 
 </Project>

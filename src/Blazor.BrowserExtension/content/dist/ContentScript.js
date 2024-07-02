@@ -7,8 +7,15 @@
 
   const blazorBrowserExtension = initializeInternal(config, url, "ContentScript");
 
+  globalThis.importProxy = (module) => {
+    if (module.startsWith(document.baseURI) && blazorBrowserExtension.BrowserExtension) {
+      module = new URL(module.substring(document.baseURI.length), blazorBrowserExtension.BrowserExtension.Url);
+    }
+
+    return import(module);
+  };
+
   await blazorBrowserExtension.BrowserExtension.InitializeContentScriptAsync({
-    IsContentScript: true,
     BlazorBrowserExtension: blazorBrowserExtension
   });
 })();

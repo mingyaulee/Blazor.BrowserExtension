@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Blazor.BrowserExtension.Analyzer": {
+      "commandName": "DebugRoslynComponent",
+      "targetProject": "..\\..\\test\\Blazor.BrowserExtension.IntegrationTest\\Blazor.BrowserExtension.IntegrationTest.csproj"
+    }
+  }
+}

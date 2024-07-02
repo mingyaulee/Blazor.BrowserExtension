@@ -4,6 +4,7 @@
 0. Add `<BrowserExtensionBootstrap>true</BrowserExtensionBootstrap>` under the `<PropertyGroup>` node in your `.csproj` project file.
 0. Build the project.
 0. This should automatically set up the project files to be compatible for building into browser extension and the `BrowserExtensionBootstrap` property is removed from the `.csproj` project file.
+0. Ideally you should be able to repeat these steps countless times. However, if it fails, you can manually set up parts of the project by referring to the steps below.
 
 ## Manual Setting Up
 
@@ -17,7 +18,7 @@ You can set up the project manually as well, if for some reason you encounter an
      "description": "My browser extension built with Blazor WebAssembly",
      "version": "0.1",
      "background": {
-       "service_worker": "BackgroundWorker.js",
+       "service_worker": "content/BackgroundWorker.js",
        "type": "module"
      },
      "content_security_policy": {
@@ -40,27 +41,44 @@ You can set up the project manually as well, if for some reason you encounter an
    @page "/index.html"
    @inherits IndexPage
    ```
-0. Add a `BackgroundWorker.js` file under `wwwroot` directory, with the following content:
-   ```js
-   // Import for the side effect of defining a global 'browser' variable
-   import * as _ from "/content/Blazor.BrowserExtension/lib/browser-polyfill.min.js";
-   
-   browser.runtime.onInstalled.addListener(() => {
-     const indexPageUrl = browser.runtime.getURL("index.html");
-     browser.tabs.create({
-       url: indexPageUrl
-     });
-   });
+0. Add a `BackgroundWorker.cs` class, with the following content.
+   Add `using Blazor.BrowserExtension;` statement if needed.
+   ```csharp
+   public partial class BackgroundWorker : BackgroundWorkerBase
+   {
+       [BackgroundWorkerMain]
+       public override void Main()
+       {
+           WebExtensions.Runtime.OnInstalled.AddListener(OnInstalled);
+       }
+
+       async Task OnInstalled()
+       {
+           var indexPageUrl = await WebExtensions.Runtime.GetURL("index.html");
+           await WebExtensions.Tabs.Create(new()
+           {
+               Url = indexPageUrl
+           });
+       }
+   }
    ```
 0. Add the following into the `Program.cs` file to wrap the `RootComponents` setup.
+   Add `using Blazor.BrowserExtension;` statement if needed.
    ```csharp
    public static async Task Main(string[] args)
    {
        ...
        builder.UseBrowserExtension(browserExtension =>
        {
-           builder.RootComponents.Add<App>("#app");
-           builder.RootComponents.Add<HeadOutlet>("head::after");
+           if (browserExtension.Mode == BrowserExtensionMode.Background)
+           {
+               builder.RootComponents.AddBackgroundWorker<BackgroundWorker>();
+           }
+           else
+           {
+               builder.RootComponents.Add<App>("#app");
+               builder.RootComponents.Add<HeadOutlet>("head::after");
+           }
        });
        ...
    }

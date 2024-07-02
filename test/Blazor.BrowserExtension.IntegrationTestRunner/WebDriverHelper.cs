@@ -36,7 +36,7 @@ namespace Blazor.BrowserExtension.IntegrationTestRunner
             var appId = isContentScript ? "#Blazor_BrowserExtension_IntegrationTest_app" : "#app";
             await Retry(
                 () => (bool)WebDriver.ExecuteScript($"""return document.querySelector("{appId} h3") != null;"""),
-                TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(10));
+                TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(20));
             return WebDriver.FindElement(By.CssSelector($"{appId} h3"))?.Text;
         }
 

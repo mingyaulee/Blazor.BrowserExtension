@@ -15,14 +15,11 @@ export default class BlazorBrowserExtension {
   Modes;
   /** @type {BrowserExtension} */
   BrowserExtension;
-  /** @type {(module: string) => Promise<any>} */
-  ImportJsInitializer;
 
   constructor() {
     this.ImportBrowserPolyfill = true;
     this.StartBlazorBrowserExtension = true;
     this.Modes = null;
     this.BrowserExtension = null;
-    this.ImportJsInitializer = null;
   }
 }

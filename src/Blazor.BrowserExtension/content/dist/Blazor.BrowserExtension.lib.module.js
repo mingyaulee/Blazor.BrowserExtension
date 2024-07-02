@@ -25,7 +25,7 @@ async function beforeStart(options, extensions) {
 
   config = await configRequest.json();
 
-  const blazorBrowserExtension = options.IsContentScript ? options.BlazorBrowserExtension : initializeInternal(config, url, browserExtensionMode);
+  const blazorBrowserExtension = options.BlazorBrowserExtension ?? initializeInternal(config, url, browserExtensionMode);
 
   if (debugMode) {
     blazorBrowserExtension.ImportBrowserPolyfill = false;

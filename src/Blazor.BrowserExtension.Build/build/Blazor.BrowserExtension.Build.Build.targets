@@ -92,8 +92,8 @@
     <Message Importance="normal" Text="  Replacing content of 'blazor.webassembly.js' and 'dotnet.*.js'" />
     <ItemGroup>
       <_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_BlazorJs_FilePath Include="$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_Directory)\blazor.webassembly.js" />
+      <_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_DotNetJs_FilePath Include="$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_Directory)\dotnet.js" />
       <_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_DotNetJs_FilePath Include="$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_Directory)\dotnet.*.js" />
-      <_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_BlazorBootJson_FilePath Include="$(_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_Directory)\blazor.boot.json" />
     </ItemGroup>
     <BlazorToBrowserExtensionReplaceContent Files="@(_BrowserExtension_Project_BuildOutput_BrowserExtension_Framework_BlazorJs_FilePath)"
                                             Replace="@(_BrowserExtension_BlazorJs_FileContentReplacements)" />

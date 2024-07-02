@@ -41,7 +41,7 @@ namespace Blazor.BrowserExtension.IntegrationTestRunner
             }
             catch (Exception exception)
             {
-                throw new NotSupportedException("Failed to create WebDriver.", exception);
+                throw new NotSupportedException("Failed to create WebDriver. Download the latest version from https://googlechromelabs.github.io/chrome-for-testing/\"", exception);
             }
             webDriverHelper = new WebDriverHelper(webDriver);
         }
