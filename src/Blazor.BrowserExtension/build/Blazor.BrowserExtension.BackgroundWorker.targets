@@ -23,7 +23,8 @@
   <!--
     Writes the background worker file in the intermediate build directory and add as StaticWebAsset.
   -->
-  <Target Name="WriteBlazorToBrowserExtensionBuildBackgroundWorkerFile">
+  <Target Name="WriteBlazorToBrowserExtensionBuildBackgroundWorkerFile"
+          Condition="Exists('$(_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerMainJsFile_FilePath)')">
 
     <PropertyGroup>
       <_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerFile_Directory>$(ProjectDir)$(IntermediateOutputPath)browserextension\build</_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerFile_Directory>
@@ -62,7 +63,8 @@
   <!--
     Writes the background worker file in the intermediate publish directory and add as ResolvedFileToPublish.
   -->
-  <Target Name="WriteBlazorToBrowserExtensionPublishBackgroundWorkerFile">
+  <Target Name="WriteBlazorToBrowserExtensionPublishBackgroundWorkerFile"
+          Condition="Exists('$(_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerMainJsFile_FilePath)')">
 
     <PropertyGroup>
       <_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerFile_Directory>$(ProjectDir)$(IntermediateOutputPath)browserextension\publish</_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerFile_Directory>
