@@ -136,7 +136,13 @@ namespace Blazor.BrowserExtension.Analyzer
                 // or
                 // obj.Method1
                 var target = TranslateExpressions(memberAccessExpression.Expression, context);
-                var member = context.GetJsAccessPath(expression, context.GetSymbol(memberAccessExpression)) ?? memberAccessExpression.Name.ToString();
+                var jsAccessPath = context.GetJsAccessPath(expression, context.GetSymbol(memberAccessExpression));
+                if (jsAccessPath is not null && !context.IsJsAccessPath(memberAccessExpression.Expression))
+                {
+                    return jsAccessPath;
+                }
+
+                var member = jsAccessPath ?? memberAccessExpression.Name.ToString();
                 return $"{target}.{member}";
             }
             else if (expression is ArgumentSyntax argument)
@@ -144,7 +150,7 @@ namespace Blazor.BrowserExtension.Analyzer
                 // argument of a method invocation
                 var type = context.GetType(argument.Expression);
                 var translatedArgument = TranslateExpressions(argument.Expression, context);
-                if (!context.IsJsAccessPath(argument.Expression))
+                if (!context.IsJsAccessPath(argument.Expression) && argument.Expression is not LiteralExpressionSyntax)
                 {
                     // Pass to JS during initialization
                     var referenceKey = context.AddReference(translatedArgument, $"({type.ConvertedType}){translatedArgument}");
@@ -241,8 +247,45 @@ namespace Blazor.BrowserExtension.Analyzer
                     return jsAccessPath;
                 }
 
+                var symbolName = GetSymbolFullName(symbol);
+                if (symbolName is not null && SystemTranslations.TryGetValue(symbolName, out var translation))
+                {
+                    JsAccessPathNodes.Add(node);
+                    return translation;
+                }
+
                 return null;
             }
+
+            private static string GetSymbolFullName(ISymbol symbol)
+            {
+                if (symbol is INamedTypeSymbol)
+                {
+                    return $"{symbol.ContainingNamespace}.{symbol.Name}";
+                }
+                else if (symbol is IMethodSymbol methodSymbol)
+                {
+                    return $"{GetSymbolFullName(methodSymbol.ContainingType)}.{methodSymbol.Name}";
+                }
+                else if (symbol is IPropertySymbol propertySymbol)
+                {
+                    return GetSymbolFullName(propertySymbol.Type);
+                }
+
+                return null;
+            }
+
+            private static Dictionary<string, string> SystemTranslations = new()
+            {
+                { "System.Console", "console" },
+                { "System.Console.WriteLine", "log" },
+                { "System.Console.Write", "log" },
+                { "Microsoft.Extensions.Logging.ILogger", "console" },
+                { "Microsoft.Extensions.Logging.LoggerExtensions.LogInformation", "log" },
+                { "Microsoft.Extensions.Logging.LoggerExtensions.LogWarning", "warn" },
+                { "Microsoft.Extensions.Logging.LoggerExtensions.LogError", "error" },
+                { "Microsoft.Extensions.Logging.LoggerExtensions.LogCritical", "error" },
+            };
 
             private static bool TryGetJsAccessPath(IEnumerable<AttributeData> attributes, out string jsAccessPath)
             {
