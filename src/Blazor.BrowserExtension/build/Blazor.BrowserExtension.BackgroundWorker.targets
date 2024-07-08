@@ -13,9 +13,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <BrowserExtensionBackgroundWorkerImportIgnore Include="content/Blazor.BrowserExtension/ContentScript.js" />
-      <BrowserExtensionBackgroundWorkerImportIgnore Include="content/Blazor.BrowserExtension/Core.js" />
-      <BrowserExtensionBackgroundWorkerImportIgnore Include="content/BackgroundWorker.js" />
+      <BrowserExtensionBackgroundWorkerImportIncludeContent Include="content/Blazor.BrowserExtension/lib/browser-polyfill.min.js" />
+      <BrowserExtensionBackgroundWorkerImportIncludeContent Include="content/Blazor.BrowserExtension/lib/decode.min.js" />
+      <BrowserExtensionBackgroundWorkerImportIncludeContent Include="content/Blazor.BrowserExtension/BackgroundWorkerRunner.js" />
+      <BrowserExtensionBackgroundWorkerImportIncludeContent Include="content/Blazor.BrowserExtension/Blazor.BrowserExtension.lib.module.js" />
+      <BrowserExtensionBackgroundWorkerImportIncludeContent Include="content/Blazor.BrowserExtension/CoreInternal.js" />
+      <BrowserExtensionBackgroundWorkerImportIncludeContent Include="content/JsBind.Net/JsBindNet.js" />
     </ItemGroup>
 
   </Target>
@@ -38,7 +41,7 @@
     <Message Importance="normal" Text="Generating background worker file '$(_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerFile_FilePath)'" />
     <BlazorToBrowserExtensionWriteBackgroundWorkerFile BackgroundWorkerMainJsFilePath="$(_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerMainJsFile_FilePath)"
                                                        JsAssets="@(_StaticWebAsset_Build_JsAssets)"
-                                                       IgnoreJsAssets="@(BrowserExtensionBackgroundWorkerImportIgnore)"
+                                                       IncludeContentJsAssets="@(BrowserExtensionBackgroundWorkerImportIncludeContent)"
                                                        ManifestFilePath="$(_BrowserExtension_Project_Assets_ManifestJson_FilePath)"
                                                        FilePath="$(_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerFile_FilePath)" />
 
@@ -79,7 +82,7 @@
     <Message Importance="normal" Text="Generating background worker file '$(_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerFile_FilePath)'" />
     <BlazorToBrowserExtensionWriteBackgroundWorkerFile BackgroundWorkerMainJsFilePath="$(_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerMainJsFile_FilePath)"
                                                        JsAssets="@(_StaticWebAsset_Publish_JsAssets)"
-                                                       IgnoreJsAssets="@(BrowserExtensionBackgroundWorkerImportIgnore)"
+                                                       IncludeContentJsAssets="@(BrowserExtensionBackgroundWorkerImportIncludeContent)"
                                                        ManifestFilePath="$(_BrowserExtension_Project_Assets_ManifestJson_FilePath)"
                                                        FilePath="$(_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerFile_FilePath)" />
 

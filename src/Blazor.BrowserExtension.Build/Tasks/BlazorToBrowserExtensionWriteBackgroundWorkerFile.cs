@@ -17,7 +17,7 @@ namespace Blazor.BrowserExtension.Build.Tasks
         [Required]
         public ITaskItem[] JsAssets { get; set; }
 
-        public string[] IgnoreJsAssets { get; set; }
+        public string[] IncludeContentJsAssets { get; set; }
 
         public string ManifestFilePath { get; set; }
 
@@ -28,7 +28,7 @@ namespace Blazor.BrowserExtension.Build.Tasks
         {
             try
             {
-                var jsImports = GetImports(JsAssets, IgnoreJsAssets);
+                var jsImports = GetImports(JsAssets, IncludeContentJsAssets);
                 if (string.IsNullOrEmpty(BackgroundWorkerMainJsFilePath))
                 {
                     if (!string.IsNullOrEmpty(ManifestFilePath) && ManifestHasBackgroundWorker(ManifestFilePath))
@@ -60,43 +60,45 @@ namespace Blazor.BrowserExtension.Build.Tasks
             }
         }
 
-        private static List<string> GetImports(ITaskItem[] jsAssets, string[] ignoreJsAssets)
+        private static List<string> GetImports(ITaskItem[] jsAssets, string[] includeContentJsAssets)
         {
             var allJsFiles = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            var includeContentJsFiles = new HashSet<string>(includeContentJsAssets, StringComparer.OrdinalIgnoreCase);
             foreach (var item in jsAssets)
             {
                 var relativePath = GetRelativePath(item);
-                if (relativePath.EndsWith(".min.js", StringComparison.OrdinalIgnoreCase))
-                {
-                    allJsFiles.Remove(relativePath.Substring(0, relativePath.Length - ".min.js".Length) + ".js");
-                    allJsFiles.Add(relativePath);
-                }
-                else if (!allJsFiles.Contains(relativePath.Substring(0, relativePath.Length - ".js".Length) + ".min.js"))
+                if (!relativePath.StartsWith("content/") || includeContentJsFiles.Contains(relativePath))
                 {
                     allJsFiles.Add(relativePath);
                 }
             }
 
-            return allJsFiles.Except(ignoreJsAssets).OrderBy(file =>
+            return [.. allJsFiles.OrderBy(file =>
             {
-                if (file.Contains("dotnet.js"))
+                if (file.StartsWith("framework"))
                 {
-                    return 0;
-                }
-                else if (file.Contains("dotnet"))
-                {
-                    return 1;
-                }
-                else if (file.Contains("blazor.webassembly"))
-                {
-                    return 2;
+                    if (file.Contains("dotnet.js"))
+                    {
+                        return 0;
+                    }
+                    else if (file.Contains("dotnet"))
+                    {
+                        return 1;
+                    }
+                    else if (file.Contains("blazor.webassembly"))
+                    {
+                        return 2;
+                    }
+
+                    return 3;
                 }
                 else if (file.Contains("app.js"))
                 {
-                    return 4;
+                    return 5;
                 }
-                return 3;
-            }).ToList();
+
+                return 4;
+            })];
         }
 
         private static string GetRelativePath(ITaskItem item)
