@@ -175,42 +175,55 @@ function defineProxy(key, value) {
   proxies[key] = value;
 }
 
-globalThis.window = ProxyTarget.createProxy("window");
-globalThis.document = ProxyTarget.createProxy("document");
-globalThis.history = ProxyTarget.createProxy("history");
+const requireProxy = globalThis.window === undefined && globalThis.document == undefined;
 
-globalThis.Node = ProxyTarget.createProxy("Node");
-globalThis.Comment = ProxyTarget.createProxy("Comment");
-globalThis.Element = ProxyTarget.createProxy("Element");
-globalThis.HTMLElement = ProxyTarget.createProxy("HTMLElement ");
-globalThis.DocumentFragment = ProxyTarget.createProxy("DocumentFragment");
+if (requireProxy) {
+  globalThis.window = ProxyTarget.createProxy("window");
+  globalThis.document = ProxyTarget.createProxy("document");
+  globalThis.history = ProxyTarget.createProxy("history");
+
+  globalThis.Node = ProxyTarget.createProxy("Node");
+  globalThis.Comment = ProxyTarget.createProxy("Comment");
+  globalThis.Element = ProxyTarget.createProxy("Element");
+  globalThis.HTMLElement = ProxyTarget.createProxy("HTMLElement ");
+  globalThis.DocumentFragment = ProxyTarget.createProxy("DocumentFragment");
+}
 
 let initializePromise;
 let backgroundWorkerInstance;
 
 async function initializeAsync() {
-  // Initialize elements
-  const elements = {
-    "#background": ProxyTarget.createProxy("element(#background)", globalThis.Element),
-    "#blazor-error-ui": ProxyTarget.createProxy("element(#blazor-error-ui)", globalThis.Element)
-  };
-  globalThis.document.querySelector = (selector) => {
-    if (!elements.hasOwnProperty(selector)) {
-      console.error("Unexpected selector " + selector);
-      elements[selector] = ProxyTarget.createProxy(`element(${selector})`, globalThis.Element);
-    }
+  if (requireProxy) {
+    // Initialize elements
+    const elements = {
+      "#background": ProxyTarget.createProxy("element(#background)", globalThis.Element),
+      "#blazor-error-ui": ProxyTarget.createProxy("element(#blazor-error-ui)", globalThis.Element)
+    };
+    globalThis.document.querySelector = (selector) => {
+      if (!elements.hasOwnProperty(selector)) {
+        console.error("Unexpected selector " + selector);
+        elements[selector] = ProxyTarget.createProxy(`element(${selector})`, globalThis.Element);
+      }
 
-    return elements[selector];
-  };
-  defineProxy("element(#background).childNodes", []);
-  defineProxy("element(template).content.querySelectorAll", () => []);
-  defineProxy("element(template).content.firstChild", undefined);
+      return elements[selector];
+    };
+
+    defineProxy("element(#background).childNodes", []);
+    defineProxy("element(template).content.querySelectorAll", () => []);
+    defineProxy("element(template).content.firstChild", undefined);
+  } else {
+    const backgroundElement = globalThis.document.createElement("div");
+    backgroundElement.id = "background";
+    globalThis.document.body.appendChild(backgroundElement);
+  }
 
   const url = (globalThis.browser || globalThis.chrome).runtime.getURL("");
-  // @ts-ignore assign the baseURI to document proxy
-  globalThis.document.baseURI = url;
-  // @ts-ignore assign the activeElement to document proxy
-  globalThis.document.activeElement = elements["#background"];
+  if (requireProxy) {
+    // @ts-ignore assign the baseURI to document proxy
+    globalThis.document.baseURI = url;
+    // @ts-ignore assign the activeElement to document proxy
+    globalThis.document.activeElement = elements["#background"];
+  }
 
   const configRequest = await fetch(`${url}content/browserextension.config.json`);
   const config = await configRequest.json();

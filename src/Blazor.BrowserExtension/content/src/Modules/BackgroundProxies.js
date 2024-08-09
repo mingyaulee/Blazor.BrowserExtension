@@ -173,12 +173,16 @@ export function defineProxy(key, value) {
   proxies[key] = value;
 }
 
-globalThis.window = ProxyTarget.createProxy("window");
-globalThis.document = ProxyTarget.createProxy("document");
-globalThis.history = ProxyTarget.createProxy("history");
+export const requireProxy = globalThis.window === undefined && globalThis.document == undefined;
 
-globalThis.Node = ProxyTarget.createProxy("Node");
-globalThis.Comment = ProxyTarget.createProxy("Comment");
-globalThis.Element = ProxyTarget.createProxy("Element");
-globalThis.HTMLElement = ProxyTarget.createProxy("HTMLElement ");
-globalThis.DocumentFragment = ProxyTarget.createProxy("DocumentFragment");
+if (requireProxy) {
+  globalThis.window = ProxyTarget.createProxy("window");
+  globalThis.document = ProxyTarget.createProxy("document");
+  globalThis.history = ProxyTarget.createProxy("history");
+
+  globalThis.Node = ProxyTarget.createProxy("Node");
+  globalThis.Comment = ProxyTarget.createProxy("Comment");
+  globalThis.Element = ProxyTarget.createProxy("Element");
+  globalThis.HTMLElement = ProxyTarget.createProxy("HTMLElement ");
+  globalThis.DocumentFragment = ProxyTarget.createProxy("DocumentFragment");
+}
