@@ -5,12 +5,12 @@ let initializePromise;
 let backgroundWorkerInstance;
 
 async function initializeAsync() {
+  // Initialize elements
+  const elements = {
+    "#background": ProxyTarget.createProxy("element(#background)", globalThis.Element),
+    "#blazor-error-ui": ProxyTarget.createProxy("element(#blazor-error-ui)", globalThis.Element)
+  };
   if (requireProxy) {
-    // Initialize elements
-    const elements = {
-      "#background": ProxyTarget.createProxy("element(#background)", globalThis.Element),
-      "#blazor-error-ui": ProxyTarget.createProxy("element(#blazor-error-ui)", globalThis.Element)
-    };
     globalThis.document.querySelector = (selector) => {
       if (!elements.hasOwnProperty(selector)) {
         console.error("Unexpected selector " + selector);
