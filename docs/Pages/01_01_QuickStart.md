@@ -3,7 +3,7 @@
 **Installation**
 
 ```shell
-dotnet new --install Blazor.BrowserExtension.Template
+dotnet new install Blazor.BrowserExtension.Template
 ```
 
 **Create a new project**
