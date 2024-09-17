@@ -37,7 +37,7 @@ MockResolvers.Configure(configure =>
 ```
 
 The [WebExtensions.Net page](https://github.com/mingyaulee/WebExtensions.Net) shows more examples of configuring the `MockResolvers`.
-Some APIs have been mocked by default in [WebExtensions.Net `DefaultMockResolver`](https://github.com/mingyaulee/WebExtensions.Net/blob/09eb19608f5310f3d5b1b9b889f8d3378a13eb06/src/WebExtensions.Net/Mock/Resolvers/DefaultMockResolver.cs#L56).
+Some APIs have been mocked by default in [WebExtensions.Net `DefaultMockResolver`](https://github.com/mingyaulee/WebExtensions.Net/blob/3eef452e6e36f3320c7c5a14dc6862223b714a06/src/WebExtensions.Net/Mock/Resolvers/DefaultMockResolver.cs#L55).
 
 > **Important Note**
 >

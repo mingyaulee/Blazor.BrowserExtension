@@ -29,7 +29,7 @@ namespace Blazor.BrowserExtension.Pages
                 }
             }))
             {
-                await WebExtensions.WebRequest.OnBeforeRequest.AddListener(
+                WebExtensions.WebRequest.OnBeforeRequest.AddListener(
                     HandleBeforeRequestChange,
                     new RequestFilter()
                     {

@@ -7,7 +7,7 @@
     {
         await base.OnInitializedAsync();
         // this opens index.html in the extension as a new tab when the background page is loaded
-        var extensionUrl = await WebExtensions.Runtime.GetURL("index.html");
+        var extensionUrl = WebExtensions.Runtime.GetURL("index.html");
         await WebExtensions.Tabs.Create(new CreateProperties
         {
             Url = extensionUrl

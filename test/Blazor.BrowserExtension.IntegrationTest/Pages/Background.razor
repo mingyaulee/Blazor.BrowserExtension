@@ -10,7 +10,7 @@
         await base.OnInitializedAsync();
 
         // Navigate to extension index page on load
-        var extensionUrl = await WebExtensions.Runtime.GetURL("");
+        var extensionUrl = WebExtensions.Runtime.GetURL("");
         await WebExtensions.Tabs.Create(new CreateProperties
         {
             Url = extensionUrl

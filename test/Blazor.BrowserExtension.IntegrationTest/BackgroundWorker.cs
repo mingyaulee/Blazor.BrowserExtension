@@ -12,7 +12,7 @@ namespace Blazor.BrowserExtension.IntegrationTest
 
         async Task OnInstalled()
         {
-            var indexPageUrl = await WebExtensions.Runtime.GetURL("index.html");
+            var indexPageUrl = WebExtensions.Runtime.GetURL("index.html");
             await WebExtensions.Tabs.Create(new()
             {
                 Url = indexPageUrl

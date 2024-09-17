@@ -16,7 +16,7 @@ When you create a new Razor page, add `@inherits BasePage` on top to get access 
     string optionsPageUrl = null;
     async Task GetOptionsPageUrl()
     {
-        optionsPageUrl = await WebExtensions.Runtime.GetURL("options.html");
+        optionsPageUrl = WebExtensions.Runtime.GetURL("options.html");
     }
 }
 ```
