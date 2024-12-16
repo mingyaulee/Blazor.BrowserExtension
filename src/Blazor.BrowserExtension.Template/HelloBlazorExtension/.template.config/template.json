@@ -35,10 +35,14 @@
         {
           "choice": "net8.0",
           "description": "Target .NET 8.0"
+        },
+        {
+          "choice": "net9.0",
+          "description": "Target .NET 9.0"
         }
       ],
-      "defaultValue": "net8.0",
-      "replaces": "net8.0"
+      "defaultValue": "net9.0",
+      "replaces": "net9.0"
     },
     "ManifestVersion": {
       "type": "parameter",
@@ -63,6 +67,10 @@
     "IsNet7": {
       "type": "computed",
       "value": "Framework == \"net7.0\""
+    },
+    "IsNet8": {
+      "type": "computed",
+      "value": "Framework == \"net8.0\""
     }
   },
   "sources": [
