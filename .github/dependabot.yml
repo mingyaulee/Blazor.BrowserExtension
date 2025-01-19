@@ -8,7 +8,10 @@ updates:
     open-pull-requests-limit: 5
   # Check for updates to NuGet packages every week
   - package-ecosystem: "nuget"
-    directory: "/test/Blazor.BrowserExtension.IntegrationTest/"
+    directories:
+    - "/test/Blazor.BrowserExtension.IntegrationTest/"
+    - "/test/Blazor.BrowserExtension.IntegrationTestRunner/"
+    - "/test/Blazor.BrowserExtension.Build.Test/"
     allow:
     - dependency-type: "direct"
     schedule:
@@ -17,25 +20,7 @@ updates:
     groups:
       aspnetcore:
         patterns: [ Microsoft.AspNetCore.* ]
-  - package-ecosystem: "nuget"
-    directory: "/test/Blazor.BrowserExtension.IntegrationTestRunner/"
-    allow:
-    - dependency-type: "direct"
-    schedule:
-      interval: "weekly"
-    open-pull-requests-limit: 5
-    groups:
       mstest:
         patterns: [ MSTest.* ]
-      xunit:
-        patterns: [ xunit, xunit.* ]
-  - package-ecosystem: "nuget"
-    directory: "/test/Blazor.BrowserExtension.Build.Test/"
-    allow:
-    - dependency-type: "direct"
-    schedule:
-      interval: "weekly"
-    open-pull-requests-limit: 5
-    groups:
       xunit:
         patterns: [ xunit, xunit.* ]
