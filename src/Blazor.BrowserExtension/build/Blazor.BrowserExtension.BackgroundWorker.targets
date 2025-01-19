@@ -46,7 +46,7 @@
                                                        FilePath="$(_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerFile_FilePath)" />
 
     <ItemGroup>
-      <StaticWebAsset Include="$(_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerFile_FilePath)">
+      <_BrowserExtension_StaticWebAssets_BackgroundWorkerFile Include="$(_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerFile_FilePath)">
         <SourceType>Computed</SourceType>
         <SourceId>Blazor.BrowserExtension</SourceId>
         <ContentRoot>$(_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerFile_Directory)</ContentRoot>
@@ -58,7 +58,15 @@
         <AssetRole>Primary</AssetRole>
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         <CopyToPublishDirectory>Never</CopyToPublishDirectory>
-      </StaticWebAsset>
+      </_BrowserExtension_StaticWebAssets_BackgroundWorkerFile>
+    </ItemGroup>
+
+    <DefineStaticWebAssets CandidateAssets="@(_BrowserExtension_StaticWebAssets_BackgroundWorkerFile)">
+      <Output TaskParameter="Assets" ItemName="_BrowserExtension_StaticWebAssets_BackgroundWorkerFile_Processed" />
+    </DefineStaticWebAssets>
+
+    <ItemGroup>
+      <StaticWebAsset Include="@(_BrowserExtension_StaticWebAssets_BackgroundWorkerFile_Processed)" />
     </ItemGroup>
 
   </Target>
