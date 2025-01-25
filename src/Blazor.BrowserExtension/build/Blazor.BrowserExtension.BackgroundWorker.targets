@@ -36,6 +36,7 @@
 
     <ItemGroup>
       <_StaticWebAsset_Build_JsAssets Include="@(StaticWebAsset)" Condition="$([System.String]::new('%(RelativePath)').EndsWith('.js'))" />
+      <_StaticWebAsset_Build_JsAssets Include="@(WasmStaticWebAsset)" Condition="$([System.String]::new('%(RelativePath)').EndsWith('.js'))" />
     </ItemGroup>
 
     <Message Importance="normal" Text="Generating background worker file '$(_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerFile_FilePath)'" />

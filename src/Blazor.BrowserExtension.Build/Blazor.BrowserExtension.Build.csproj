@@ -61,4 +61,8 @@
     <ProjectReference Include="..\Blazor.BrowserExtension.Analyzer\Blazor.BrowserExtension.Analyzer.csproj" PrivateAssets="all" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="Blazor.BrowserExtension.Build.Test" />
+  </ItemGroup>
+
 </Project>

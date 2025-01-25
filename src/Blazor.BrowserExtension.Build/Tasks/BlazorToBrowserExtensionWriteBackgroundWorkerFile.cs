@@ -1,4 +1,5 @@
-﻿using Microsoft.Build.Framework;
+﻿using Blazor.BrowserExtension.Build.Tasks.Helpers;
+using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using System;
 using System.Collections.Generic;
@@ -104,7 +105,7 @@ namespace Blazor.BrowserExtension.Build.Tasks
         private static string GetRelativePath(ITaskItem item)
         {
             var basePath = item.GetMetadata("BasePath");
-            var relativePath = item.GetMetadata("RelativePath");
+            var relativePath = FingerprintHelper.RemoveFingerprintSegment(item.GetMetadata("RelativePath"));
             return string.Join("/", Path.Combine(basePath, relativePath).Split(new[] { '/', '\\' }, StringSplitOptions.RemoveEmptyEntries).Select(part => part.TrimStart('_')));
         }
 
