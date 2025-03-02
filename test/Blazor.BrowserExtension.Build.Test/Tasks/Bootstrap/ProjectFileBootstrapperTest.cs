@@ -8,13 +8,13 @@ namespace Blazor.BrowserExtension.Build.Test.Tasks.Bootstrap
             <Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
               <PropertyGroup>
-                <TargetFramework>net8.0</TargetFramework>
+                <TargetFramework>net9.0</TargetFramework>
                 <BrowserExtensionBootstrap>true</BrowserExtensionBootstrap>
               </PropertyGroup>
 
               <ItemGroup>
-                <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.2" />
-                <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.2" PrivateAssets="all" />
+                <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.2" />
+                <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="9.0.2" PrivateAssets="all" />
               </ItemGroup>
 
             </Project>
@@ -24,12 +24,12 @@ namespace Blazor.BrowserExtension.Build.Test.Tasks.Bootstrap
             <Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
             
               <PropertyGroup>
-                <TargetFramework>net8.0</TargetFramework>
+                <TargetFramework>net9.0</TargetFramework>
               </PropertyGroup>
             
               <ItemGroup>
-                <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.2" />
-                <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.2" PrivateAssets="all" />
+                <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.2" />
+                <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="9.0.2" PrivateAssets="all" />
               </ItemGroup>
             
             </Project>

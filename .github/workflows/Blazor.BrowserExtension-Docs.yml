@@ -24,7 +24,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 8.0.x
+        dotnet-version: 9.0.x
     - name: Restore dependencies
       run: dotnet restore docs
     - name: Build
@@ -36,10 +36,10 @@ jobs:
            cat <<EOF > $PWD/docs/bin/BuildOutput/Docs.runtimeconfig.json
            {
              "runtimeOptions": {
-               "tfm": "net8.0",
+               "tfm": "net9.0",
                "framework": {
                  "name": "Microsoft.AspNetCore.App",
-                 "version": "8.0.1"
+                 "version": "9.0.0"
                },
                "rollForwardOnNoCandidateFx": 2
              }

@@ -1,7 +1,7 @@
 ﻿# Publishing the extension
 
 1. Run the `dotnet publish` command to publish the extension.
-0. The extension output is in the `bin/Release/net8.0/publish/browserextension` directory.
+0. The extension output is in the `bin/Release/net9.0/publish/browserextension` directory.
 0. The contents of this directory should be used when packing your extension. The contents can also be loaded unpacked the same way as the build output.
 
 ## Packing the extension

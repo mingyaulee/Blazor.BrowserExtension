@@ -13,14 +13,14 @@ The following MSBuild properties can be specified in your `.csproj` project file
 | BrowserExtensionAssetsPath               | `wwwroot`                                                                                                        | The root directory of the browser extension assets.                                                |
 | BrowserExtensionOutputPath               | `browserextension`                                                                                               | The directory of the build/publish output.                                                         |
 | BrowserExtensionRoutingEntryFile         | `index.html`                                                                                                     | The HTML entry file for the Blazor application.                                                    |
-| BrowserExtensionEnableCompression        | .Net 8: `$(CompressionEnabled)`<br />.Net 6 and .Net 7: `$(BlazorEnableCompression)`<br />Blazor default: `true` | **When published**<br />If set to `true`, the .br compressed files will be loaded instead of .dll. |
+| BrowserExtensionEnableCompression        | `$(CompressionEnabled)`<br />Blazor default: `true` | **When published**<br />If set to `true`, the .br compressed files will be loaded instead of .dll. |
 
 
 **Add property to `.csproj` project file**
 
 ```xml
 <PropertyGroup>
-  <TargetFramework>net8.0</TargetFramework>
+  <TargetFramework>net9.0</TargetFramework>
   <BrowserExtensionEnvironment>Development</BrowserExtensionEnvironment>
 </PropertyGroup>
 ```

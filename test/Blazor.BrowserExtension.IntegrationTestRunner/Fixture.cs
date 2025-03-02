@@ -55,7 +55,7 @@ namespace Blazor.BrowserExtension.IntegrationTestRunner
 #else
             var configuration = "release";
 #endif
-            return $"{solutionDirectory}\\test\\Blazor.BrowserExtension.IntegrationTest\\bin\\{configuration}\\net8.0\\browserextension";
+            return $"{solutionDirectory}\\test\\Blazor.BrowserExtension.IntegrationTest\\bin\\{configuration}\\net9.0\\browserextension";
         }
 
         private static ChromeDriver GetWebDriver(string driverPath, string extensionPath)

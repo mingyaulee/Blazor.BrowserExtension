@@ -5,9 +5,8 @@
     <!--
       The target 'ResolveRazorComponentInputs' resolves the item group RazorComponent.
       Source:
-      - Current/.Net 8 https://github.com/dotnet/sdk/blob/main/src/RazorSdk/Targets/Sdk.Razor.CurrentVersion.targets
-      - .Net 7 https://github.com/dotnet/sdk/blob/release/7.0.4xx/src/RazorSdk/Targets/Sdk.Razor.CurrentVersion.targets
-      - .Net 6 https://github.com/dotnet/sdk/blob/release/6.0.4xx/src/RazorSdk/Targets/Sdk.Razor.CurrentVersion.targets
+      - .Net 9 https://github.com/dotnet/sdk/blob/v9.0.200/src/RazorSdk/Targets/Sdk.Razor.CurrentVersion.targets
+      - .Net 8 https://github.com/dotnet/sdk/blob/v8.0.406/src/RazorSdk/Targets/Sdk.Razor.CurrentVersion.targets
     -->
     <_ConvertBlazorToBrowserExtensionDependsOn>
       DefineBlazorToBrowserExtensionFrameworkJsFileContentReplacements;
@@ -41,7 +40,8 @@
   <!-- Compression -->
   <!--
       Source:
-      - .Net 8 https://github.com/dotnet/sdk/blob/release/8.0.3xx/src/StaticWebAssetsSdk/Targets/Microsoft.NET.Sdk.StaticWebAssets.Compression.targets
+      - .Net 9 https://github.com/dotnet/sdk/blob/v9.0.200/src/StaticWebAssetsSdk/Targets/Microsoft.NET.Sdk.StaticWebAssets.Compression.targets
+      - .Net 8 https://github.com/dotnet/sdk/blob/v8.0.406/src/StaticWebAssetsSdk/Targets/Microsoft.NET.Sdk.StaticWebAssets.Compression.targets
     -->
   <PropertyGroup>
     <ResolveCompressedFilesDependsOn>$(ResolveCompressedFilesDependsOn);BeforeBlazorToBrowserExtensionCompression</ResolveCompressedFilesDependsOn>
@@ -51,21 +51,11 @@
   <!--
       The target '_CompressFilesForPublish' compresses the files during publish and we attempt to make publishing faster by removing unnecessary files before compression.
       Source:
-      - .Net 8 https://github.com/dotnet/sdk/blob/release/8.0.3xx/src/StaticWebAssetsSdk/Targets/Microsoft.NET.Sdk.StaticWebAssets.Compression.targets
+      - .Net 9 https://github.com/dotnet/sdk/blob/v9.0.200/src/StaticWebAssetsSdk/Targets/Microsoft.NET.Sdk.StaticWebAssets.Compression.targets
+      - .Net 8 https://github.com/dotnet/sdk/blob/v8.0.406/src/StaticWebAssetsSdk/Targets/Microsoft.NET.Sdk.StaticWebAssets.Compression.targets
     -->
-  <Target Name="CallProcessBlazorToBrowserExtensionPublishFilesNet8"
+  <Target Name="CallProcessBlazorToBrowserExtensionPublishFiles"
           AfterTargets="_CompressFilesForPublish">
-    <CallTarget Targets="ProcessBlazorToBrowserExtensionPublishFiles"/>
-  </Target>
-
-  <!--
-      The target '_BlazorCompressPublishFiles' compresses the files during publish and we attempt to make publishing faster by removing unnecessary files from StaticWebAsset item group.
-      Source:
-      - .Net 7 https://github.com/dotnet/sdk/blob/release/7.0.4xx/src/BlazorWasmSdk/Targets/Microsoft.NET.Sdk.BlazorWebAssembly.6_0.targets
-      - .Net 6 https://github.com/dotnet/sdk/blob/release/6.0.4xx/src/BlazorWasmSdk/Targets/Microsoft.NET.Sdk.BlazorWebAssembly.6_0.targets
-    -->
-  <Target Name="CallProcessBlazorToBrowserExtensionPublishFilesNet7"
-          AfterTargets="_BlazorCompressPublishFiles">
     <CallTarget Targets="ProcessBlazorToBrowserExtensionPublishFiles"/>
   </Target>
 

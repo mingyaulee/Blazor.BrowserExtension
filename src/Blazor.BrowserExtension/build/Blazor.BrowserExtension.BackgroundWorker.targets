@@ -62,12 +62,19 @@
       </_BrowserExtension_StaticWebAssets_BackgroundWorkerFile>
     </ItemGroup>
 
-    <DefineStaticWebAssets CandidateAssets="@(_BrowserExtension_StaticWebAssets_BackgroundWorkerFile)">
+    <DefineStaticWebAssets CandidateAssets="@(_BrowserExtension_StaticWebAssets_BackgroundWorkerFile)" FingerprintCandidates="false">
       <Output TaskParameter="Assets" ItemName="_BrowserExtension_StaticWebAssets_BackgroundWorkerFile_Processed" />
     </DefineStaticWebAssets>
 
+    <DefineStaticWebAssetEndpoints CandidateAssets="@(_BrowserExtension_StaticWebAssets_BackgroundWorkerFile_Processed)"
+                                   ExistingEndpoints="@(StaticWebAssetEndpoint)" ContentTypeMappings="@(StaticWebAssetContentTypeMapping)"
+                                   Condition="'$(TargetFramework)' != 'net8.0'">
+      <Output TaskParameter="Endpoints" ItemName="_BrowserExtension_StaticWebAssets_BackgroundWorkerFile_Endpoint" />
+    </DefineStaticWebAssetEndpoints>
+
     <ItemGroup>
       <StaticWebAsset Include="@(_BrowserExtension_StaticWebAssets_BackgroundWorkerFile_Processed)" />
+      <StaticWebAssetEndpoint Include="@(_BrowserExtension_StaticWebAssets_BackgroundWorkerFile_Endpoint)" />
     </ItemGroup>
 
   </Target>

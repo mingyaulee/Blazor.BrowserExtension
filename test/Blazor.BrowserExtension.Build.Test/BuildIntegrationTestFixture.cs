@@ -66,13 +66,13 @@ namespace Blazor.BrowserExtension.Build.Test
 
         public Task<WebDriverExtensionHelper> LoadExtensionBuildOutput(string testProjectName)
         {
-            var extensionPath = Path.Combine(GetTestProjectDirectory(testProjectName), "bin", "Debug", "net8.0", "browserextension");
+            var extensionPath = Path.Combine(GetTestProjectDirectory(testProjectName), "bin", "Debug", "net9.0", "browserextension");
             return LoadExtension(extensionPath);
         }
 
         public Task<WebDriverExtensionHelper> LoadExtensionPublishOutput(string testProjectName)
         {
-            var extensionPath = Path.Combine(GetTestProjectDirectory(testProjectName), "bin", "Release", "net8.0", "publish", "browserextension");
+            var extensionPath = Path.Combine(GetTestProjectDirectory(testProjectName), "bin", "Release", "net9.0", "publish", "browserextension");
             return LoadExtension(extensionPath);
         }
 

@@ -22,11 +22,11 @@ namespace Blazor.BrowserExtension.Pages
             prefixUri = WebAssemblyHostEnvironment.BaseAddress;
             if (await WebExtensions.Permissions.Contains(new AnyPermissions()
             {
-                Permissions = new Permission[]
-                {
-                    new OptionalPermission("webRequest"),
-                    new OptionalPermission("webRequestBlocking")
-                }
+                Permissions =
+                [
+                    new((PermissionNoPrompt)OptionalPermissionNoPrompt.WebRequest),
+                    new((PermissionNoPrompt)OptionalPermissionNoPrompt.WebRequestBlocking)
+                ]
             }))
             {
                 WebExtensions.WebRequest.OnBeforeRequest.AddListener(
@@ -60,7 +60,6 @@ namespace Blazor.BrowserExtension.Pages
             return null;
         }
 
-#if NET7_0_OR_GREATER
         private static bool IsStaticFile(string url)
         {
             return GetStaticFileRegex().IsMatch(url);
@@ -68,11 +67,5 @@ namespace Blazor.BrowserExtension.Pages
 
         [GeneratedRegex(@"\.\w{2,5}(\?.+)?$", RegexOptions.IgnoreCase)]
         private static partial Regex GetStaticFileRegex();
-#else
-        private static bool IsStaticFile(string url)
-        {
-            return Regex.IsMatch(url, @"\.\w{2,5}(\?.+)?$");
-        }
-#endif
 }
 }

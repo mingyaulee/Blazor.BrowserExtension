@@ -42,19 +42,6 @@
       </_BrowserExtension_Project_PublishOutput_BrowserExtension_FilesToCopy>
     </ItemGroup>
 
-    <!-- TODO: To remove this custom dotnet runtime when .Net 7.0 support is removed -->
-    <Message Importance="normal" Text="  Replacing 'dotnet.*.js' with custom CSP compliant version" Condition="'$(TargetFramework)' == 'net7.0'" />
-    <PropertyGroup>
-      <_BrowserExtension_Package_Contents_Directory>$(MSBuildThisFileDirectory)..\content</_BrowserExtension_Package_Contents_Directory>
-      <_BrowserExtension_Package_Contents_DotNet70Js_FilePath>$(_BrowserExtension_Package_Contents_Directory)\dotnet-7.0.js</_BrowserExtension_Package_Contents_DotNet70Js_FilePath>
-    </PropertyGroup>
-    <ItemGroup>
-      <_BrowserExtension_Project_PublishOutput_BrowserExtension_FilesToCopy Include="$(_BrowserExtension_Package_Contents_DotNet70Js_FilePath)"
-                                                                          Condition="'$(TargetFramework)' == 'net7.0'">
-        <CopyToRelativeDirectory>framework</CopyToRelativeDirectory>
-      </_BrowserExtension_Project_PublishOutput_BrowserExtension_FilesToCopy>
-    </ItemGroup>
-
     <!-- Copy files -->
     <Message Importance="normal" Text="  Copying files to '$(_BrowserExtension_Project_PublishOutput_BrowserExtension_Directory)'" />
     <Copy SourceFiles="@(_BrowserExtension_Project_PublishOutput_BrowserExtension_FilesToCopy)"

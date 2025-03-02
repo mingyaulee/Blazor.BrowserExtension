@@ -6,16 +6,11 @@ At the moment, Chromium based browsers (Chrome & Edge) have support for the mani
 
 Firefox's implementation has slight differences with Chromium based browsers in the [manifest format](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json).
 
-> **Important Note**
->
-> - .Net 6 is not supported for manifest V3.
-> - We are using a custom version of `dotnet.js` runtime to overcome the CSP compliance issue in .Net 7.
-> - .Net 8 and above is CSP compliant and is recommended for new projects.
 
 ## Migrate from Manifest V2 to V3
 
 1. Update the `Blazor.BrowserExtension` NuGet package version to the latest version.
-0. Update target framework to `net8.0` and all .Net packages to .Net 8.
+0. Update target framework to `net9.0` and all .Net packages to .Net 9.
 0. Update the `manifest.json` file
    - Update `manifest_version`
      ```json

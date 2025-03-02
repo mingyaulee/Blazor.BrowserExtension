@@ -26,9 +26,8 @@
       <!-- StaticWebAssets
         The StaticWebAssets manifest is created by the dotnet SDK and read by the DevServer.
         Source:
-        - Current/.Net 8 https://github.com/dotnet/aspnetcore/blob/main/src/Components/WebAssembly/DevServer/src/Server/Program.cs
-        - .Net 7 https://github.com/dotnet/aspnetcore/blob/v7.0.12/src/Components/WebAssembly/DevServer/src/Server/Program.cs
-        - .Net 6 https://github.com/dotnet/aspnetcore/blob/v6.0.23/src/Components/WebAssembly/DevServer/src/Server/Program.cs
+        - .Net 9 https://github.com/dotnet/aspnetcore/blob/v9.0.2/src/Components/WebAssembly/DevServer/src/Server/Program.cs
+        - .Net 8 https://github.com/dotnet/aspnetcore/blob/v8.0.13/src/Components/WebAssembly/DevServer/src/Server/Program.cs
       -->
       <_BrowserExtension_Project_BuildOutput_StaticWebAssets_Manifest_FilePath>$(TargetDir)$(ProjectName).staticwebassets.runtime.json</_BrowserExtension_Project_BuildOutput_StaticWebAssets_Manifest_FilePath>
     </PropertyGroup>
@@ -49,19 +48,6 @@
     <ItemGroup>
       <_BrowserExtension_Project_BuildOutput_BrowserExtension_FilesToCopy Include="@(_BrowserExtension_Project_BuildOutput_Assets_FilesToCopy)">
         <CopyToRelativeDirectory>%(_BrowserExtension_Project_BuildOutput_Assets_FilesToCopy.ContentRelativeDirectory)</CopyToRelativeDirectory>
-      </_BrowserExtension_Project_BuildOutput_BrowserExtension_FilesToCopy>
-    </ItemGroup>
-
-    <!-- TODO: To remove this custom dotnet runtime when .Net 7.0 support is removed -->
-    <Message Importance="normal" Text="  Replacing 'dotnet.*.js' with custom CSP compliant version" Condition="'$(TargetFramework)' == 'net7.0'" />
-    <PropertyGroup>
-      <_BrowserExtension_Package_Contents_Directory>$(MSBuildThisFileDirectory)..\content</_BrowserExtension_Package_Contents_Directory>
-      <_BrowserExtension_Package_Contents_DotNet70Js_FilePath>$(_BrowserExtension_Package_Contents_Directory)\dotnet-7.0.js</_BrowserExtension_Package_Contents_DotNet70Js_FilePath>
-    </PropertyGroup>
-    <ItemGroup>
-      <_BrowserExtension_Project_BuildOutput_BrowserExtension_FilesToCopy Include="$(_BrowserExtension_Package_Contents_DotNet70Js_FilePath)"
-                                                                          Condition="'$(TargetFramework)' == 'net7.0'">
-        <CopyToRelativeDirectory>framework</CopyToRelativeDirectory>
       </_BrowserExtension_Project_BuildOutput_BrowserExtension_FilesToCopy>
     </ItemGroup>
 
