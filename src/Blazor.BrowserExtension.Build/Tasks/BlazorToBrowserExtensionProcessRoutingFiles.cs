@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 
 namespace Blazor.BrowserExtension.Build.Tasks
 {
-    public class BlazorToBrowserExtensionProcessRoutingFiles : Task
+    public partial class BlazorToBrowserExtensionProcessRoutingFiles : Task
     {
         private const string LogPrefix = "    ";
 
@@ -80,9 +80,16 @@ namespace Blazor.BrowserExtension.Build.Tasks
             }
         }
 
+
+#if NETFRAMEWORK
+        private static Regex GetRouteRegex() => new(@"@page\s+""(?'route'[^""]+)");
+#else
+        [GeneratedRegex(@"@page\s+""(?'route'[^""]+)")]
+        private static partial Regex GetRouteRegex();
+#endif
         private static string ParsePageRoute(string pageDirective)
         {
-            var match = Regex.Match(pageDirective, @"@page\s+""(?'route'[^""]+)");
+            var match = GetRouteRegex().Match(pageDirective);
             if (match.Success && match.Groups["route"].Success)
             {
                 return match.Groups["route"].Value.TrimStart('/');
