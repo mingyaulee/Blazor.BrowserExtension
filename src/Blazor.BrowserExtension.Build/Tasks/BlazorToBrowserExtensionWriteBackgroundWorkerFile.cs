@@ -101,11 +101,12 @@ namespace Blazor.BrowserExtension.Build.Tasks
             })];
         }
 
+        static readonly char[] PathSeparators = ['/', '\\'];
         private static string GetRelativePath(ITaskItem item)
         {
             var basePath = item.GetMetadata("BasePath");
             var relativePath = item.GetMetadata("RelativePath");
-            return string.Join("/", Path.Combine(basePath, relativePath).Split(new[] { '/', '\\' }, StringSplitOptions.RemoveEmptyEntries).Select(part => part.TrimStart('_')));
+            return string.Join("/", Path.Combine(basePath, relativePath).Split(PathSeparators, StringSplitOptions.RemoveEmptyEntries).Select(part => part.TrimStart('_')));
         }
 
         private static bool ManifestHasBackgroundWorker(string manifestFilePath)
