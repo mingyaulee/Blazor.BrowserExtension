@@ -42,10 +42,6 @@
       "datatype": "choice",
       "choices": [
         {
-          "choice": "2",
-          "description": "Manifest V2 (Deprecated)"
-        },
-        {
           "choice": "3",
           "description": "Manifest V3"
         }
@@ -62,26 +58,8 @@
       "source": "./",
       "target": "./",
       "include": [ "**/*" ],
-      "exclude": [ ".template.config/**/*", "wwwroot/manifestV2.json" ],
-      "modifiers": [
-        {
-          "exclude": [ "Pages/Background.razor" ],
-          "condition": "ManifestVersion == \"3\""
-        },
-        {
-          "exclude": [ "BackgroundWorker.cs" ],
-          "condition": "ManifestVersion == \"2\""
-        }
-      ]
-    },
-    {
-      "source": "./wwwroot/",
-      "target": "./wwwroot/",
-      "include": [ "manifestV2.json" ],
-      "rename": {
-        "manifestV2.json": "manifest.json"
-      },
-      "condition": "ManifestVersion == \"2\""
+      "exclude": [ ".template.config/**/*" ],
+      "modifiers": []
     }
   ]
 }

@@ -4,8 +4,6 @@ Content scripts can be used to inject your Blazor application into any open brow
 
 Add the following to the `manifest.json`
 
-**Manifest V3**
-
 ```json
 "content_scripts": [
   {
@@ -23,21 +21,6 @@ Add the following to the `manifest.json`
     ...
   }
 ]
-```
-
-**Manifest V2**
-```json
-"content_scripts": [
-  {
-    "matches": [ "*://*/*" ],
-    "js": [ "content/Blazor.BrowserExtension/ContentScript.js" ]
-  }
-],
-...
-"web_accessible_resources": [
-  ...
-  "app.js"
-],
 ```
 
 > **Tips**

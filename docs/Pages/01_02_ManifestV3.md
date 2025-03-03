@@ -1,5 +1,7 @@
 # Manifest V3 is supported
 
+> Manifest V2 is deprecated in Chromium based browsers and should not be used in new projects.
+
 What is Manifest V3? Read more about manifest V3 [here](https://developer.chrome.com/docs/extensions/develop/migrate/what-is-mv3).
 
 At the moment, Chromium based browsers (Chrome & Edge) have support for the manifest V3 specification and manifest V2 is deprecated.
