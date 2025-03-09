@@ -9,6 +9,7 @@
       - .Net 8 https://github.com/dotnet/sdk/blob/v8.0.406/src/RazorSdk/Targets/Sdk.Razor.CurrentVersion.targets
     -->
     <_ConvertBlazorToBrowserExtensionDependsOn>
+      PrepareForBlazorToBrowserExtension;
       DefineBlazorToBrowserExtensionFrameworkJsFileContentReplacements;
       ResolveRazorComponentInputs
     </_ConvertBlazorToBrowserExtensionDependsOn>
@@ -64,6 +65,5 @@
           AfterTargets="AfterClean">
     <CallTarget Targets="CleanBlazorBrowserExtension"/>
   </Target>
-
 
 </Project>

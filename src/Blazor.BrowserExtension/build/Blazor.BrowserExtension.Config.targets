@@ -35,7 +35,7 @@
   <Target Name="WriteBlazorToBrowserExtensionBuildConfigFile">
 
     <PropertyGroup>
-      <_BrowserExtension_Project_IntermediateOutput_ConfigFile_Directory>$(ProjectDir)$(IntermediateOutputPath)browserextension\build</_BrowserExtension_Project_IntermediateOutput_ConfigFile_Directory>
+      <_BrowserExtension_Project_IntermediateOutput_ConfigFile_Directory>$(_BrowserExtension_Project_IntermediateOutput_Directory)browserextension\build</_BrowserExtension_Project_IntermediateOutput_ConfigFile_Directory>
       <_BrowserExtension_Project_IntermediateOutput_ConfigFile_FilePath>$(_BrowserExtension_Project_IntermediateOutput_ConfigFile_Directory)\browserextension.config.json</_BrowserExtension_Project_IntermediateOutput_ConfigFile_FilePath>
     </PropertyGroup>
 
@@ -89,7 +89,7 @@
   <Target Name="WriteBlazorToBrowserExtensionPublishConfigFile">
 
     <PropertyGroup>
-      <_BrowserExtension_Project_IntermediateOutput_ConfigFile_Directory>$(ProjectDir)$(IntermediateOutputPath)browserextension\publish</_BrowserExtension_Project_IntermediateOutput_ConfigFile_Directory>
+      <_BrowserExtension_Project_IntermediateOutput_ConfigFile_Directory>$(_BrowserExtension_Project_IntermediateOutput_Directory)browserextension\publish</_BrowserExtension_Project_IntermediateOutput_ConfigFile_Directory>
       <_BrowserExtension_Project_IntermediateOutput_ConfigFile_FilePath>$(_BrowserExtension_Project_IntermediateOutput_ConfigFile_Directory)\browserextension.config.json</_BrowserExtension_Project_IntermediateOutput_ConfigFile_FilePath>
     </PropertyGroup>
 

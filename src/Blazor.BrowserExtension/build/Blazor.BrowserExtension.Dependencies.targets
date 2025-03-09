@@ -3,6 +3,11 @@
 
   <!-- Config -->
   <PropertyGroup>
+    <_ConvertBlazorToBrowserExtensionConfigDependsOn>
+      PrepareForBlazorToBrowserExtension;
+      DefineBlazorToBrowserExtensionConfig
+    </_ConvertBlazorToBrowserExtensionConfigDependsOn>
+
     <ResolveStaticWebAssetsInputsDependsOn>
       $(ResolveStaticWebAssetsInputsDependsOn);
       CallWriteBlazorToBrowserExtensionBuildConfigFile;
@@ -11,19 +16,24 @@
 
   <Target Name="CallWriteBlazorToBrowserExtensionBuildConfigFile"
           Condition="'$(IncludeBrowserExtensionAssets)' == 'true' and '$(BuildBlazorToBrowserExtension)' == 'true'"
-          DependsOnTargets="DefineBlazorToBrowserExtensionConfig">
+          DependsOnTargets="$(_ConvertBlazorToBrowserExtensionConfigDependsOn)">
     <CallTarget Targets="WriteBlazorToBrowserExtensionBuildConfigFile"/>
   </Target>
 
   <Target Name="CallWriteBlazorToBrowserExtensionPublishConfigFile"
           BeforeTargets="BeforePublish"
           Condition="'$(IncludeBrowserExtensionAssets)' == 'true' and '$(BuildBlazorToBrowserExtension)' == 'true'"
-          DependsOnTargets="DefineBlazorToBrowserExtensionConfig">
+          DependsOnTargets="$(_ConvertBlazorToBrowserExtensionConfigDependsOn)">
     <CallTarget Targets="WriteBlazorToBrowserExtensionPublishConfigFile"/>
   </Target>
 
   <!-- Background Worker -->
   <PropertyGroup>
+    <_ConvertBlazorToBrowserExtensionBackgroundWorkerDependsOn>
+      PrepareForBlazorToBrowserExtension;
+      PrepareForBlazorToBrowserExtensionBackgroundWorkerFile
+    </_ConvertBlazorToBrowserExtensionBackgroundWorkerDependsOn>
+
     <StaticWebAssetsPrepareForRunDependsOn>
       $(StaticWebAssetsPrepareForRunDependsOn)
       CallWriteBlazorToBrowserExtensionBuildBackgroundWorkerFile;
@@ -32,14 +42,14 @@
 
   <Target Name="CallWriteBlazorToBrowserExtensionBuildBackgroundWorkerFile"
           Condition="'$(GenerateBrowserExtensionBackgroundWorker)' == 'true' and '$(BuildBlazorToBrowserExtension)' == 'true'"
-          DependsOnTargets="PrepareForBlazorToBrowserExtensionBackgroundWorkerFile">
+          DependsOnTargets="$(_ConvertBlazorToBrowserExtensionBackgroundWorkerDependsOn)">
     <CallTarget Targets="WriteBlazorToBrowserExtensionBuildBackgroundWorkerFile"/>
   </Target>
 
   <Target Name="CallWriteBlazorToBrowserExtensionPublishBackgroundWorkerFile"
           AfterTargets="GeneratePublishWasmBootJson"
           Condition="'$(GenerateBrowserExtensionBackgroundWorker)' == 'true' and '$(BuildBlazorToBrowserExtension)' == 'true'"
-          DependsOnTargets="PrepareForBlazorToBrowserExtensionBackgroundWorkerFile">
+          DependsOnTargets="$(_ConvertBlazorToBrowserExtensionBackgroundWorkerDependsOn)">
     <CallTarget Targets="WriteBlazorToBrowserExtensionPublishBackgroundWorkerFile"/>
   </Target>
 

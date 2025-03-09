@@ -30,7 +30,7 @@
           Condition="Exists('$(_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerMainJsFile_FilePath)')">
 
     <PropertyGroup>
-      <_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerFile_Directory>$(ProjectDir)$(IntermediateOutputPath)browserextension\build</_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerFile_Directory>
+      <_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerFile_Directory>$(_BrowserExtension_Project_IntermediateOutput_Directory)browserextension\build</_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerFile_Directory>
       <_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerFile_FilePath>$(_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerFile_Directory)\BackgroundWorker.js</_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerFile_FilePath>
     </PropertyGroup>
 
@@ -86,7 +86,7 @@
           Condition="Exists('$(_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerMainJsFile_FilePath)')">
 
     <PropertyGroup>
-      <_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerFile_Directory>$(ProjectDir)$(IntermediateOutputPath)browserextension\publish</_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerFile_Directory>
+      <_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerFile_Directory>$(_BrowserExtension_Project_IntermediateOutput_Directory)browserextension\publish</_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerFile_Directory>
       <_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerFile_FilePath>$(_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerFile_Directory)\BackgroundWorker.js</_BrowserExtension_Project_IntermediateOutput_BackgroundWorkerFile_FilePath>
     </PropertyGroup>
 

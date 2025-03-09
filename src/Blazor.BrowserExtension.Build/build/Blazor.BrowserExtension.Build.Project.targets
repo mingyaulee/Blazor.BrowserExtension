@@ -5,4 +5,11 @@
     <None Include="$(BrowserExtensionAssetsPath)\**\*" CopyToOutputDirectory="Always" />
   </ItemGroup>
 
+  <Target Name="PrepareForBlazorToBrowserExtension">
+    <PropertyGroup>
+      <_BrowserExtension_Project_IntermediateOutput_Directory>$(IntermediateOutputPath)</_BrowserExtension_Project_IntermediateOutput_Directory>
+      <_BrowserExtension_Project_IntermediateOutput_Directory Condition="'$([System.IO.Path]::IsPathRooted($(IntermediateOutputPath)))' == 'false'">$(ProjectDir)$(IntermediateOutputPath)</_BrowserExtension_Project_IntermediateOutput_Directory>
+    </PropertyGroup>
+  </Target>
+
 </Project>
