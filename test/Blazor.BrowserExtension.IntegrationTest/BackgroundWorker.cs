@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace Blazor.BrowserExtension.IntegrationTest
+﻿namespace Blazor.BrowserExtension.IntegrationTest
 {
     public partial class BackgroundWorker : BackgroundWorkerBase
     {

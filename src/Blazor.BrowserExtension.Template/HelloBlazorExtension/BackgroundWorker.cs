@@ -1,5 +1,4 @@
 ﻿using Blazor.BrowserExtension;
-using System.Threading.Tasks;
 
 namespace HelloBlazorExtension
 {

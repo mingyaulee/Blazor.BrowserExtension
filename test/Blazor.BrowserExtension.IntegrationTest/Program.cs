@@ -1,39 +1,27 @@
-﻿using Blazor.BrowserExtension.IntegrationTest.Pages;
-using Microsoft.AspNetCore.Components.Web;
+﻿using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Net.Http;
-using System.Threading.Tasks;
+using Blazor.BrowserExtension;
+using Blazor.BrowserExtension.IntegrationTest;
+using Blazor.BrowserExtension.IntegrationTest.Pages;
 
-namespace Blazor.BrowserExtension.IntegrationTest
+var builder = WebAssemblyHostBuilder.CreateDefault(args);
+builder.UseBrowserExtension(browserExtension =>
 {
-    public static class Program
+    if (browserExtension.Mode == BrowserExtensionMode.ContentScript)
     {
-        public static async Task Main(string[] args)
-        {
-            var builder = WebAssemblyHostBuilder.CreateDefault(args);
-
-            builder.UseBrowserExtension(browserExtension =>
-            {
-                if (browserExtension.Mode == BrowserExtensionMode.ContentScript)
-                {
-                    builder.RootComponents.Add<ContentScript>("#Blazor_BrowserExtension_IntegrationTest_app");
-                }
-                else if (browserExtension.Mode == BrowserExtensionMode.Background)
-                {
-                    builder.RootComponents.AddBackgroundWorker<BackgroundWorker>();
-                }
-                else
-                {
-                    builder.RootComponents.Add<App>("#app");
-                    builder.RootComponents.Add<HeadOutlet>("head::after");
-                }
-            });
-
-            builder.Services.AddScoped(sp => new HttpClient() { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-
-            await builder.Build().RunAsync();
-        }
+        builder.RootComponents.Add<ContentScript>("#Blazor_BrowserExtension_IntegrationTest_app");
     }
-}
+    else if (browserExtension.Mode == BrowserExtensionMode.Background)
+    {
+        builder.RootComponents.AddBackgroundWorker<BackgroundWorker>();
+    }
+    else
+    {
+        builder.RootComponents.Add<App>("#app");
+        builder.RootComponents.Add<HeadOutlet>("head::after");
+    }
+});
+
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+
+await builder.Build().RunAsync();

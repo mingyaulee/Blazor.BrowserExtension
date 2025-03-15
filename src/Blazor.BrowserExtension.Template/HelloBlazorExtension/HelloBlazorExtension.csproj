@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
 <!--#if (HiddenProperties) -->
     <!-- NU1504 - Duplicate package reference. Ignore for dotnet template. -->
     <!-- NU1605 - Package reference downgrade. Ignore for dotnet template. -->
