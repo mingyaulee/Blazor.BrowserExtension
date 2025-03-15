@@ -55,11 +55,11 @@ namespace Blazor.BrowserExtension.Analyzer
                 File.WriteAllText(jsFilePath, source.TranslatedMain);
 #pragma warning restore RS1035 // Do not use APIs banned for analyzers
 
-                generateContext.AddSource($"{source.ClassName}.generated.cs", $$"""
-                    using System.Collections.Generic;
+                if (string.IsNullOrEmpty(source.Namespace))
+                {
+                    generateContext.AddSource($"{source.ClassName}.generated.cs", $$"""
+                        using System.Collections.Generic;
 
-                    namespace {{source.Namespace}}
-                    {
                         public partial class {{source.ClassName}}
                         {
                             protected override Dictionary<string, object> JsInstance => new()
@@ -67,8 +67,25 @@ namespace Blazor.BrowserExtension.Analyzer
                                 {{generatedDictionary}}
                             };
                         }
-                    }
-                    """);
+                        """);
+                }
+                else
+                {
+                    generateContext.AddSource($"{source.ClassName}.generated.cs", $$"""
+                        using System.Collections.Generic;
+
+                        namespace {{source.Namespace}}
+                        {
+                            public partial class {{source.ClassName}}
+                            {
+                                protected override Dictionary<string, object> JsInstance => new()
+                                {
+                                    {{generatedDictionary}}
+                                };
+                            }
+                        }
+                        """);
+                }
             });
         }
 
