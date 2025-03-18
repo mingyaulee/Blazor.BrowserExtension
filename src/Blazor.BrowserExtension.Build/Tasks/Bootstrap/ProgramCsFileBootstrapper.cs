@@ -71,7 +71,7 @@ namespace Blazor.BrowserExtension.Build.Tasks.Bootstrap
 
                 if (!string.IsNullOrWhiteSpace(fileLines[rootComponentsFirstIndex - 1]))
                 {
-                    fileLines.Insert(rootComponentsFirstIndex - 1, string.Empty);
+                    fileLines.Insert(rootComponentsFirstIndex, string.Empty);
                 }
 
                 isUpdated = true;

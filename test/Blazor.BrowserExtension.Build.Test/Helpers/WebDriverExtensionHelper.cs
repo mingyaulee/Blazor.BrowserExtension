@@ -1,7 +1,4 @@
-﻿using FluentAssertions;
-using OpenQA.Selenium;
-using System;
-using System.Threading.Tasks;
+﻿using OpenQA.Selenium;
 
 namespace Blazor.BrowserExtension.Build.Test.Helpers
 {
@@ -35,12 +32,12 @@ namespace Blazor.BrowserExtension.Build.Test.Helpers
                 () => WebDriver.WindowHandles.Count > 1,
                 TimeSpan.FromMilliseconds(500),
                 TimeSpan.FromSeconds(10));
-            isLoaded.Should().BeTrue();
+            isLoaded.ShouldBeTrue();
 
             // switch to the second window
             WebDriver.SwitchTo().Window(WebDriver.WindowHandles[1]);
             ExtensionBaseUrl = CurrentUrl.Substring(0, CurrentUrl.LastIndexOf("/") + 1);
-            CurrentUrl.Should().StartWith("chrome-extension://");
+            CurrentUrl.ShouldStartWith("chrome-extension://");
         }
 
         public async Task<string> GetContent(string selector)

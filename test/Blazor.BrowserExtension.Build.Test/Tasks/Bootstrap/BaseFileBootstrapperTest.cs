@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using Blazor.BrowserExtension.Build.Tasks.Bootstrap;
-using FluentAssertions;
+﻿using Blazor.BrowserExtension.Build.Tasks.Bootstrap;
 using Xunit;
 
 namespace Blazor.BrowserExtension.Build.Test.Tasks.Bootstrap
@@ -24,8 +21,8 @@ namespace Blazor.BrowserExtension.Build.Test.Tasks.Bootstrap
             var isUpdated = bootstrapper.Bootstrap(fileLines);
 
             // Assert
-            isUpdated.Should().BeTrue();
-            fileLines.Should().BeEquivalentTo(expectedFileLines);
+            isUpdated.ShouldBeTrue();
+            fileLines.ShouldBeEquivalentTo(expectedFileLines);
         }
 
         [Fact]
@@ -40,8 +37,8 @@ namespace Blazor.BrowserExtension.Build.Test.Tasks.Bootstrap
             var isUpdated = bootstrapper.Bootstrap(fileLines);
 
             // Assert
-            isUpdated.Should().BeFalse();
-            fileLines.Should().BeEquivalentTo(expectedFileLines);
+            isUpdated.ShouldBeFalse();
+            fileLines.ShouldBeEquivalentTo(expectedFileLines);
         }
     }
 }

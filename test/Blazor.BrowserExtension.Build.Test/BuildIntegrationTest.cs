@@ -1,8 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Threading.Tasks;
-using Blazor.BrowserExtension.Build.Test.Helpers;
-using FluentAssertions;
+﻿using Blazor.BrowserExtension.Build.Test.Helpers;
 using Xunit;
 
 namespace Blazor.BrowserExtension.Build.Test
@@ -22,14 +18,14 @@ namespace Blazor.BrowserExtension.Build.Test
                 using (var extensionFromBuild = await testFixture.LoadExtensionBuildOutput(projectName))
                 {
                     var pageContentFromBuild = await extensionFromBuild.GetContent("h1");
-                    pageContentFromBuild.Should().Be("Hello, from Blazor.");
+                    pageContentFromBuild.ShouldBe("Hello, from Blazor.");
                 }
 
                 testFixture.ExecuteDotnetPublishCommand(projectName);
                 using (var extensionFromPublish = await testFixture.LoadExtensionPublishOutput(projectName))
                 {
                     var pageContentFromPublish = await extensionFromPublish.GetContent("h1");
-                    pageContentFromPublish.Should().Be("Hello, from Blazor.");
+                    pageContentFromPublish.ShouldBe("Hello, from Blazor.");
                 }
             }
             finally
@@ -49,18 +45,18 @@ namespace Blazor.BrowserExtension.Build.Test
                 testFixture.ExecuteDotnetBuildCommand(projectName);
                 var projectFile = Path.Combine(projectDirectory, projectName + ".csproj");
                 var projectFileContent = File.ReadAllText(projectFile);
-                projectFileContent.Should().NotContain("BrowserExtensionBootstrap");
+                projectFileContent.ShouldNotContain("BrowserExtensionBootstrap");
                 using (var extensionFromBuild = await testFixture.LoadExtensionBuildOutput(projectName))
                 {
                     var pageContentFromBuild = await extensionFromBuild.GetContent("h1");
-                    pageContentFromBuild.Should().Be("Hello, world!");
+                    pageContentFromBuild.ShouldBe("Hello, world!");
                 }
 
                 testFixture.ExecuteDotnetPublishCommand(projectName);
                 using (var extensionFromPublish = await testFixture.LoadExtensionPublishOutput(projectName))
                 {
                     var pageContentFromPublish = await extensionFromPublish.GetContent("h1");
-                    pageContentFromPublish.Should().Be("Hello, world!");
+                    pageContentFromPublish.ShouldBe("Hello, world!");
                 }
             }
             finally

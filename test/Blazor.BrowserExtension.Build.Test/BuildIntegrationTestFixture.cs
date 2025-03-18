@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Threading.Tasks;
-using Blazor.BrowserExtension.Build.Test.Helpers;
+﻿using Blazor.BrowserExtension.Build.Test.Helpers;
 using OpenQA.Selenium.Chrome;
 
 namespace Blazor.BrowserExtension.Build.Test

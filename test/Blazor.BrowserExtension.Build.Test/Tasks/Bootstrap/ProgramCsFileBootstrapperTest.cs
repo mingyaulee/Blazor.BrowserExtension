@@ -22,8 +22,8 @@ namespace Blazor.BrowserExtension.Build.Test.Tasks.Bootstrap
             """;
 
         protected override string BootstrappedFileContent => """
-            using System;
             using Blazor.BrowserExtension;
+            using System;
 
             public static class Program
             {
