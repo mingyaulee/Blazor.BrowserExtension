@@ -4,24 +4,13 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace Blazor.BrowserExtension.Analyzer
+namespace Blazor.BrowserExtension.Analyzer.Translation
 {
     internal sealed class TranslateContext(SemanticModel semanticModel)
     {
-        private static Dictionary<string, string> SystemTranslations = new()
-        {
-            { "System.Console", "console" },
-            { "System.Console.WriteLine", "log" },
-            { "System.Console.Write", "log" },
-            { "Microsoft.Extensions.Logging.ILogger", "console" },
-            { "Microsoft.Extensions.Logging.LoggerExtensions.LogInformation", "log" },
-            { "Microsoft.Extensions.Logging.LoggerExtensions.LogWarning", "warn" },
-            { "Microsoft.Extensions.Logging.LoggerExtensions.LogError", "error" },
-            { "Microsoft.Extensions.Logging.LoggerExtensions.LogCritical", "error" },
-        };
-
         private HashSet<SyntaxNode> JsAccessPathNodes { get; } = [];
         public Dictionary<string, string> ReferenceDictionary { get; } = [];
+        public ParentExpressionType ParentExpressionType { get; set; }
 
         public ISymbol GetSymbol(SyntaxNode node)
         {
@@ -104,6 +93,15 @@ namespace Blazor.BrowserExtension.Analyzer
                 {
                     jsAccessPath = attribute.ConstructorArguments.FirstOrDefault().Value?.ToString();
                     return !string.IsNullOrEmpty(jsAccessPath);
+                }
+                else if (attribute.AttributeClass.ToString() == "WebExtensions.Net.EnumValueAttribute")
+                {
+                    jsAccessPath = attribute.ConstructorArguments.FirstOrDefault().Value?.ToString();
+                    if (!string.IsNullOrEmpty(jsAccessPath))
+                    {
+                        jsAccessPath = $"\"{jsAccessPath}\"";
+                        return true;
+                    }
                 }
             }
 
