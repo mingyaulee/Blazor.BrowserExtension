@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <!-- Build properties. -->
   <PropertyGroup>
@@ -51,7 +51,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Build.Framework" Version="17.13.9" />
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.13.9" />
-    <PackageReference Include="System.Text.Json" Version="9.0.2" Condition="'$(TargetFramework)' == 'net472'" />
+    <PackageReference Include="System.Text.Json" Version="9.0.4" Condition="'$(TargetFramework)' == 'net472'" />
     <!-- marks all packages as 'local only' so they don't end up in the nuspec -->
     <PackageReference Update="@(PackageReference)" PrivateAssets="All" />
   </ItemGroup>
