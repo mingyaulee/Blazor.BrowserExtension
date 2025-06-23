@@ -1,5 +1,4 @@
 ﻿using Blazor.BrowserExtension.Build.Test.Helpers;
-using OpenQA.Selenium.Chrome;
 
 namespace Blazor.BrowserExtension.Build.Test
 {
@@ -75,34 +74,8 @@ namespace Blazor.BrowserExtension.Build.Test
 
         private async Task<WebDriverExtensionHelper> LoadExtension(string extensionPath)
         {
-            var driverPath = "C:\\SeleniumWebDrivers\\ChromeDriver";
-            if (!Directory.Exists(driverPath))
-            {
-                throw new NotSupportedException($"Download the chromedriver from and extract the executable file to {driverPath}. Download the latest version from https://googlechromelabs.github.io/chrome-for-testing/");
-            }
-
-            ChromeDriver webDriver;
-            try
-            {
-                var chromeOptions = new ChromeOptions();
-                chromeOptions.AddArgument($"load-extension={extensionPath}");
-                webDriver = new ChromeDriver(driverPath, chromeOptions);
-            }
-            catch (Exception exception)
-            {
-                throw new NotSupportedException("Failed to create WebDriver.", exception);
-            }
-
-            var extension = new WebDriverExtensionHelper(webDriver);
-            try
-            {
-                await extension.WaitForExtensionPage();
-            }
-            catch
-            {
-                extension.Dispose();
-                throw;
-            }
+            var extension = new WebDriverExtensionHelper();
+            await extension.Load(extensionPath);
             return extension;
         }
 

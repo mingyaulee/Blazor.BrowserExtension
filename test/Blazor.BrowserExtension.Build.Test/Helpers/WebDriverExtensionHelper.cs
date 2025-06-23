@@ -1,24 +1,36 @@
-﻿using OpenQA.Selenium;
+﻿using Microsoft.Playwright;
 
 namespace Blazor.BrowserExtension.Build.Test.Helpers
 {
     public class WebDriverExtensionHelper : IDisposable
     {
-        public readonly WebDriver WebDriver;
+        private IPlaywright playwright;
+        private IPage page;
+        protected string extensionPath;
+        protected string extensionBaseUrl;
         private bool disposedValue;
 
-        public string CurrentUrl => WebDriver.Url;
+        public string CurrentUrl => page.Url;
         public string ExtensionBaseUrl { get; private set; }
 
-        public WebDriverExtensionHelper(WebDriver webDriver)
+        public async Task Load(string extensionPath)
         {
-            WebDriver = webDriver;
+            var currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            playwright = await Playwright.CreateAsync();
+            var browser = await LaunchBrowser(playwright, currentDirectory, extensionPath);
+            page = await browser.RunAndWaitForPageAsync(static () => Task.CompletedTask);
+            var consoleMessages = new List<string>();
+            page.Console += (_, message) =>
+            {
+                consoleMessages.Add(message.Text);
+            };
+
+            ExtensionBaseUrl = page.Url[..^"/index.html".Length];
         }
 
         public Task NavigateToUrl(string url)
         {
-            WebDriver.Url = url;
-            return Retry(() => (bool)WebDriver.ExecuteScript("return document.readyState === \"complete\";"), TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(5));
+            return page.GotoAsync(url);
         }
 
         public string GetExtensionUrl(string path)
@@ -26,41 +38,10 @@ namespace Blazor.BrowserExtension.Build.Test.Helpers
             return $"{ExtensionBaseUrl}index.html?path={path}";
         }
 
-        public async Task WaitForExtensionPage()
-        {
-            var isLoaded = await Retry(
-                () => WebDriver.WindowHandles.Count > 1,
-                TimeSpan.FromMilliseconds(500),
-                TimeSpan.FromSeconds(10));
-            isLoaded.ShouldBeTrue();
-
-            // switch to the second window
-            WebDriver.SwitchTo().Window(WebDriver.WindowHandles[1]);
-            ExtensionBaseUrl = CurrentUrl.Substring(0, CurrentUrl.LastIndexOf("/") + 1);
-            CurrentUrl.ShouldStartWith("chrome-extension://");
-        }
-
         public async Task<string> GetContent(string selector)
         {
-            await Retry(
-                () => (bool)WebDriver.ExecuteScript($"""return document.querySelector("{selector}") != null;"""),
-                TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(10));
-            return WebDriver.FindElement(By.CssSelector($"{selector}"))?.Text;
-        }
-
-        public async Task<bool> Retry(Func<bool> action, TimeSpan interval, TimeSpan timeout)
-        {
-            var retryCount = timeout.TotalMilliseconds / interval.TotalMilliseconds;
-            while (retryCount > 0)
-            {
-                retryCount--;
-                if (action())
-                {
-                    return true;
-                }
-                await Task.Delay(interval);
-            }
-            return false;
+            await page.WaitForSelectorAsync(selector);
+            return await page.EvalOnSelectorAsync<string>(selector, "el => el.innerText");
         }
 
         protected virtual void Dispose(bool disposing)
@@ -69,7 +50,7 @@ namespace Blazor.BrowserExtension.Build.Test.Helpers
             {
                 if (disposing)
                 {
-                    WebDriver.Dispose();
+                    playwright.Dispose();
                 }
 
                 disposedValue = true;
@@ -80,6 +61,27 @@ namespace Blazor.BrowserExtension.Build.Test.Helpers
         {
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
+        }
+
+        private static Task<IBrowserContext> LaunchBrowser(IPlaywright playwright, string currentDirectory, string extensionPath)
+        {
+            var userDataDir = Path.Combine(currentDirectory, "chrome");
+            if (Directory.Exists(userDataDir))
+            {
+                Directory.Delete(userDataDir, true);
+            }
+            Directory.CreateDirectory(userDataDir);
+
+            return playwright.Chromium.LaunchPersistentContextAsync(userDataDir, new()
+            {
+                Headless = false,
+                Channel = "chromium",
+                Args =
+                [
+                    $"--disable-extensions-except={extensionPath}",
+                    $"--load-extension={extensionPath}"
+                ]
+            });
         }
     }
 }

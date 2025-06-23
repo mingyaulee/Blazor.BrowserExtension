@@ -42,8 +42,12 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 9.0.x
-    - name: Setup Chrome and Chrome Driver
-      uses: nanasess/setup-chromedriver@master
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: lts/*
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps
     - name: Checkout
       uses: actions/checkout@v4
       with:

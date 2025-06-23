@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
+using Microsoft.Playwright;
 using Xunit;
 
 [assembly: CollectionBehavior(DisableTestParallelization = true)]
@@ -7,61 +10,100 @@ using Xunit;
 namespace Blazor.BrowserExtension.IntegrationTestRunner
 {
     [TestCaseOrderer("Blazor.BrowserExtension.IntegrationTestRunner.TestOrderer", "Blazor.BrowserExtension.IntegrationTestRunner")]
-    public abstract class BaseIntegrationTest : IClassFixture<Fixture>
+    public abstract class BaseIntegrationTest : IAsyncLifetime
     {
-        private readonly WebDriverHelper webDriverHelper;
-
-        protected BaseIntegrationTest(Fixture fixture)
-        {
-            if (!fixture.IsInitialized)
-            {
-                SetupBeforeInitialize();
-                fixture.Initialize();
-            }
-            webDriverHelper = fixture.WebDriverHelper;
-        }
-
-        protected abstract void SetupBeforeInitialize();
+        private IPlaywright playwright;
+        private IPage page;
+        protected string extensionPath;
+        protected string extensionBaseUrl;
 
         [Fact, Order(1)]
         public async Task IndexPageIsLoaded()
         {
-            // The background page creates a new tab with the url of the extension index page on load, so check on the count of window handles
-            var isLoaded = await webDriverHelper.Retry(
-                () => webDriverHelper.WebDriver.WindowHandles.Count > 1,
-                TimeSpan.FromMilliseconds(500),
-                TimeSpan.FromSeconds(10));
-            Assert.True(isLoaded);
-
-            // switch to the second window
-            webDriverHelper.WebDriver.SwitchTo().Window(webDriverHelper.WebDriver.WindowHandles[1]);
-            webDriverHelper.SetExtensionBaseUrl(webDriverHelper.CurrentUrl);
-
-            Assert.StartsWith("chrome-extension://", webDriverHelper.CurrentUrl);
-            Assert.Equal("Index", await webDriverHelper.GetPageContent());
+            Assert.StartsWith("chrome-extension://", page.Url);
+            Assert.Equal("Index", await GetPageContent());
         }
 
         [Fact, Order(2)]
         public async Task PopupPageIsLoaded()
         {
-            await webDriverHelper.NavigateToUrl(webDriverHelper.GetExtensionUrl("popup"));
-            Assert.Equal("Popup", await webDriverHelper.GetPageContent());
-            Assert.Equal($"{webDriverHelper.ExtensionBaseUrl}popup", webDriverHelper.CurrentUrl);
+            await page.GotoAsync($"{extensionBaseUrl}/index.html?path=popup");
+            Assert.Equal("Popup", await GetPageContent());
+            Assert.Equal($"{extensionBaseUrl}/popup", page.Url);
         }
 
         [Fact, Order(3)]
         public async Task OptionsPageIsLoaded()
         {
-            await webDriverHelper.NavigateToUrl(webDriverHelper.GetExtensionUrl("options"));
-            Assert.Equal("Options", await webDriverHelper.GetPageContent());
-            Assert.Equal($"{webDriverHelper.ExtensionBaseUrl}options", webDriverHelper.CurrentUrl);
+            await page.GotoAsync($"{extensionBaseUrl}/index.html?path=options");
+            Assert.Equal("Options", await GetPageContent());
+            Assert.Equal($"{extensionBaseUrl}/options", page.Url);
         }
 
         [Fact, Order(4)]
         public async Task ContentScriptIsLoaded()
         {
-            await webDriverHelper.NavigateToUrl($"https://developer.chrome.com/");
-            Assert.Equal("ContentScript", await webDriverHelper.GetPageContent(true));
+            await page.GotoAsync("https://developer.chrome.com/");
+            Assert.Equal("ContentScript", await GetPageContent(true));
+        }
+
+        protected abstract void SetupBeforeInitialize();
+
+        public virtual async Task InitializeAsync()
+        {
+            var currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            var solutionDirectory = currentDirectory[..currentDirectory.LastIndexOf("\\test")];
+#if DEBUG
+            var configuration = "debug";
+#else
+            var configuration = "release";
+#endif
+            extensionPath = @$"{solutionDirectory}\test\Blazor.BrowserExtension.IntegrationTest\bin\{configuration}\net9.0\browserextension";
+
+            SetupBeforeInitialize();
+            playwright = await Playwright.CreateAsync();
+            var browser = await LaunchBrowser(playwright, currentDirectory, extensionPath);
+            page = await browser.RunAndWaitForPageAsync(static () => Task.CompletedTask);
+            var consoleMessages = new List<string>();
+            page.Console += (_, message) =>
+            {
+                consoleMessages.Add(message.Text);
+            };
+            extensionBaseUrl = page.Url[..^"/index.html".Length];
+        }
+
+        public Task DisposeAsync()
+        {
+            playwright.Dispose();
+            return Task.CompletedTask;
+        }
+
+        private static Task<IBrowserContext> LaunchBrowser(IPlaywright playwright, string currentDirectory, string extensionPath)
+        {
+            var userDataDir = Path.Combine(currentDirectory, "chrome");
+            if (Directory.Exists(userDataDir))
+            {
+                Directory.Delete(userDataDir, true);
+            }
+            Directory.CreateDirectory(userDataDir);
+
+            return playwright.Chromium.LaunchPersistentContextAsync(userDataDir, new()
+            {
+                Headless = false,
+                Channel = "chromium",
+                Args =
+                [
+                    $"--disable-extensions-except={extensionPath}",
+                    $"--load-extension={extensionPath}"
+                ]
+            });
+        }
+
+        private async Task<string> GetPageContent(bool isContentScript = false)
+        {
+            var appId = isContentScript ? "#Blazor_BrowserExtension_IntegrationTest_app h3" : "#app h3";
+            await page.WaitForSelectorAsync(appId);
+            return await page.EvalOnSelectorAsync<string>(appId, "el => el.innerText");
         }
     }
 }
