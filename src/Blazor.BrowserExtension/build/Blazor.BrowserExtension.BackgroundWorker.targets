@@ -18,7 +18,7 @@
       <BrowserExtensionBackgroundWorkerImportIncludeContent Include="content/Blazor.BrowserExtension/BackgroundWorkerRunner.js" />
       <BrowserExtensionBackgroundWorkerImportIncludeContent Include="content/Blazor.BrowserExtension/Blazor.BrowserExtension.lib.module.js" />
       <BrowserExtensionBackgroundWorkerImportIncludeContent Include="content/Blazor.BrowserExtension/CoreInternal.js" />
-      <BrowserExtensionBackgroundWorkerImportIncludeContent Include="content/JsBind.Net/JsBindNet.js" />
+      <BrowserExtensionBackgroundWorkerImportIncludeContent Include="content/JsBind.Net/JsBind.Net.lib.module.js" />
     </ItemGroup>
 
   </Target>

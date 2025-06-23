@@ -23,9 +23,6 @@ export default class BrowserExtension {
    * @param {object} blazorStartOptions Blazor WebAssembly start options. Refer to https://github.com/dotnet/aspnetcore/blob/main/src/Components/Web.JS/src/Platform/WebAssemblyStartOptions.ts
    */
   async InitializeCoreAsync(blazorStartOptions) {
-    // import JsBind.Net JS
-    await import(`${this.Url}_content/JsBind.Net/JsBindNet.js`);
-
     if (this.Config.CompressionEnabled) {
       // import brotli decode.js
       this.BrotliDecode = (await import("../lib/decode.min.js")).BrotliDecode;
