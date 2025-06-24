@@ -16,12 +16,6 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 9.0.x
-    - name: Setup Node
-      uses: actions/setup-node@v4
-      with:
-        node-version: lts/*
-    - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
     - name: Checkout
       uses: actions/checkout@v4
       with:
@@ -30,5 +24,8 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore --configuration Debug
+    - name: Install Playwright Browsers
+      shell: powershell
+      run: .\test\Blazor.BrowserExtension.IntegrationTestRunner\bin\Debug\net9.0\playwright.ps1 install --with-deps
     - name: Run tests
       run: dotnet test --no-restore --no-build --configuration Debug
