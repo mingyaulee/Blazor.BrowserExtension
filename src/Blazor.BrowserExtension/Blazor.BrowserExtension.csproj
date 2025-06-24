@@ -48,7 +48,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.0" />
     <PackageReference Include="Microsoft.JSInterop" Version="9.0.0" />
     <PackageReference Update="Microsoft.*" Version="8.0.0" Condition="'$(TargetFramework)' == 'net8.0'" />
-    <PackageReference Include="JsBind.Net.Extensions.DependencyInjection" Version="2.1.1" PrivateAssets="contentfiles" />
+    <PackageReference Include="JsBind.Net.Extensions.DependencyInjection" Version="2.2.0" PrivateAssets="contentfiles" />
     <PackageReference Include="WebExtensions.Net.Extensions.DependencyInjection" Version="4.1.1" PrivateAssets="contentfiles" />
   </ItemGroup>
 
