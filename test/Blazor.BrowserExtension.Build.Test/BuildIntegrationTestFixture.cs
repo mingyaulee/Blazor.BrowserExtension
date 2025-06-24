@@ -72,7 +72,7 @@ namespace Blazor.BrowserExtension.Build.Test
             return LoadExtension(extensionPath);
         }
 
-        private async Task<WebDriverExtensionHelper> LoadExtension(string extensionPath)
+        private static async Task<WebDriverExtensionHelper> LoadExtension(string extensionPath)
         {
             var extension = new WebDriverExtensionHelper();
             await extension.Load(extensionPath);

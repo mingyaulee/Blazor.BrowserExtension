@@ -22,11 +22,9 @@ namespace Blazor.BrowserExtension.Build.Test
                 }
 
                 testFixture.ExecuteDotnetPublishCommand(projectName);
-                using (var extensionFromPublish = await testFixture.LoadExtensionPublishOutput(projectName))
-                {
-                    var pageContentFromPublish = await extensionFromPublish.GetContent("h1");
-                    pageContentFromPublish.ShouldBe("Hello, from Blazor.");
-                }
+                using var extensionFromPublish = await testFixture.LoadExtensionPublishOutput(projectName);
+                var pageContentFromPublish = await extensionFromPublish.GetContent("h1");
+                pageContentFromPublish.ShouldBe("Hello, from Blazor.");
             }
             finally
             {
@@ -44,7 +42,7 @@ namespace Blazor.BrowserExtension.Build.Test
                 testFixture.ExecuteDotnetRestoreCommand(projectName);
                 testFixture.ExecuteDotnetBuildCommand(projectName);
                 var projectFile = Path.Combine(projectDirectory, projectName + ".csproj");
-                var projectFileContent = File.ReadAllText(projectFile);
+                var projectFileContent = await File.ReadAllTextAsync(projectFile);
                 projectFileContent.ShouldNotContain("BrowserExtensionBootstrap");
                 using (var extensionFromBuild = await testFixture.LoadExtensionBuildOutput(projectName))
                 {
@@ -53,11 +51,9 @@ namespace Blazor.BrowserExtension.Build.Test
                 }
 
                 testFixture.ExecuteDotnetPublishCommand(projectName);
-                using (var extensionFromPublish = await testFixture.LoadExtensionPublishOutput(projectName))
-                {
-                    var pageContentFromPublish = await extensionFromPublish.GetContent("h1");
-                    pageContentFromPublish.ShouldBe("Hello, world!");
-                }
+                using var extensionFromPublish = await testFixture.LoadExtensionPublishOutput(projectName);
+                var pageContentFromPublish = await extensionFromPublish.GetContent("h1");
+                pageContentFromPublish.ShouldBe("Hello, world!");
             }
             finally
             {
@@ -65,7 +61,7 @@ namespace Blazor.BrowserExtension.Build.Test
             }
         }
 
-        void ResetDirectoryChanges(string directory)
+        static void ResetDirectoryChanges(string directory)
         {
             try
             {
