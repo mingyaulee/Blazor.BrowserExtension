@@ -17,20 +17,18 @@ jobs:
       with:
         dotnet-version: 9.0.x
     - name: Install GitVersion
-      uses: gittools/actions/gitversion/setup@v3.2.1
+      uses: gittools/actions/gitversion/setup@v4.1.0
       with:
-        versionSpec: 5.x
+        versionSpec: 6.x
     - name: Determine Version
       id: gitversion
-      uses: gittools/actions/gitversion/execute@v3.2.1
-      with:
-        useConfigFile: true
+      uses: gittools/actions/gitversion/execute@v4.1.0
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --no-restore --configuration Release -p:Version=${{ steps.gitversion.outputs.NuGetVersion }}
+      run: dotnet build --no-restore --configuration Release -p:Version=${{ steps.gitversion.outputs.MajorMinorPatch }}
     - name: Pack
-      run: dotnet pack --no-restore --no-build --configuration Release -p:Version=${{ steps.gitversion.outputs.NuGetVersion }}
+      run: dotnet pack --no-restore --no-build --configuration Release -p:Version=${{ steps.gitversion.outputs.MajorMinorPatch }}
     - name: Push generated package to NuGet
       run: dotnet nuget push ./src/PackageOutput/*.nupkg --api-key ${NUGET_AUTH_TOKEN} --source https://api.nuget.org/v3/index.json
       env:

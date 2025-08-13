@@ -13,21 +13,19 @@ jobs:
   version:
     runs-on: ubuntu-latest
     outputs:
-      NuGetVersion: ${{ steps.gitversion.outputs.NuGetVersion }}
+      MajorMinorPatch: ${{ steps.gitversion.outputs.MajorMinorPatch }}
     steps:
     - name: Checkout
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
     - name: Install GitVersion
-      uses: gittools/actions/gitversion/setup@v3.2.1
+      uses: gittools/actions/gitversion/setup@v4.1.0
       with:
-        versionSpec: 5.x
+        versionSpec: 6.x
     - name: Determine Version
       id: gitversion
-      uses: gittools/actions/gitversion/execute@v3.2.1
-      with:
-        useConfigFile: true
+      uses: gittools/actions/gitversion/execute@v4.1.0
 
   buildAndTest:
     needs: version
@@ -69,11 +67,10 @@ jobs:
       run: dotnet restore
     - name: Build and analyze
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       shell: powershell
       run: |
-        .\.sonar\scanner\dotnet-sonarscanner begin /k:"Blazor.BrowserExtension" /o:"mingyaulee" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /v:"v${{ needs.version.outputs.NuGetVersion }}"/d:sonar.cs.xunit.reportsPaths="test/TestResults/*.xml" /d:sonar.cs.opencover.reportsPaths="test/TestResults/**/*.opencover.xml"
+        .\.sonar\scanner\dotnet-sonarscanner begin /k:"Blazor.BrowserExtension" /o:"mingyaulee" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /v:"v${{ needs.version.outputs.MajorMinorPatch }}" /d:sonar.cs.xunit.reportsPaths="test/TestResults/*.xml" /d:sonar.cs.opencover.reportsPaths="test/TestResults/**/*.opencover.xml"
         dotnet build --no-restore --configuration Release
         .\test\Blazor.BrowserExtension.IntegrationTestRunner\bin\Release\net9.0\playwright.ps1 install --with-deps
         dotnet test --no-restore --no-build --configuration Release --results-directory ./test/TestResults --logger "console;verbosity=detailed" --logger "xunit;LogFileName={assembly}-test-result.xml" --collect "XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
@@ -89,7 +86,7 @@ jobs:
       uses: mukunku/tag-exists-action@v1.6.0
       id: tagExistsCheck
       with: 
-        tag: 'v${{ needs.version.outputs.NuGetVersion }}'
+        tag: 'v${{ needs.version.outputs.MajorMinorPatch }}'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Create tag
@@ -97,4 +94,4 @@ jobs:
       uses: negz/create-tag@v1
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        version: v${{ needs.version.outputs.NuGetVersion }}
+        version: v${{ needs.version.outputs.MajorMinorPatch }}
