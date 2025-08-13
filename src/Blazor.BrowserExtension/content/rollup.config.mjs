@@ -1,5 +1,5 @@
-﻿import rollupCleanup from "./rollup-plugins/rollupCleanup.js";
-import rollupNormalizeLineEndings from "./rollup-plugins/rollupNormalizeLineEndings.js";
+﻿import rollupCleanup from "./rollup-plugins/rollupCleanup.mjs";
+import rollupNormalizeLineEndings from "./rollup-plugins/rollupNormalizeLineEndings.mjs";
 
 export default [
   {
