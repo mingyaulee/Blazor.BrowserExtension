@@ -5,7 +5,7 @@ const rollupCleanup = function () {
   return {
     name: "cleanup",
     transform: function (/** @type {string} */code) {
-      return code.replace(new RegExp(regex, "g"), "");
+      return code.replaceAll(new RegExp(regex, "g"), "");
     }
   };
 };

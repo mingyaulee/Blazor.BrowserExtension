@@ -1,5 +1,5 @@
-import path from "path";
-import fs from "fs";
+import path from "node:path";
+import fs from "node:fs";
 
 const rollupNormalizeLineEndings = function () {
   return {
@@ -11,7 +11,7 @@ const rollupNormalizeLineEndings = function () {
         }
         const filePath = path.resolve(path.join(options.dir, chunk.fileName));
         let fileContent = fs.readFileSync(filePath, "utf8");
-        fileContent = fileContent.replace(/(\r\n|\n)/g, "\r\n");
+        fileContent = fileContent.replaceAll(/\r?\n/g, "\r\n");
         fs.writeFileSync(filePath, fileContent, { encoding: "utf8" });
       }
     }

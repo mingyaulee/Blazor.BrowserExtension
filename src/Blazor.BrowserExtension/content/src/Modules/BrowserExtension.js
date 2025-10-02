@@ -93,7 +93,7 @@ export default class BrowserExtension {
   async AppendElementToDocumentAsync(element) {
     if (element.tagName === "SCRIPT") {
       const scriptElement = /** @type {HTMLScriptElement} */(element);
-      if (scriptElement.text.indexOf("__wasmmodulecallback__") > -1) {
+      if (scriptElement.text.includes("__wasmmodulecallback__")) {
         globalThis.__wasmmodulecallback__();
         delete globalThis.__wasmmodulecallback__;
       } else if (scriptElement.src) {
@@ -130,7 +130,7 @@ export default class BrowserExtension {
    * @returns {string} The absolute extension path if it is not a full URL with scheme, otherwise the original path.
    */
   _getUrl(path) {
-    return path.indexOf("://") > -1 ? path : this.Url + path;
+    return path.includes("://") ? path : this.Url + path;
   }
 
   /**

@@ -62,7 +62,7 @@ class BrowserExtension {
   async AppendElementToDocumentAsync(element) {
     if (element.tagName === "SCRIPT") {
       const scriptElement = (element);
-      if (scriptElement.text.indexOf("__wasmmodulecallback__") > -1) {
+      if (scriptElement.text.includes("__wasmmodulecallback__")) {
         globalThis.__wasmmodulecallback__();
         delete globalThis.__wasmmodulecallback__;
       } else if (scriptElement.src) {
@@ -87,7 +87,7 @@ class BrowserExtension {
   }
 
   _getUrl(path) {
-    return path.indexOf("://") > -1 ? path : this.Url + path;
+    return path.includes("://") ? path : this.Url + path;
   }
 
   async _appendElementToDocumentAsync(element) {
@@ -152,29 +152,25 @@ class BrowserExtension {
 }
 
 class BlazorBrowserExtension {
-  ImportBrowserPolyfill;
-  StartBlazorBrowserExtension;
-  Modes;
-  BrowserExtension;
+  ImportBrowserPolyfill = true;
 
-  constructor() {
-    this.ImportBrowserPolyfill = true;
-    this.StartBlazorBrowserExtension = true;
-    this.Modes = null;
-    this.BrowserExtension = null;
-  }
+  StartBlazorBrowserExtension = true;
+
+  Modes = null;
+
+  BrowserExtension = null;
 }
 
 function initializeGlobalVariable(browserExtension) {
   let blazorBrowserExtension;
 
   // initialize global property BlazorBrowserExtension
-  if (!globalThis.hasOwnProperty("BlazorBrowserExtension")) {
+  if (globalThis.hasOwnProperty("BlazorBrowserExtension")) {
+    blazorBrowserExtension = (globalThis.BlazorBrowserExtension);
+  } else {
     blazorBrowserExtension = new BlazorBrowserExtension();
     blazorBrowserExtension.Modes = BrowserExtensionModes;
     globalThis.BlazorBrowserExtension = blazorBrowserExtension;
-  } else {
-    blazorBrowserExtension = (globalThis.BlazorBrowserExtension);
   }
 
   if (blazorBrowserExtension.BrowserExtension) {

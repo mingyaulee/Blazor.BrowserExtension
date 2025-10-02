@@ -15,12 +15,12 @@ export function initializeGlobalVariable(browserExtension) {
   let blazorBrowserExtension;
 
   // initialize global property BlazorBrowserExtension
-  if (!globalThis.hasOwnProperty("BlazorBrowserExtension")) {
+  if (globalThis.hasOwnProperty("BlazorBrowserExtension")) {
+    blazorBrowserExtension = /** @type {BlazorBrowserExtension} */(globalThis.BlazorBrowserExtension);
+  } else {
     blazorBrowserExtension = new BlazorBrowserExtension();
     blazorBrowserExtension.Modes = BrowserExtensionModes;
     globalThis.BlazorBrowserExtension = blazorBrowserExtension;
-  } else {
-    blazorBrowserExtension = /** @type {BlazorBrowserExtension} */(globalThis.BlazorBrowserExtension);
   }
 
   if (blazorBrowserExtension.BrowserExtension) {

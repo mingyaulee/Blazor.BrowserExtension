@@ -9,12 +9,12 @@ if (!hasExtensionsApi("browser") && !hasExtensionsApi("chrome")) {
 let url;
 /** @type {import("./Modules/BrowserExtensionModes.js").BrowserExtensionMode} */
 let browserExtensionMode;
-if (!debugMode) {
-  url = (globalThis.browser || globalThis.chrome).runtime.getURL("");
-  browserExtensionMode = "Standard";
-} else {
+if (debugMode) {
   url = globalThis.location.origin + "/";
   browserExtensionMode = "Debug";
+} else {
+  url = (globalThis.browser || globalThis.chrome).runtime.getURL("");
+  browserExtensionMode = "Standard";
 }
 
 /** @type {import("./Modules/BrowserExtensionConfig.js").default} */
