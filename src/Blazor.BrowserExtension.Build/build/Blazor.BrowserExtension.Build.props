@@ -28,6 +28,7 @@
   <UsingTask TaskName="Blazor.BrowserExtension.Build.Tasks.BlazorToBrowserExtensionProcessOutputFiles" AssemblyFile="$(_BrowserExtensionBuildTaskAssembly)" />
   <UsingTask TaskName="Blazor.BrowserExtension.Build.Tasks.BlazorToBrowserExtensionProcessPublishFiles" AssemblyFile="$(_BrowserExtensionBuildTaskAssembly)" />
   <UsingTask TaskName="Blazor.BrowserExtension.Build.Tasks.BlazorToBrowserExtensionProcessRoutingFiles" AssemblyFile="$(_BrowserExtensionBuildTaskAssembly)" />
+  <UsingTask TaskName="Blazor.BrowserExtension.Build.Tasks.BlazorToBrowserExtensionProcessRunSettings" AssemblyFile="$(_BrowserExtensionBuildTaskAssembly)" />
   <UsingTask TaskName="Blazor.BrowserExtension.Build.Tasks.BlazorToBrowserExtensionProcessStaticWebAssetsManifest" AssemblyFile="$(_BrowserExtensionBuildTaskAssembly)" />
   <UsingTask TaskName="Blazor.BrowserExtension.Build.Tasks.BlazorToBrowserExtensionReplaceContent" AssemblyFile="$(_BrowserExtensionBuildTaskAssembly)" />
   <UsingTask TaskName="Blazor.BrowserExtension.Build.Tasks.BlazorToBrowserExtensionValidateManifest" AssemblyFile="$(_BrowserExtensionBuildTaskAssembly)" />

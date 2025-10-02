@@ -34,10 +34,6 @@
         <From>_framework</From>
         <To>framework</To>
       </_BrowserExtension_BlazorJs_FileContentReplacements>
-      <_BrowserExtension_BlazorJs_FileContentReplacements Include="framework debug path">
-        <From>framework/debug</From>
-        <To>_framework/debug</To>
-      </_BrowserExtension_BlazorJs_FileContentReplacements>
       <_BrowserExtension_BlazorJs_FileContentReplacements Include="fetch url">
         <From>fetch(</From>
         <To>globalThis.BlazorBrowserExtension.BrowserExtension.FetchAsync(</To>
@@ -68,6 +64,24 @@
         <IsOptional>true</IsOptional>
       </_BrowserExtension_Other_FileContentReplacements>
       <_BrowserExtension_Other_FileContentReplacements Include="@(_Import_FileContentReplacements)" />
+    </ItemGroup>
+
+    <!-- Replace framework debug path with application host from run settings -->
+    <PropertyGroup>
+      <_BrowserExtension_Project_RunSettings_FilePath Condition="Exists('$(ProjectDir)$(ProjectName).run.json')">$(ProjectDir)$(ProjectName).run.json</_BrowserExtension_Project_RunSettings_FilePath>
+      <_BrowserExtension_Project_RunSettings_FilePath Condition="Exists('$(ProjectDir)Properties\launchSettings.json')">$(ProjectDir)Properties\launchSettings.json</_BrowserExtension_Project_RunSettings_FilePath>
+    </PropertyGroup>
+
+    <BlazorToBrowserExtensionProcessRunSettings FilePath="$(_BrowserExtension_Project_RunSettings_FilePath)"
+                                                Condition="'$(_BrowserExtension_Project_RunSettings_FilePath)' != ''">
+      <Output TaskParameter="ApplicationUrl" PropertyName="_BrowserExtension_Project_RunSettings_ApplicationUrl" />
+    </BlazorToBrowserExtensionProcessRunSettings>
+
+    <ItemGroup>
+      <_BrowserExtension_BlazorJs_FileContentReplacements Include="framework debug path">
+        <From>framework/debug</From>
+        <To>$(_BrowserExtension_Project_RunSettings_ApplicationUrl)/_framework/debug</To>
+      </_BrowserExtension_BlazorJs_FileContentReplacements>
     </ItemGroup>
 
   </Target>

@@ -1,4 +1,10 @@
-﻿# Running the extension in the browser
+﻿# Debugging the extension
+
+1. Start the Blazor project directly from Visual Studio, or use the command `dotnet run`, or the command `dotnet watch` for hot reload.
+0. Load the extension in the browser as described in the next section.
+0. Add a breakpoint from Visual Studio/Visual Studio Code, or use the Blazor debugging hotkey `Shift+Alt+D` to launch the debugging console.
+
+# Loading the extension
 
 **Google Chrome**
 
@@ -21,12 +27,10 @@
    > For Mozilla Firefox, the extension manifest needs to be modified before you can load it.
    > See [Background Worker](03_02_BackgroundWorker.md#mozilla-firefox) page.
 
-# Debugging
+# Debugging without loading the extension in the browser
 
-1. Start the Blazor project directly from Visual Studio, or use the command `dotnet run`, or the command `dotnet watch` for hot reload.
-0. Once the application is loaded, use the Blazor debugging hotkey `Shift+Alt+D` to launch the debugging console.
-
-This debugging method is running outside of the browser extension context, thus all the APIs are not available when debugging and can be mocked by configuring the `MockResolvers`.
+When running outside of the browser extension context, all the browser extension APIs are not available.
+The behaviour can be mocked by configuring the `MockResolvers`.
 
 ```csharp
 MockResolvers.Configure(configure =>
@@ -37,15 +41,7 @@ MockResolvers.Configure(configure =>
 ```
 
 The [WebExtensions.Net page](https://github.com/mingyaulee/WebExtensions.Net) shows more examples of configuring the `MockResolvers`.
-Some APIs have been mocked by default in [WebExtensions.Net `DefaultMockResolver`](https://github.com/mingyaulee/WebExtensions.Net/blob/3eef452e6e36f3320c7c5a14dc6862223b714a06/src/WebExtensions.Net/Mock/Resolvers/DefaultMockResolver.cs#L55).
-
-> **Important Note**
->
-> At the moment, debugging when the application is loaded as an extension in the browser is not possible.
->
-> This is because debugging requires a NodeJs debugging proxy launched by the DevServer, which is not available when loaded as an extension in the browser.
->
-> The best way to debug when loaded as an extension is to use `Console.WriteLine` which writes the logs to the browser console window, accessible from the Developer Tools window (`F12`).
+Some APIs have been mocked by default in [WebExtensions.Net `DefaultMockResolver`](https://github.com/mingyaulee/WebExtensions.Net/blob/main/src/WebExtensions.Net/Mock/Resolvers/DefaultMockResolver.cs#L55).
 
 # Reference
 
