@@ -1,26 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
-  <!-- Build properties. -->
   <PropertyGroup>
-    <TargetFrameworks>net9.0;net8.0</TargetFrameworks>
-    <LangVersion>latest</LangVersion>
-    <GenerateDependencyFile>false</GenerateDependencyFile>
-    <IsShippingPackage>true</IsShippingPackage>
-    <HasReferenceAssembly>false</HasReferenceAssembly>
     <BuildBlazorToBrowserExtension>false</BuildBlazorToBrowserExtension>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
-  <!-- Package properties. -->
   <PropertyGroup>
-    <IsPackable>true</IsPackable>
-    <PackageOutputPath>..\PackageOutput</PackageOutputPath>
-    <Authors>mingyaulee</Authors>
     <Description>Build a browser extension with Blazor.</Description>
-    <RepositoryUrl>https://github.com/mingyaulee/Blazor.BrowserExtension</RepositoryUrl>
-    <PackageTags>Blazor Browser Chrome Firefox Edge Extension Addons .Net</PackageTags>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageIcon>Icon.png</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -37,24 +23,14 @@
       <Pack>true</Pack>
       <PackagePath>content\BrowserExtensionScripts\lib</PackagePath>
     </Content>
-    <Content Include="..\Icon\Icon.png">
-      <Pack>true</Pack>
-      <PackagePath></PackagePath>
-    </Content>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components" Version="9.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.0" />
-    <PackageReference Include="Microsoft.JSInterop" Version="9.0.0" />
-    <PackageReference Update="Microsoft.*" Version="8.0.0" Condition="'$(TargetFramework)' == 'net8.0'" />
-    <PackageReference Include="JsBind.Net.Extensions.DependencyInjection" Version="2.2.0" PrivateAssets="contentfiles" />
-    <PackageReference Include="WebExtensions.Net.Extensions.DependencyInjection" Version="4.4.0" PrivateAssets="contentfiles" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <!-- NU1902 - Package reference has known vulnerability. All Microsoft package references are the minimum supported versions. The consumer should update their own package references instead of being enforced by this package. -->
-    <PackageReference Update="Microsoft.*" NoWarn="NU1902" />
+    <PackageReference Include="Microsoft.AspNetCore.Components" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" />
+    <PackageReference Include="Microsoft.JSInterop" />
+    <PackageReference Include="JsBind.Net.Extensions.DependencyInjection" PrivateAssets="contentfiles" />
+    <PackageReference Include="WebExtensions.Net.Extensions.DependencyInjection" PrivateAssets="contentfiles" />
   </ItemGroup>
 
   <ItemGroup>

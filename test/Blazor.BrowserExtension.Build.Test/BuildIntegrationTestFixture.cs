@@ -30,7 +30,7 @@ namespace Blazor.BrowserExtension.Build.Test
             CommandHelper.ExecuteCommandVoid(DotNetCommand, $"pack --no-build --no-restore --configuration {CurrentConfiguration}", rootSolutionDirectory);
             try
             {
-                CommandHelper.ExecuteCommandVoid(DotNetCommand, $"new install src/PackageOutput/Blazor.BrowserExtension.Template.1.0.0.nupkg", rootSolutionDirectory);
+                CommandHelper.ExecuteCommandVoid(DotNetCommand, $"new install PackageOutput/Blazor.BrowserExtension.Template.1.0.0.nupkg", rootSolutionDirectory);
             }
             catch (Exception exception) when (exception.Message.Contains("already exists"))
             {

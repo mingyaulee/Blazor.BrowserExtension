@@ -1,0 +1,64 @@
+<Project>
+
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <ProjectIsInDocs Condition="$(MSBuildProjectDirectory.Contains('$(MSBuildThisFileDirectory)docs'))">true</ProjectIsInDocs>
+    <ProjectIsInSrc Condition="$(MSBuildProjectDirectory.Contains('$(MSBuildThisFileDirectory)src'))">true</ProjectIsInSrc>
+    <ProjectIsInTemplate Condition="$(MSBuildProjectDirectory.Contains('$(MSBuildThisFileDirectory)template'))">true</ProjectIsInTemplate>
+    <ProjectIsInTest Condition="$(MSBuildProjectDirectory.Contains('$(MSBuildThisFileDirectory)test'))">true</ProjectIsInTest>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(ProjectIsInDocs)' == 'true'">
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(ProjectIsInSrc)' == 'true'">
+    <ProjectIsAnalyzer Condition="'$(MSBuildProjectName)' == 'Blazor.BrowserExtension.Analyzer'">true</ProjectIsAnalyzer>
+    <ProjectIsBuild Condition="'$(MSBuildProjectName)' == 'Blazor.BrowserExtension.Build'">true</ProjectIsBuild>
+    <TargetFrameworks>net9.0;net8.0</TargetFrameworks>
+    <TargetFrameworks Condition="'$(ProjectIsAnalyzer)' == 'true'">netstandard2.0</TargetFrameworks>
+    <TargetFrameworks Condition="'$(ProjectIsBuild)' == 'true'">net9.0;net8.0;net472</TargetFrameworks>
+    <IsPackable>true</IsPackable>
+    <GenerateDependencyFile>false</GenerateDependencyFile>
+    <IsShippingPackage>true</IsShippingPackage>
+    <HasReferenceAssembly>false</HasReferenceAssembly>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(ProjectIsInTemplate)' == 'true'">
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <IsPackable>true</IsPackable>
+    <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <GenerateDependencyFile>false</GenerateDependencyFile>
+    <IsShippingPackage>true</IsShippingPackage>
+    <HasReferenceAssembly>false</HasReferenceAssembly>
+    <!-- Suppresses the warnings about the package not having assemblies in lib/*/.dll. -->
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+    <PackageType>Template</PackageType>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(ProjectIsInTest)' == 'true'">
+    <TargetFramework>net9.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(IsPackable)' == 'true'">
+    <PackageOutputPath>$(MSBuildThisFileDirectory)PackageOutput</PackageOutputPath>
+    <Authors>mingyaulee</Authors>
+    <RepositoryUrl>https://github.com/mingyaulee/Blazor.BrowserExtension</RepositoryUrl>
+    <PackageTags>Blazor Browser Chrome Firefox Edge Extension Addons .Net</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageIcon>Icon.png</PackageIcon>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(IsPackable)' == 'true'">
+    <Content Include="$(MSBuildThisFileDirectory)Icon\Icon.png">
+      <Pack>true</Pack>
+      <PackagePath></PackagePath>
+    </Content>
+  </ItemGroup>
+
+</Project>

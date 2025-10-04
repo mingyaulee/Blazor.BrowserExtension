@@ -3,7 +3,7 @@
   <PropertyGroup>
     <RestoreSources>
       https://api.nuget.org/v3/index.json;
-      $(MSBuildThisFileDirectory)/../../../src/PackageOutput
+      $(MSBuildThisFileDirectory)/../../../PackageOutput
     </RestoreSources>
     <RestorePackagesPath>$(MSBuildThisFileDirectory)/../../../PackagesCache</RestorePackagesPath>
   </PropertyGroup>

@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>Template to create a browser extension with Blazor WebAssembly.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="HelloBlazorExtension\**\*" Exclude="**\bin\**;**\obj\**">
+      <Pack>true</Pack>
+      <PackagePath>content</PackagePath>
+    </Content>
+    <Compile Remove="**\*" />
+    <Content Include="..\..\Icon\Icon.png" Link="HelloBlazorExtension/.template.config/Icon.png">
+      <Pack>true</Pack>
+      <PackagePath>content/.template.config/Icon.png</PackagePath>
+    </Content>
+  </ItemGroup>
+
+</Project>

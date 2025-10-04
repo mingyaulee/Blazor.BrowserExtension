@@ -1,27 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <!-- Build properties. -->
   <PropertyGroup>
-    <TargetFrameworks>net9.0;net8.0;net472</TargetFrameworks>
-    <LangVersion>latest</LangVersion>
-    <GenerateDependencyFile>false</GenerateDependencyFile>
-    <IsShippingPackage>true</IsShippingPackage>
-    <HasReferenceAssembly>false</HasReferenceAssembly>
-  </PropertyGroup>
-
-  <!-- Package properties. -->
-  <PropertyGroup>
-    <IsPackable>true</IsPackable>
-    <PackageOutputPath>..\PackageOutput</PackageOutputPath>
     <!-- Suppresses the warnings about the package not having assemblies in lib/*/.dll. -->
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <BuildOutputTargetFolder>tasks</BuildOutputTargetFolder>
-    <Authors>mingyaulee</Authors>
     <Description>A package for building a Blazor WebAssembly application to a browser extension.</Description>
-    <RepositoryUrl>https://github.com/mingyaulee/Blazor.BrowserExtension</RepositoryUrl>
-    <PackageTags>Blazor Browser Chrome Firefox Edge Extension Addons .Net</PackageTags>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageIcon>Icon.png</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -42,20 +25,14 @@
       <PackagePath>content</PackagePath>
     </Content>
     <Compile Remove="content\**" />
-    <Content Include="..\Icon\Icon.png">
-      <Pack>true</Pack>
-      <PackagePath></PackagePath>
-    </Content>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Build.Framework" Version="17.13.9" />
-    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.13.9" />
-    <PackageReference Include="System.Text.Json" Version="9.0.2" Condition="'$(TargetFramework)' == 'net472'" />
+    <PackageReference Include="Microsoft.Build.Framework" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" />
+    <PackageReference Include="System.Text.Json" Condition="'$(TargetFramework)' == 'net472'" />
     <!-- marks all packages as 'local only' so they don't end up in the nuspec -->
     <PackageReference Update="@(PackageReference)" PrivateAssets="All" />
-    <PackageReference Update="Microsoft.Build.Framework" Version="17.14.8" />
-    <PackageReference Update="Microsoft.Build.Utilities.Core" Version="17.14.8" />
   </ItemGroup>
 
   <ItemGroup>
