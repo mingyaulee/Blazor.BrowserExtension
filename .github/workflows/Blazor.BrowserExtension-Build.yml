@@ -72,7 +72,7 @@ jobs:
     - name: Build
       run: dotnet build --no-restore --configuration Release
     - name: Install Playwright
-      run: .\test\Blazor.BrowserExtension.IntegrationTestRunner\bin\Release\net9.0\playwright.ps1 install --with-deps
+      run: .\test\Blazor.BrowserExtension.IntegrationTestRunner\bin\Release\net9.0\playwright.ps1 install chromium --with-deps
     - name: Test
       run: dotnet test --no-restore --no-build --configuration Release --results-directory ./test/TestResults --logger "console;verbosity=detailed" --logger "xunit;LogFileName={assembly}-test-result.xml" --collect "XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
     - name: End analyze
