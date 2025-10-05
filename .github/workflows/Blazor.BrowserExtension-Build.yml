@@ -54,27 +54,31 @@ jobs:
       id: cache-sonar-scanner
       uses: actions/cache@v4
       with:
-        path: .\.sonar\scanner
+        path: ${{ runner.temp }}\scanner
         key: ${{ runner.os }}-sonar-scanner
         restore-keys: ${{ runner.os }}-sonar-scanner
     - name: Install SonarCloud scanner
       if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
       shell: powershell
       run: |
-        New-Item -Path .\.sonar\scanner -ItemType Directory
-        dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
+        New-Item -Path ${{ runner.temp }}\scanner -ItemType Directory
+        dotnet tool update dotnet-sonarscanner --tool-path ${{ runner.temp }}\scanner
     - name: Restore dependencies
       run: dotnet restore
-    - name: Build and analyze
+    - name: Begin analyze
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      shell: powershell
-      run: |
-        .\.sonar\scanner\dotnet-sonarscanner begin /k:"Blazor.BrowserExtension" /o:"mingyaulee" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /v:"v${{ needs.version.outputs.MajorMinorPatch }}" /d:sonar.cs.xunit.reportsPaths="test/TestResults/*.xml" /d:sonar.cs.opencover.reportsPaths="test/TestResults/**/*.opencover.xml"
-        dotnet build --no-restore --configuration Release
-        .\test\Blazor.BrowserExtension.IntegrationTestRunner\bin\Release\net9.0\playwright.ps1 install --with-deps
-        dotnet test --no-restore --no-build --configuration Release --results-directory ./test/TestResults --logger "console;verbosity=detailed" --logger "xunit;LogFileName={assembly}-test-result.xml" --collect "XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
-        .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+      run: ${{ runner.temp }}\scanner\dotnet-sonarscanner begin /k:"Blazor.BrowserExtension" /o:"mingyaulee" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /v:"v${{ needs.version.outputs.MajorMinorPatch }}" /d:sonar.cs.xunit.reportsPaths="test/TestResults/*.xml" /d:sonar.cs.opencover.reportsPaths="test/TestResults/**/*.opencover.xml"
+    - name: Build
+      run: dotnet build --no-restore --configuration Release
+    - name: Install Playwright
+      run: .\test\Blazor.BrowserExtension.IntegrationTestRunner\bin\Release\net9.0\playwright.ps1 install --with-deps
+    - name: Test
+      run: dotnet test --no-restore --no-build --configuration Release --results-directory ./test/TestResults --logger "console;verbosity=detailed" --logger "xunit;LogFileName={assembly}-test-result.xml" --collect "XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+    - name: End analyze
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      run: ${{ runner.temp }}\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
   tag:
     needs: [version, buildAndTest]
