@@ -39,10 +39,15 @@ namespace Blazor.BrowserExtension.Build.Test
             var projectDirectory = testFixture.GetTestProjectDirectory(projectName);
             try
             {
-                testFixture.ExecuteDotnetRestoreCommand(projectName);
-                testFixture.ExecuteDotnetBuildCommand(projectName);
                 var projectFile = Path.Combine(projectDirectory, projectName + ".csproj");
                 var projectFileContent = await File.ReadAllTextAsync(projectFile);
+                projectFileContent = projectFileContent
+                    .Replace("[NetVersion]", CommonTestHelper.TargetFrameworkMajorVersion);
+                await File.WriteAllTextAsync(projectFile, projectFileContent);
+
+                testFixture.ExecuteDotnetRestoreCommand(projectName);
+                testFixture.ExecuteDotnetBuildCommand(projectName);
+                projectFileContent = await File.ReadAllTextAsync(projectFile);
                 projectFileContent.ShouldNotContain("BrowserExtensionBootstrap");
                 using (var extensionFromBuild = await testFixture.LoadExtensionBuildOutput(projectName))
                 {

@@ -4,6 +4,9 @@ on:
   release:
     types: [ published ]
 
+env:
+  DOTNET_VERSION: '9.0'
+
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -15,7 +18,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v5
       with:
-        dotnet-version: 9.0.x
+        dotnet-version: ${{ env.DOTNET_VERSION }}.x
     - name: Install GitVersion
       uses: gittools/actions/gitversion/setup@v4.1.0
       with:

@@ -1,4 +1,6 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Testing;
+﻿using System.Reflection;
+using Blazor.BrowserExtension.Analyzer.Test.Helpers;
+using Microsoft.CodeAnalysis.CSharp.Testing;
 using Microsoft.CodeAnalysis.Testing;
 
 namespace Blazor.BrowserExtension.Analyzer.Test
@@ -10,9 +12,9 @@ namespace Blazor.BrowserExtension.Analyzer.Test
         {
             var test = new CSharpSourceGeneratorTest<BackgroundSourceGenerator, DefaultVerifier>();
 
-            test.TestState.ReferenceAssemblies = ReferenceAssemblies.Net.Net90
+            test.TestState.ReferenceAssemblies = GetReferenceAssemblies()
                 .AddPackages([
-                    new PackageIdentity("Microsoft.AspNetCore.Components.WebAssembly", "9.0.0"),
+                    new PackageIdentity("Microsoft.AspNetCore.Components.WebAssembly", $"{CommonTestHelper.TargetFrameworkMajorVersion}.0.0"),
                     new PackageIdentity("WebExtensions.Net.Extensions.DependencyInjection", "4.1.0")
                 ]).AddAssemblies([
                     "Microsoft.AspNetCore.Components.WebAssembly",
@@ -33,7 +35,7 @@ namespace Blazor.BrowserExtension.Analyzer.Test
                 Directory.Delete(jsOutputDirectory, true);
             }
             Directory.CreateDirectory(jsOutputDirectory);
-            File.WriteAllText(Path.Combine(testDirectory, $"{testName}.csproj"), string.Empty);
+            await File.WriteAllTextAsync(Path.Combine(testDirectory, $"{testName}.csproj"), string.Empty);
 
             var backgroundWorkerFile = ReadFromEmbeddedResource("BackgroundWorkerTemplate.cs")
                 .Replace("/* Main_Method_Body_Placeholder */", IndentContent(MainMethodBody, 12))
@@ -49,7 +51,7 @@ namespace Blazor.BrowserExtension.Analyzer.Test
 
             var jsFile = Path.Combine(jsOutputDirectory, "BackgroundWorkerMain.generated.js");
             Assert.True(File.Exists(jsFile), $"File exists '{jsFile}'");
-            Assert.Equal(ExpectedBackgroundWorkerJs, File.ReadAllText(jsFile).TrimEnd());
+            Assert.Equal(ExpectedBackgroundWorkerJs, (await File.ReadAllTextAsync(jsFile)).TrimEnd());
         }
 
         protected abstract string MainMethodBody { get; }
@@ -70,6 +72,14 @@ namespace Blazor.BrowserExtension.Analyzer.Test
         {
             var indentation = "".PadRight(indent);
             return string.Join($"{Environment.NewLine}{indentation}", content.Split(Environment.NewLine));
+        }
+
+        static ReferenceAssemblies GetReferenceAssemblies()
+        {
+            var propertyName = $"Net{CommonTestHelper.TargetFrameworkMajorVersion}0";
+            var property = typeof(ReferenceAssemblies.Net).GetProperty(propertyName, BindingFlags.Public | BindingFlags.Static);
+            return property?.GetValue(null) as ReferenceAssemblies
+                ?? throw new InvalidOperationException($"ReferenceAssemblies for {propertyName} not found");
         }
     }
 }

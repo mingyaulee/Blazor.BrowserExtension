@@ -10,18 +10,18 @@
 
 1. Launch the Extensions page ( ⋮ → More tools → Extensions).
 2. Switch on `Developer mode`.
-3. Click on the `Load unpacked` button, then navigate to `bin/Debug/net9.0` and select the `browserextension` directory.
+3. Click on the `Load unpacked` button, then navigate to `bin/Debug/net[NetVersion].0` and select the `browserextension` directory.
 
 **Microsoft Edge**
 
 1. Launch the Extensions page ( ⋮ → Extensions).
 2. Click on the ☰ and switch on `Developer mode`.
-3. Click on the button with the title `Load unpacked`, then navigate to `bin/Debug/net9.0` and select the `browserextension` directory.
+3. Click on the button with the title `Load unpacked`, then navigate to `bin/Debug/net[NetVersion].0` and select the `browserextension` directory.
 
 **Mozilla Firefox**
 
 1. Navigate to the URL [about:debugging#/runtime/this-firefox](about:debugging#/runtime/this-firefox). You need to copy this link and paste it in the address bar.
-2. Click on `Load Temporary Add-on...`, then navigate to `bin/Debug/net9.0/browserextension` and select any file in the directory.
+2. Click on `Load Temporary Add-on...`, then navigate to `bin/Debug/net[NetVersion].0/browserextension` and select any file in the directory.
    > **Tips**
    >
    > For Mozilla Firefox, the extension manifest needs to be modified before you can load it.

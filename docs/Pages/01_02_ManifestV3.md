@@ -12,7 +12,7 @@ Firefox's implementation has slight differences with Chromium based browsers in 
 ## Migrate from Manifest V2 to V3
 
 1. Update the `Blazor.BrowserExtension` NuGet package version to the latest version.
-0. Update target framework to `net9.0` and all .Net packages to .Net 9.
+0. Update target framework to `net[NetVersion].0` and all .Net packages to .Net [NetVersion].
 0. Update the `manifest.json` file
    - Update `manifest_version`
      ```json

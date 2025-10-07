@@ -20,7 +20,7 @@ The following MSBuild properties can be specified in your `.csproj` project file
 
 ```xml
 <PropertyGroup>
-  <TargetFramework>net9.0</TargetFramework>
+  <TargetFramework>net[NetVersion].0</TargetFramework>
   <BrowserExtensionEnvironment>Development</BrowserExtensionEnvironment>
 </PropertyGroup>
 ```

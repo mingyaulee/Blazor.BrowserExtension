@@ -8,6 +8,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  DOTNET_VERSION: '9.0'
+
 jobs:
   buildAndTestPR:
     runs-on: windows-latest
@@ -15,7 +18,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v5
       with:
-        dotnet-version: 9.0.x
+        dotnet-version: ${{ env.DOTNET_VERSION }}.x
     - name: Checkout
       uses: actions/checkout@v5
       with:
@@ -26,6 +29,6 @@ jobs:
       run: dotnet build --no-restore --configuration Debug
     - name: Install Playwright Browsers
       shell: powershell
-      run: .\test\Blazor.BrowserExtension.IntegrationTestRunner\bin\Debug\net9.0\playwright.ps1 install chromium --with-deps
+      run: .\test\Blazor.BrowserExtension.IntegrationTestRunner\bin\Debug\net${{ env.DOTNET_VERSION }}\playwright.ps1 install chromium --with-deps
     - name: Run tests
       run: dotnet test --no-restore --no-build --configuration Debug

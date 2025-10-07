@@ -19,7 +19,7 @@ cd MyBlazorExtension
 dotnet build
 ```
 
-The built extension will be in the directory `MyBlazorExtension/bin/Debug/net9.0/browserextension`.
+The built extension will be in the directory `MyBlazorExtension/bin/Debug/net[NetVersion].0/browserextension`.
 
 > **Tips**
 >

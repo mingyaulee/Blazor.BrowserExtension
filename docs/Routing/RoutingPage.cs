@@ -1,4 +1,6 @@
 ﻿using System.IO;
+using System.Reflection;
+using System.Runtime.Versioning;
 using Docs.Rendering;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
@@ -20,11 +22,15 @@ namespace Docs.Routing
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
+            var targetFramework = Assembly.GetExecutingAssembly().GetCustomAttribute<TargetFrameworkAttribute>()!.FrameworkDisplayName!.ToLower().Replace(" ", string.Empty).TrimStart('.');
+            var targetFrameworkMajorVersion = targetFramework.Split('.')[0][3..];
             var documentRouteMetadata = DocumentRouteProvider.GetDocumentRouteMetadataFromPath(PageRoute);
             using var stream = DocumentRouteProvider.GetDocumentRouteResourceStream(documentRouteMetadata);
             using var streamReader = new StreamReader(stream);
-            var markdown = MarkdownRenderer.Render(streamReader.ReadToEnd());
-            builder.AddMarkupContent(0, markdown);
+            var markdown = streamReader.ReadToEnd()
+                .Replace("[NetVersion]", targetFrameworkMajorVersion);
+            var markup = MarkdownRenderer.Render(markdown);
+            builder.AddMarkupContent(0, markup);
             DocumentRouteEvent.TriggerChange(documentRouteMetadata);
         }
 

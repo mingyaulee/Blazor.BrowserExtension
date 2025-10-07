@@ -9,6 +9,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  DOTNET_VERSION: '9.0'
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -24,7 +27,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v5
       with:
-        dotnet-version: 9.0.x
+        dotnet-version: ${{ env.DOTNET_VERSION }}.x
     - name: Restore dependencies
       run: dotnet restore docs
     - name: Build
@@ -36,10 +39,10 @@ jobs:
            cat <<EOF > $PWD/docs/bin/BuildOutput/Docs.runtimeconfig.json
            {
              "runtimeOptions": {
-               "tfm": "net9.0",
+               "tfm": "net${{ env.DOTNET_VERSION }}",
                "framework": {
                  "name": "Microsoft.AspNetCore.App",
-                 "version": "9.0.0"
+                 "version": "${{ env.DOTNET_VERSION }}.0"
                },
                "rollForwardOnNoCandidateFx": 2
              }

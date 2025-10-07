@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
+using System.Runtime.Versioning;
 using System.Threading.Tasks;
 using Microsoft.Playwright;
 using Xunit;
@@ -53,12 +55,10 @@ namespace Blazor.BrowserExtension.IntegrationTestRunner
         {
             var currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
             var solutionDirectory = currentDirectory[..currentDirectory.LastIndexOf("\\test")];
-#if DEBUG
-            var configuration = "debug";
-#else
-            var configuration = "release";
-#endif
-            extensionPath = @$"{solutionDirectory}\test\Blazor.BrowserExtension.IntegrationTest\bin\{configuration}\net9.0\browserextension";
+            var assembly = Assembly.GetExecutingAssembly();
+            var targetFramework = assembly.GetCustomAttribute<TargetFrameworkAttribute>().FrameworkDisplayName.ToLower().Replace(" ", string.Empty).TrimStart('.');
+            var configuration = assembly.GetCustomAttribute<AssemblyConfigurationAttribute>().Configuration;
+            extensionPath = @$"{solutionDirectory}\test\Blazor.BrowserExtension.IntegrationTest\bin\{configuration}\{targetFramework}\browserextension";
 
             SetupBeforeInitialize();
             playwright = await Playwright.CreateAsync();
