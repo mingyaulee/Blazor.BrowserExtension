@@ -47,10 +47,5 @@ This package facilitates the build process by defining and importing the build t
 ### Blazor.BrowserExtension.Template
 This package serves as a template for initiating a new project using the `dotnet new` command.
 
-### Running the integration tests
-1. Download the chrome driver from (here)[http://chromedriver.storage.googleapis.com/]
-0. Extract the chrome driver to the directory C:\SeleniumWebDrivers\ChromeDriver
-0. Run the tests using either the Test Explorer in VS or `dotnet test` command
-
 ## License
 By contributing, you agree that your contributions will be licensed under its MIT License.
