@@ -9,15 +9,11 @@ using Blazor.BrowserExtension.Build.Tasks.Helpers;
 
 namespace Blazor.BrowserExtension.Build.Tasks.StaticWebAssets
 {
-    public class JsonManifestProcessor : BaseManifestProcessor
+    public class JsonManifestProcessor(IEnumerable<string> excludePaths) : BaseManifestProcessor(excludePaths)
     {
-        private List<string> contentRoots = new();
+        private List<string> contentRoots = [];
         private StaticWebAssetManifest? staticWebAssetManifest;
         private bool isUpdated;
-
-        public JsonManifestProcessor(IEnumerable<string> excludePaths) : base(excludePaths)
-        {
-        }
 
         public override void ReadFromFile(string filePath)
         {
@@ -28,7 +24,7 @@ namespace Blazor.BrowserExtension.Build.Tasks.StaticWebAssets
                 return;
             }
 
-            contentRoots = staticWebAssetManifest.ContentRoots.ToList();
+            contentRoots = [.. staticWebAssetManifest.ContentRoots];
             VisitNode(staticWebAssetManifest.Root, "/");
         }
 
@@ -51,7 +47,7 @@ namespace Blazor.BrowserExtension.Build.Tasks.StaticWebAssets
             {
                 contentRoots.Add(outputPath);
                 var outputPathIndex = contentRoots.Count - 1;
-                staticWebAssetManifest.ContentRoots = contentRoots.ToArray();
+                staticWebAssetManifest.ContentRoots = [.. contentRoots];
                 var frameworkChildren = staticWebAssetManifest.Root.Children["framework"].Children;
                 if (frameworkChildren is not null)
                 {

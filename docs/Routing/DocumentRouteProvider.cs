@@ -19,22 +19,17 @@ namespace Docs.Routing
         public static IEnumerable<DocumentRouteMetadata> DocumentRoutes => documentRoutes ??= GetAllDocumentRoutes();
 
         private static List<DocumentRouteMetadata> GetAllDocumentRoutes()
-        {
-            return GetResourceDocuments()
+            => [.. GetResourceDocuments()
                 .Concat(GetRazorPages())
-                .OrderBy(metadata => metadata.FileName)
-                .ToList();
-        }
+                .OrderBy(metadata => metadata.FileName)];
 
-        private static IEnumerable<DocumentRouteMetadata> GetResourceDocuments()
-        {
-            return CurrentAssembly
+        private static IEnumerable<DocumentRouteMetadata> GetResourceDocuments() => CurrentAssembly
                 .GetManifestResourceNames()
                 .Where(resourceName => resourceName.StartsWith(ResourceNamePrefix) && resourceName.EndsWith(ResourceNameSuffix) && resourceName != $"{ResourceNamePrefix}{NotFound}{ResourceNameSuffix}")
                 .Select(resourceName =>
                 {
-                    var fileName = resourceName.Substring(ResourceNamePrefix.Length);
-                    var unformattedDocumentName = ExtractDocumentNameWithoutOrder(fileName.Substring(0, fileName.Length - ResourceNameSuffix.Length));
+                    var fileName = resourceName[ResourceNamePrefix.Length..];
+                    var unformattedDocumentName = ExtractDocumentNameWithoutOrder(fileName[..^ResourceNameSuffix.Length]);
                     var formattedDocumentName = FormatName(unformattedDocumentName, ' ');
                     var webPath = FormatName(unformattedDocumentName, '-', char.ToLowerInvariant);
                     webPath = EnsureValidWebPath(webPath);
@@ -48,11 +43,8 @@ namespace Docs.Routing
                         ResourceName = resourceName
                     };
                 });
-        }
 
-        private static IEnumerable<DocumentRouteMetadata> GetRazorPages()
-        {
-            return CurrentAssembly.GetExportedTypes()
+        private static IEnumerable<DocumentRouteMetadata> GetRazorPages() => CurrentAssembly.GetExportedTypes()
                 .Where(type => type.FullName?.StartsWith(ResourceNamePrefix) == true && Attribute.IsDefined(type, typeof(RouteAttribute), false))
                 .Select(type =>
                 {
@@ -71,12 +63,11 @@ namespace Docs.Routing
                         ResourceName = type.FullName
                     };
                 });
-        }
 
         private static string ExtractDocumentNameWithoutOrder(string documentName)
         {
             var index = documentName.LastIndexOf('_');
-            return index == -1 ? documentName : documentName.Substring(index + 1);
+            return index == -1 ? documentName : documentName[(index + 1)..];
         }
 
         private static string FormatName(string documentName, char separator, Func<char, char>? transform = null)
@@ -87,9 +78,9 @@ namespace Docs.Routing
             }
             var sb = new StringBuilder();
             sb.Append(transform?.Invoke(documentName[0]) ?? documentName[0]);
-            for (int i = 1; i < documentName.Length; ++i)
+            for (var i = 1; i < documentName.Length; ++i)
             {
-                char c = documentName[i];
+                var c = documentName[i];
                 if (char.IsUpper(c) && !char.IsUpper(documentName[i - 1]))
                 {
                     sb.Append(separator);
@@ -99,20 +90,11 @@ namespace Docs.Routing
             return sb.ToString();
         }
 
-        private static string EnsureValidWebPath(string webPath)
-        {
-            return webPath.Replace('.', '-');
-        }
+        private static string EnsureValidWebPath(string webPath) => webPath.Replace('.', '-');
 
-        public static DocumentRouteMetadata? GetDocumentRouteMetadataFromResourceName(string? resourceName)
-        {
-            return DocumentRoutes.FirstOrDefault(route => route.ResourceName == resourceName);
-        }
+        public static DocumentRouteMetadata? GetDocumentRouteMetadataFromResourceName(string? resourceName) => DocumentRoutes.FirstOrDefault(route => route.ResourceName == resourceName);
 
-        public static DocumentRouteMetadata? GetDocumentRouteMetadataFromFileName(string? fileName)
-        {
-            return DocumentRoutes.FirstOrDefault(route => route.FileName == fileName);
-        }
+        public static DocumentRouteMetadata? GetDocumentRouteMetadataFromFileName(string? fileName) => DocumentRoutes.FirstOrDefault(route => route.FileName == fileName);
 
         public static DocumentRouteMetadata? GetDocumentRouteMetadataFromPath(string? webPath)
         {

@@ -34,10 +34,10 @@ namespace Blazor.BrowserExtension.Build.Tasks.ExtensionManifest
             {
                 manifest = new Manifest()
                 {
-                    ParseErrors = new[]
-                    {
+                    ParseErrors =
+                    [
                         new ManifestParseError(jsonException.LineNumber, jsonException.BytePositionInLine, jsonException.Message)
-                    }
+                    ]
                 };
                 return false;
             }
@@ -83,13 +83,10 @@ namespace Blazor.BrowserExtension.Build.Tasks.ExtensionManifest
             }
 
             public override void Write(Utf8JsonWriter writer, IDictionary<ManifestItemKey, ManifestItem> value, JsonSerializerOptions options)
-            {
-                throw new NotImplementedException();
-            }
+                => throw new NotImplementedException();
 
             private static ManifestItemKey? MapManifestItemKey(string key)
-            {
-                return key switch
+                => key switch
                 {
                     "manifest_version" => ManifestItemKey.ManifestVersion,
                     "options_ui" => ManifestItemKey.OptionsUi,
@@ -101,7 +98,6 @@ namespace Blazor.BrowserExtension.Build.Tasks.ExtensionManifest
                     "permissions" => ManifestItemKey.Permissions,
                     _ => null,
                 };
-            }
 
             delegate long? GetNumberFieldDelegate(Utf8JsonReader reader);
             private static readonly ParameterExpression readerParameter = Expression.Parameter(typeof(Utf8JsonReader), "reader");
@@ -124,9 +120,7 @@ namespace Blazor.BrowserExtension.Build.Tasks.ExtensionManifest
             }
 
             private static long? GetColumnNumber(ref Utf8JsonReader reader)
-            {
-                return getColumnNumberDelegate(reader);
-            }
+                => getColumnNumberDelegate(reader);
         }
     }
 }

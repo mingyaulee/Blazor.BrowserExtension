@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <ProjectIsInDocs Condition="$(MSBuildProjectDirectory.Contains('$(MSBuildThisFileDirectory)docs'))">true</ProjectIsInDocs>
     <ProjectIsInSrc Condition="$(MSBuildProjectDirectory.Contains('$(MSBuildThisFileDirectory)src'))">true</ProjectIsInSrc>
     <ProjectIsInTemplate Condition="$(MSBuildProjectDirectory.Contains('$(MSBuildThisFileDirectory)template'))">true</ProjectIsInTemplate>

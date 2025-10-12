@@ -110,9 +110,7 @@ namespace Blazor.BrowserExtension.Build.Tasks
         }
 
         private static bool ManifestHasBackgroundWorker(string manifestFilePath)
-        {
-            return File.Exists(manifestFilePath) && File.ReadAllText(manifestFilePath).Contains("content/BackgroundWorker.js");
-        }
+            => File.Exists(manifestFilePath) && File.ReadAllText(manifestFilePath).Contains("content/BackgroundWorker.js");
 
         private static void GenerateBackgroundWorkerContent(List<string> jsImports, string generatedBackgroundWorkerJsFilePath, StringBuilder backgroundWorkerContent)
         {
@@ -120,7 +118,7 @@ namespace Blazor.BrowserExtension.Build.Tasks
                 import { importRequested, fromReference } from "/content/Blazor.BrowserExtension/BackgroundWorkerRunner.js";
                 """);
 
-            int index = 0;
+            var index = 0;
             foreach (var import in jsImports)
             {
                 backgroundWorkerContent.AppendLine($"""

@@ -10,10 +10,9 @@ namespace Blazor.BrowserExtension.Analyzer.Translation
     internal static class ExpressionTranslator
     {
         public static string Translate(SyntaxNode expression, TranslateContext context)
-        {
-            // In general, 'Value' in the examples can be a Constant value or a value returned from a method invocation
-            return expression switch
+            => expression switch
             {
+                // In general, 'Value' in the examples can be a Constant value or a value returned from a method invocation
                 ExpressionStatementSyntax expressionStatement => TranslateExpressionStatement(expressionStatement, context),
                 LocalDeclarationStatementSyntax localDeclarationStatement => TranslateLocalDeclarationStatement(localDeclarationStatement, context),
                 VariableDeclaratorSyntax variableDeclarator when variableDeclarator.Initializer is not null => TranslateVariableAssignment(variableDeclarator, context),
@@ -31,7 +30,6 @@ namespace Blazor.BrowserExtension.Analyzer.Translation
                 LiteralExpressionSyntax literalExpression => TranslateLiteralExpression(literalExpression),
                 _ => throw new InvalidOperationException($"Unmapped expression type {expression.GetType().Name}. Please raise an issue in GitHub with your code in Main.")
             };
-        }
 
         /// <summary>
         /// Can be any statement.
@@ -39,10 +37,7 @@ namespace Blazor.BrowserExtension.Analyzer.Translation
         /// <example>
         /// SomeMethod(args);
         /// </example>
-        private static string TranslateExpressionStatement(ExpressionStatementSyntax expressionStatement, TranslateContext context)
-        {
-            return $"{Translate(expressionStatement.Expression, context)};";
-        }
+        private static string TranslateExpressionStatement(ExpressionStatementSyntax expressionStatement, TranslateContext context) => $"{Translate(expressionStatement.Expression, context)};";
 
         /// <summary>
         /// Variables declared locally.

@@ -14,15 +14,13 @@ namespace Docs.Rendering
     public class LinkExtension : IMarkdownExtension
     {
         public void Setup(MarkdownPipelineBuilder pipeline)
-        {
-            pipeline.DocumentProcessed += OnDocumentProcessed;
-        }
+            => pipeline.DocumentProcessed += OnDocumentProcessed;
 
         public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
         {
         }
 
-        private void OnDocumentProcessed(MarkdownDocument document)
+        private static void OnDocumentProcessed(MarkdownDocument document)
         {
             foreach (var node in document.Descendants())
             {

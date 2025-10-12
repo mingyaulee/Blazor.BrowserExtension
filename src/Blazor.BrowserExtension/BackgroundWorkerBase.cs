@@ -50,9 +50,7 @@ namespace Blazor.BrowserExtension
         }
 
         Task IComponent.SetParametersAsync(ParameterView parameters)
-        {
-            return Task.CompletedTask;
-        }
+            => Task.CompletedTask;
 
         private void Initialize()
         {
@@ -70,9 +68,7 @@ namespace Blazor.BrowserExtension
             }
 
             public void Initialize(Dictionary<string, object> jsInstance)
-            {
-                InvokeVoid("setBackgroundWorkerInstance", jsInstance);
-            }
+                => InvokeVoid("setBackgroundWorkerInstance", jsInstance);
         }
     }
 }

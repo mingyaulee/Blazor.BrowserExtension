@@ -65,10 +65,7 @@ namespace Blazor.BrowserExtension.IntegrationTestRunner
             var browser = await LaunchBrowser(playwright, currentDirectory, extensionPath);
             page = await browser.RunAndWaitForPageAsync(static () => Task.CompletedTask);
             var consoleMessages = new List<string>();
-            page.Console += (_, message) =>
-            {
-                consoleMessages.Add(message.Text);
-            };
+            page.Console += (_, message) => consoleMessages.Add(message.Text);
             extensionBaseUrl = page.Url[..^"/index.html".Length];
         }
 

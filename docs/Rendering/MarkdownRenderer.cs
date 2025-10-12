@@ -12,8 +12,6 @@ namespace Docs.Rendering
             .Build();
 
         public static string Render(string source)
-        {
-            return Markdown.ToHtml(source, pipeline);
-        }
+            => Markdown.ToHtml(source, pipeline);
     }
 }

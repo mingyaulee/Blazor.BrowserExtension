@@ -4,9 +4,7 @@
     {
         [BackgroundWorkerMain]
         public override void Main()
-        {
-            WebExtensions.Runtime.OnInstalled.AddListener(OnInstalled);
-        }
+            => WebExtensions.Runtime.OnInstalled.AddListener(OnInstalled);
 
         async Task OnInstalled()
         {

@@ -30,9 +30,6 @@ namespace Blazor.BrowserExtension.Analyzer.Translation
             }
         }
 
-        public string Build()
-        {
-            return stringBuilder.ToString();
-        }
+        public string Build() => stringBuilder.ToString();
     }
 }

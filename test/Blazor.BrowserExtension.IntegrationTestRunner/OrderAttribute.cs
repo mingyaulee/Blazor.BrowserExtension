@@ -3,12 +3,8 @@
 namespace Blazor.BrowserExtension.IntegrationTestRunner
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-    public class OrderAttribute : Attribute
+    public class OrderAttribute(int order) : Attribute
     {
-        public OrderAttribute(int order)
-        {
-            Order = order;
-        }
-        public int Order { get; }
+        public int Order { get; } = order;
     }
 }

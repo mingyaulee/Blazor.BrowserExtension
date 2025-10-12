@@ -12,30 +12,20 @@ namespace Blazor.BrowserExtension.Build.Tasks.StaticWebAssets
     {
 #if NETFRAMEWORK
 #pragma warning disable S3400 // Methods should not return constants
-        internal static bool IsWindows()
-#pragma warning restore S3400 // Methods should not return constants
-        {
-            // .Net framework runs on Windows
-            return true;
-        }
+        // .Net framework runs on Windows
+        internal static bool IsWindows() => true;
 #else
-        internal static bool IsWindows()
-        {
-            return OperatingSystem.IsWindows();
-        }
+        internal static bool IsWindows() => OperatingSystem.IsWindows();
 #endif
 
-    internal static readonly StringComparer PathComparer =
+        internal static readonly StringComparer PathComparer =
                  IsWindows() ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal;
 
-        public string[] ContentRoots { get; set; } = Array.Empty<string>();
+        public string[] ContentRoots { get; set; } = [];
 
         public StaticWebAssetNode Root { get; set; } = null!;
 
-        internal static StaticWebAssetManifest Parse(string manifest)
-        {
-            return JsonSerializer.Deserialize<StaticWebAssetManifest>(manifest)!;
-        }
+        internal static StaticWebAssetManifest Parse(string manifest) => JsonSerializer.Deserialize<StaticWebAssetManifest>(manifest)!;
     }
 
     internal sealed class StaticWebAssetNode
@@ -85,9 +75,7 @@ namespace Blazor.BrowserExtension.Build.Tasks.StaticWebAssets
         }
 
         public override void Write(Utf8JsonWriter writer, Dictionary<string, StaticWebAssetNode> value, JsonSerializerOptions options)
-        {
-            JsonSerializer.Serialize(writer, value, options);
-        }
+            => JsonSerializer.Serialize(writer, value, options);
 
         private static void MergeChildren(Dictionary<string, StaticWebAssetNode> newChildren, Dictionary<string, StaticWebAssetNode> existing)
         {

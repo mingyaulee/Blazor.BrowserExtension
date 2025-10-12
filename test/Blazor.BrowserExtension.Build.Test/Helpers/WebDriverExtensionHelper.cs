@@ -20,23 +20,16 @@ namespace Blazor.BrowserExtension.Build.Test.Helpers
             var browser = await LaunchBrowser(playwright, currentDirectory, extensionPath);
             page = await browser.RunAndWaitForPageAsync(static () => Task.CompletedTask);
             var consoleMessages = new List<string>();
-            page.Console += (_, message) =>
-            {
-                consoleMessages.Add(message.Text);
-            };
+            page.Console += (_, message) => consoleMessages.Add(message.Text);
 
             ExtensionBaseUrl = page.Url[..^"/index.html".Length];
         }
 
         public Task NavigateToUrl(string url)
-        {
-            return page.GotoAsync(url);
-        }
+            => page.GotoAsync(url);
 
         public string GetExtensionUrl(string path)
-        {
-            return $"{ExtensionBaseUrl}index.html?path={path}";
-        }
+            => $"{ExtensionBaseUrl}index.html?path={path}";
 
         public async Task<string> GetContent(string selector)
         {

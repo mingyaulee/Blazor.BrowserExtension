@@ -12,20 +12,14 @@ namespace Blazor.BrowserExtension
         private readonly IJSInProcessRuntime inProcessInstance = instance as IJSInProcessRuntime;
 
         public ValueTask<TValue> InvokeAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.PublicProperties)] TValue>(string identifier, object[] args)
-        {
-            return instance.InvokeAsync<TValue>(identifier, InterceptArgs(identifier, args));
-        }
+            => instance.InvokeAsync<TValue>(identifier, InterceptArgs(identifier, args));
 
         public ValueTask<TValue> InvokeAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.PublicProperties)] TValue>(string identifier, CancellationToken cancellationToken, object[] args)
-        {
-            return instance.InvokeAsync<TValue>(identifier, cancellationToken, InterceptArgs(identifier, args));
-        }
+            => instance.InvokeAsync<TValue>(identifier, cancellationToken, InterceptArgs(identifier, args));
 
         [RequiresUnreferencedCode("JSON serialization and deserialization might require types that cannot be statically analyzed.")]
         public TResult Invoke<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.PublicProperties)] TResult>(string identifier, params object[] args)
-        {
-            return inProcessInstance.Invoke<TResult>(identifier, args);
-        }
+            => inProcessInstance.Invoke<TResult>(identifier, args);
 
         object[] InterceptArgs(string identifier, object[] args)
         {

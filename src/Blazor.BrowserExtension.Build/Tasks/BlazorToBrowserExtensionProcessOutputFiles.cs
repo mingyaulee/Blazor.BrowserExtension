@@ -21,7 +21,7 @@ namespace Blazor.BrowserExtension.Build.Tasks
             {
                 ProcessItem(input, output);
             }
-            Output = output.ToArray();
+            Output = [.. output];
             return true;
         }
 
@@ -36,8 +36,6 @@ namespace Blazor.BrowserExtension.Build.Tasks
         }
 
         private static string GetRelativePath(ITaskItem item)
-        {
-            return Path.GetDirectoryName(item.GetMetadata("RelativePath")) ?? string.Empty;
-        }
+            => Path.GetDirectoryName(item.GetMetadata("RelativePath")) ?? string.Empty;
     }
 }

@@ -62,7 +62,7 @@ namespace Blazor.BrowserExtension.Build.Tasks
                 Log.LogMessage(MessageImportance.Normal, $"{LogPrefix}Added route '{pageRoute}'");
             }
 
-            Output = output.ToArray();
+            Output = [.. output];
             return true;
         }
 
@@ -99,8 +99,6 @@ namespace Blazor.BrowserExtension.Build.Tasks
         }
 
         private static bool IsFileName(string pageDirective)
-        {
-            return !string.IsNullOrEmpty(Path.GetExtension(pageDirective));
-        }
+            => !string.IsNullOrEmpty(Path.GetExtension(pageDirective));
     }
 }

@@ -40,9 +40,7 @@ namespace Blazor.BrowserExtension.Build.Tasks
         }
 
         private void LogErrorAtLine(long? lineNumber, long? columnNumber, string message)
-        {
-            Log.LogError(null, null, null, FileName, (int)lineNumber.GetValueOrDefault(), (int)columnNumber.GetValueOrDefault(), (int)lineNumber.GetValueOrDefault(), (int)columnNumber.GetValueOrDefault(), message);
-        }
+            => Log.LogError(null, null, null, FileName, (int)lineNumber.GetValueOrDefault(), (int)columnNumber.GetValueOrDefault(), (int)lineNumber.GetValueOrDefault(), (int)columnNumber.GetValueOrDefault(), message);
 
         private bool ValidateManifestFile(string manifestFile)
         {

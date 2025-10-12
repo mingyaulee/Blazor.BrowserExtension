@@ -39,14 +39,10 @@ namespace Blazor.BrowserExtension.Build.Test
         }
 
         public void ExecuteDotnetCommand(string command)
-        {
-            CommandHelper.ExecuteCommandVoid(DotNetCommand, command, Path.Combine(rootTestDirectory, "TestProjects"));
-        }
+            => CommandHelper.ExecuteCommandVoid(DotNetCommand, command, Path.Combine(rootTestDirectory, "TestProjects"));
 
         public void ExecuteDotnetCommand(string command, string testProjectName)
-        {
-            CommandHelper.ExecuteCommandVoid(DotNetCommand, command, GetTestProjectDirectory(testProjectName));
-        }
+            => CommandHelper.ExecuteCommandVoid(DotNetCommand, command, GetTestProjectDirectory(testProjectName));
 
         public void ExecuteDotnetRestoreCommand(string testProjectName)
             => ExecuteDotnetCommand("restore --no-cache", testProjectName);

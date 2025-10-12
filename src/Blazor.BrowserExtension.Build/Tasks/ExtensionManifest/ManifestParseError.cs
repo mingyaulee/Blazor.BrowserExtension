@@ -1,16 +1,9 @@
 ﻿namespace Blazor.BrowserExtension.Build.Tasks.ExtensionManifest
 {
-    internal class ManifestParseError
+    internal class ManifestParseError(long? lineNumber, long? columnNumber, string message)
     {
-        public ManifestParseError(long? lineNumber, long? columnNumber, string message)
-        {
-            LineNumber = lineNumber;
-            ColumnNumber = columnNumber;
-            Message = message;
-        }
-
-        public long? LineNumber { get; }
-        public long? ColumnNumber { get; }
-        public string Message { get; }
+        public long? LineNumber { get; } = lineNumber;
+        public long? ColumnNumber { get; } = columnNumber;
+        public string Message { get; } = message;
     }
 }

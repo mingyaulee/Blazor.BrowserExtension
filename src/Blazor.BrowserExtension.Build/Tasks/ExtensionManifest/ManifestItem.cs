@@ -2,18 +2,11 @@
 
 namespace Blazor.BrowserExtension.Build.Tasks.ExtensionManifest
 {
-    internal class ManifestItem
+    internal class ManifestItem(long? lineNumber, long? columnNumber, string value)
     {
-        public ManifestItem(long? lineNumber, long? columnNumber, string value)
-        {
-            LineNumber = lineNumber;
-            ColumnNumber = columnNumber;
-            Value = value;
-        }
-
-        public long? LineNumber { get; }
-        public long? ColumnNumber { get; set; }
-        public string Value { get; }
+        public long? LineNumber { get; } = lineNumber;
+        public long? ColumnNumber { get; set; } = columnNumber;
+        public string Value { get; } = value;
 
         public bool ContainsExact(string value) => Regex.IsMatch(Value, Regex.Escape($"\"{value}\""));
         public bool ContainsExactIgnoreCase(string value) => Regex.IsMatch(Value, Regex.Escape($"\"{value}\""), RegexOptions.IgnoreCase);

@@ -5,9 +5,7 @@ namespace Blazor.BrowserExtension.Analyzer
     internal static class DiagnosticFactory
     {
         public static Diagnostic CreateTranslationError(Location location, string message)
-        {
-            return Diagnostic.Create(TranslationDiagnostic, location, message);
-        }
+            => Diagnostic.Create(TranslationDiagnostic, location, message);
 
         static DiagnosticDescriptor TranslationDiagnostic = new(
             id: "BROWSEREXT001",

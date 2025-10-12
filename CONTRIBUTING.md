@@ -47,11 +47,6 @@ This package facilitates the build process by defining and importing the build t
 ### Blazor.BrowserExtension.Template
 This package serves as a template for initiating a new project using the `dotnet new` command.
 
-### Use a Consistent Coding Style
-- 4 spaces (C#) or 2 spaces (XML/JSON/JS) for indentation rather than tabs.
-- Every `if`, `else`, `for`, `foreach`, `while` etc should have its own opening and closing bracket, even if it is a single line statement.
-- Every code file changed should be formatted properly (CTRL+K, CTRL+D in VS or ALT+SHIFT+F in VS Code).
-
 ### Running the integration tests
 1. Download the chrome driver from (here)[http://chromedriver.storage.googleapis.com/]
 0. Extract the chrome driver to the directory C:\SeleniumWebDrivers\ChromeDriver

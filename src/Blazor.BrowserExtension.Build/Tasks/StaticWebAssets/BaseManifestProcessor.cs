@@ -5,16 +5,10 @@ using System.Linq;
 
 namespace Blazor.BrowserExtension.Build.Tasks.StaticWebAssets
 {
-    public abstract class BaseManifestProcessor
+    public abstract class BaseManifestProcessor(IEnumerable<string> excludePaths)
     {
-        private readonly IEnumerable<string> excludePaths;
-        private readonly List<StaticWebAssetFile> output;
-
-        protected BaseManifestProcessor(IEnumerable<string> excludePaths)
-        {
-            this.excludePaths = excludePaths?.Select(excludePath => NormalizePath(excludePath)).ToList() ?? Enumerable.Empty<string>();
-            output = new List<StaticWebAssetFile>();
-        }
+        private readonly IEnumerable<string> excludePaths = excludePaths?.Select(NormalizePath).ToList() ?? Enumerable.Empty<string>();
+        private readonly List<StaticWebAssetFile> output = [];
 
         public abstract void ReadFromFile(string filePath);
 
@@ -32,20 +26,13 @@ namespace Blazor.BrowserExtension.Build.Tasks.StaticWebAssets
             });
         }
 
-        public IEnumerable<StaticWebAssetFile> GetOutput()
-        {
-            return output;
-        }
+        public IEnumerable<StaticWebAssetFile> GetOutput() => output;
 
         protected bool ShouldExcludePath(string path)
-        {
-            return excludePaths.Any(excludePath => path.Equals(excludePath, StringComparison.OrdinalIgnoreCase));
-        }
+            => excludePaths.Any(excludePath => path.Equals(excludePath, StringComparison.OrdinalIgnoreCase));
 
         protected static string NormalizePath(string path)
-        {
-            return Path.GetFullPath(new Uri(path).LocalPath)
+            => Path.GetFullPath(new Uri(path).LocalPath)
                        .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
-        }
     }
 }

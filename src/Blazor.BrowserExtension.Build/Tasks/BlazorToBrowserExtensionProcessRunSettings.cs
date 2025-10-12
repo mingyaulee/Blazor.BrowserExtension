@@ -64,8 +64,6 @@ namespace Blazor.BrowserExtension.Build.Tasks
         }
 
         private static bool IsProjectCommand(JsonProperty profile)
-        {
-            return profile.Value.TryGetProperty("commandName", out var commandNameElement) && commandNameElement.ValueEquals("Project");
-        }
+            => profile.Value.TryGetProperty("commandName", out var commandNameElement) && commandNameElement.ValueEquals("Project");
     }
 }

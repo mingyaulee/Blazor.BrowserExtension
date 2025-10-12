@@ -25,7 +25,7 @@ namespace Blazor.BrowserExtension.Build.Tasks
             {
                 ProcessItem(input, output, compressionEnabled);
             }
-            Output = output.ToArray();
+            Output = [.. output];
             return true;
         }
 
@@ -77,15 +77,11 @@ namespace Blazor.BrowserExtension.Build.Tasks
         }
 
         private static bool ShouldUseCompressedFile(string filePath)
-        {
-            return filePath.Contains("framework") &&
+            => filePath.Contains("framework") &&
                 !(filePath.EndsWith(".js") || filePath.EndsWith(".json"));
-        }
 
         private void LogExcludeItem(string relativePath)
-        {
-            Log.LogMessage(MessageImportance.Normal, $"{LogPrefix}Excluding {relativePath}");
-        }
+            => Log.LogMessage(MessageImportance.Normal, $"{LogPrefix}Excluding {relativePath}");
 
         private void LogExcludeItems(IEnumerable<ITaskItem> items)
         {
@@ -96,8 +92,6 @@ namespace Blazor.BrowserExtension.Build.Tasks
         }
 
         private static string GetRelativePath(ITaskItem item)
-        {
-            return item.GetMetadata("RelativePath");
-        }
+            => item.GetMetadata("RelativePath");
     }
 }

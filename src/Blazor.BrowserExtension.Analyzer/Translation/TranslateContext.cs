@@ -13,14 +13,10 @@ namespace Blazor.BrowserExtension.Analyzer.Translation
         public ParentExpressionType ParentExpressionType { get; set; }
 
         public ISymbol GetSymbol(SyntaxNode node)
-        {
-            return semanticModel.GetSymbolInfo(node).Symbol;
-        }
+            => semanticModel.GetSymbolInfo(node).Symbol;
 
         public TypeInfo GetType(SyntaxNode node)
-        {
-            return semanticModel.GetTypeInfo(node);
-        }
+            => semanticModel.GetTypeInfo(node);
 
         public string AddReference(string key, string value)
         {
@@ -39,9 +35,7 @@ namespace Blazor.BrowserExtension.Analyzer.Translation
         }
 
         public bool IsJsAccessPath(ExpressionSyntax node)
-        {
-            return JsAccessPathNodes.Contains(node);
-        }
+            => JsAccessPathNodes.Contains(node);
 
         public string GetJsAccessPath(SyntaxNode node, ISymbol symbol)
         {
