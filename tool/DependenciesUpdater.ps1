@@ -15,21 +15,11 @@ Function DownloadFile {
 }
 
 Function UpdateBrowserPolyfill {
-    $baseUrl = "https://unpkg.com"
-    $request = [System.Net.WebRequest]::Create("$baseUrl/webextension-polyfill")
-    $request.AllowAutoRedirect = $false
-    $response = $request.GetResponse()
-    
-    If ($response.StatusCode -eq "Found") {
-        $versionRelativeUrl = $response.GetResponseHeader("Location")
-        $versionUrl = "$baseUrl$versionRelativeUrl/dist"
-        DownloadFile -baseUrl $versionUrl -fileName "browser-polyfill.js"
-        DownloadFile -baseUrl $versionUrl -fileName "browser-polyfill.js.map"
-        DownloadFile -baseUrl $versionUrl -fileName "browser-polyfill.min.js"
-        DownloadFile -baseUrl $versionUrl -fileName "browser-polyfill.min.js.map"
-    } Else {
-        Throw "Unable to get the latest version of webextension-polyfill."
-    }
+    $baseUrl = "https://unpkg.com/webextension-polyfill/dist"
+    DownloadFile -baseUrl $baseUrl -fileName "browser-polyfill.js"
+    DownloadFile -baseUrl $baseUrl -fileName "browser-polyfill.js.map"
+    DownloadFile -baseUrl $baseUrl -fileName "browser-polyfill.min.js"
+    DownloadFile -baseUrl $baseUrl -fileName "browser-polyfill.min.js.map"
 }
 
 Function UpdateBrotliDecode {
