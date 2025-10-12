@@ -99,7 +99,7 @@ namespace Blazor.BrowserExtension.Build.Tasks.ExtensionManifest
                     _ => null,
                 };
 
-            delegate long? GetNumberFieldDelegate(Utf8JsonReader reader);
+            private delegate long? GetNumberFieldDelegate(Utf8JsonReader reader);
             private static readonly ParameterExpression readerParameter = Expression.Parameter(typeof(Utf8JsonReader), "reader");
             private static readonly Expression getLineNumberField = Expression.Field(readerParameter, "_lineNumber");
             private static readonly Expression returnLineNumberConverted = Expression.ConvertChecked(getLineNumberField, typeof(long?));

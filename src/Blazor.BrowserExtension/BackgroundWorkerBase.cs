@@ -15,7 +15,7 @@ namespace Blazor.BrowserExtension
     {
         protected virtual Dictionary<string, object> JsInstance => throw new InvalidOperationException("The JsInstance should be overridden by the generated code.");
 
-        bool isInitialized;
+        private bool isInitialized;
 
         [Inject]
         private IJsRuntimeAdapter JsRuntimeAdapter { get; set; }

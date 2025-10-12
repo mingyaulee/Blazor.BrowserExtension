@@ -101,7 +101,8 @@ namespace Blazor.BrowserExtension.Build.Tasks
             })];
         }
 
-        static readonly char[] PathSeparators = ['/', '\\'];
+        private static readonly char[] PathSeparators = ['/', '\\'];
+
         private static string GetRelativePath(ITaskItem item)
         {
             var basePath = item.GetMetadata("BasePath");

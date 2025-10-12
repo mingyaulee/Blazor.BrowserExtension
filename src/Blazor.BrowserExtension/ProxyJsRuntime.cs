@@ -21,7 +21,7 @@ namespace Blazor.BrowserExtension
         public TResult Invoke<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.PublicProperties)] TResult>(string identifier, params object[] args)
             => inProcessInstance.Invoke<TResult>(identifier, args);
 
-        object[] InterceptArgs(string identifier, object[] args)
+        private object[] InterceptArgs(string identifier, object[] args)
         {
             if (identifier == "import")
             {
@@ -30,7 +30,7 @@ namespace Blazor.BrowserExtension
             return args;
         }
 
-        string ReplaceImportPath(string importPath)
+        private string ReplaceImportPath(string importPath)
         {
             var splitPaths = importPath.Split('/');
             var replacedImportPath = string.Join('/', splitPaths.Select((path, index) => index < splitPaths.Length - 1 && path.StartsWith('_') ? path[1..] : path));
