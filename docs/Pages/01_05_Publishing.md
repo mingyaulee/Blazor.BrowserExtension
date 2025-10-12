@@ -25,4 +25,4 @@ If you would like to use AOT compilation, it is best to benchmark the size befor
 
 You can also enable IL trimming when publishing and disable unused features such as timezone support.
 
-Refer to [Blazor performance best practices](https://learn.microsoft.com/en-us/aspnet/core/blazor/performance?view=aspnetcore-8.0#minimize-app-download-size) documentation page for more information.
+Refer to [ASP.NET Core Blazor app download size performance best practices](https://learn.microsoft.com/en-us/aspnet/core/blazor/performance/app-download-size?view=aspnetcore-[NetVersion].0#intermediate-language-il-trimming) documentation page for more information.
