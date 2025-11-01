@@ -6,8 +6,8 @@
 
   <ItemGroup Condition="'$(ProjectIsInDocs)' == 'true'">
     <PackageVersion Include="Markdig" Version="0.42.0" />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.9" />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="9.0.9" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.10" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="9.0.10" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(ProjectIsInSrc)' == 'true'">
