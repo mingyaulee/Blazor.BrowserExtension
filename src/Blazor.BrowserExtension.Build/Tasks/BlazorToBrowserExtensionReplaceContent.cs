@@ -45,18 +45,7 @@ namespace Blazor.BrowserExtension.Build.Tasks
                         Log.LogMessage(MessageImportance.Normal, $"{LogPrefix}Replacing {replace.ItemSpec}");
                         if (fileContent.Contains(from))
                         {
-                            const string importRelativePathToken = "{{IMPORT_RELATIVE_PATH}}";
-                            if (to.Contains(importRelativePathToken))
-                            {
-                                var basePath = !string.IsNullOrEmpty(BasePath) ? BasePath : throw new InvalidOperationException($"BasePath must be set when using the token '{importRelativePathToken}' in the 'To' value.");
-#pragma warning disable IDE0057 // Use range operator
-                                var relativePath = Path.GetDirectoryName(FileName)
-                                    .Substring(basePath.Length)
-                                    .TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
-                                    .Replace('\\', '/');
-#pragma warning restore IDE0057 // Use range operator
-                                to = to.Replace(importRelativePathToken, relativePath);
-                            }
+                            to = ReplaceToken(to);
                             fileContent = fileContent.Replace(from, to);
                             fileChanged = true;
                             Log.LogMessage(MessageImportance.Normal, $"{LogPrefix}Replaced from '{from}' to '{to}'");
@@ -92,6 +81,24 @@ namespace Blazor.BrowserExtension.Build.Tasks
                 Log.LogErrorFromException(ex);
                 return false;
             }
+        }
+
+        string ReplaceToken(string input)
+        {
+            const string importRelativePathToken = "{{IMPORT_RELATIVE_PATH}}";
+            if (input.Contains(importRelativePathToken))
+            {
+                var basePath = !string.IsNullOrEmpty(BasePath) ? BasePath : throw new InvalidOperationException($"BasePath must be set when using the token '{importRelativePathToken}' in the 'To' value.");
+#pragma warning disable IDE0057 // Use range operator
+                var relativePath = Path.GetDirectoryName(FileName)
+                    .Substring(basePath.Length)
+                    .TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+                    .Replace('\\', '/');
+#pragma warning restore IDE0057 // Use range operator
+                input = input.Replace(importRelativePathToken, relativePath);
+            }
+
+            return input;
         }
     }
 }
