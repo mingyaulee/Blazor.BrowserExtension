@@ -10,17 +10,17 @@
       <!-- Import proxy -->
       <_Import_FileContentReplacements Include="await import">
         <From>await import(</From>
-        <To>await (globalThis.importProxy ?? (m => import(m)))(</To>
+        <To>await (globalThis.importProxy?.bind(null, "{{IMPORT_RELATIVE_PATH}}") ?? (m => import(m)))(</To>
         <IsOptional>true</IsOptional>
       </_Import_FileContentReplacements>
       <_Import_FileContentReplacements Include="import assigned to variable">
         <From>=import(</From>
-        <To>=(globalThis.importProxy ?? (m => import(m)))(</To>
+        <To>=(globalThis.importProxy?.bind(null, "{{IMPORT_RELATIVE_PATH}}") ?? (m => import(m)))(</To>
         <IsOptional>true</IsOptional>
       </_Import_FileContentReplacements>
       <_Import_FileContentReplacements Include="import assigned to variable comma separated">
         <From>,import(</From>
-        <To>,(globalThis.importProxy ?? (m => import(m)))(</To>
+        <To>,(globalThis.importProxy?.bind(null, "{{IMPORT_RELATIVE_PATH}}") ?? (m => import(m)))(</To>
         <IsOptional>true</IsOptional>
       </_Import_FileContentReplacements>
 

@@ -15,6 +15,8 @@ namespace Blazor.BrowserExtension.Build.Tasks
         [Required]
         public ITaskItem[] Replace { get; set; }
 
+        public string BasePath { get; set; }
+
         public bool FailOnWarning { get; set; }
 
         public string FailMessage { get; set; }
@@ -43,6 +45,18 @@ namespace Blazor.BrowserExtension.Build.Tasks
                         Log.LogMessage(MessageImportance.Normal, $"{LogPrefix}Replacing {replace.ItemSpec}");
                         if (fileContent.Contains(from))
                         {
+                            const string importRelativePathToken = "{{IMPORT_RELATIVE_PATH}}";
+                            if (to.Contains(importRelativePathToken))
+                            {
+                                var basePath = !string.IsNullOrEmpty(BasePath) ? BasePath : throw new InvalidOperationException($"BasePath must be set when using the token '{importRelativePathToken}' in the 'To' value.");
+#pragma warning disable IDE0057 // Use range operator
+                                var relativePath = Path.GetDirectoryName(FileName)
+                                    .Substring(basePath.Length)
+                                    .TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+                                    .Replace('\\', '/');
+#pragma warning restore IDE0057 // Use range operator
+                                to = to.Replace(importRelativePathToken, relativePath);
+                            }
                             fileContent = fileContent.Replace(from, to);
                             fileChanged = true;
                             Log.LogMessage(MessageImportance.Normal, $"{LogPrefix}Replaced from '{from}' to '{to}'");

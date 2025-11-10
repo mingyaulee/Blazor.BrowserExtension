@@ -156,7 +156,7 @@ namespace Blazor.BrowserExtension.Build.Tasks
                   return {};
                 }
 
-                globalThis.importProxy = (module) => Promise.resolve(importModule(module));
+                globalThis.importProxy = (requestorRelativePath, module) => Promise.resolve(importModule(module));
                 for (const importRequest of importRequested) {
                   importRequest.resolve(importModule(importRequest.module));
                 }

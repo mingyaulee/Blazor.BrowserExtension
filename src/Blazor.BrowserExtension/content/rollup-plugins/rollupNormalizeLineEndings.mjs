@@ -9,9 +9,16 @@ const rollupNormalizeLineEndings = function () {
         if (chunk.type !== "chunk") {
           continue;
         }
+
         const filePath = path.resolve(path.join(options.dir, chunk.fileName));
         let fileContent = fs.readFileSync(filePath, "utf8");
         fileContent = fileContent.replaceAll(/\r?\n/g, "\r\n");
+
+        if (chunk.fileName == "ContentScript.js") {
+          // Update import path to be absolute
+          fileContent = fileContent.replaceAll("await import('./CoreInternal.js')", "await import(`${url}content/Blazor.BrowserExtension/CoreInternal.js`)");
+        }
+
         fs.writeFileSync(filePath, fileContent, { encoding: "utf8" });
       }
     }

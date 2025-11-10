@@ -56,9 +56,11 @@
       <_BrowserExtension_Project_PublishOutput_BrowserExtension_Framework_DotNetJs_FilePath Include="$(_BrowserExtension_Project_PublishOutput_BrowserExtension_Framework_Directory)\dotnet.*.js" />
     </ItemGroup>
     <BlazorToBrowserExtensionReplaceContent Files="@(_BrowserExtension_Project_PublishOutput_BrowserExtension_Framework_BlazorJs_FilePath)"
-                                            Replace="@(_BrowserExtension_BlazorJs_FileContentReplacements)" />
+                                            Replace="@(_BrowserExtension_BlazorJs_FileContentReplacements)"
+                                            BasePath="$(_BrowserExtension_Project_PublishOutput_BrowserExtension_Directory)" />
     <BlazorToBrowserExtensionReplaceContent Files="@(_BrowserExtension_Project_PublishOutput_BrowserExtension_Framework_DotnetJs_FilePath)"
-                                            Replace="@(_BrowserExtension_DotNetJs_FileContentReplacements)" />
+                                            Replace="@(_BrowserExtension_DotNetJs_FileContentReplacements)"
+                                            BasePath="$(_BrowserExtension_Project_PublishOutput_BrowserExtension_Directory)" />
 
     <Message Importance="normal" Text="  Replacing content of other asset files" />
     <ItemGroup>
@@ -69,7 +71,8 @@
                                                                                       Exclude="$(_BrowserExtension_Project_PublishOutput_BrowserExtension_Framework_Directory)\**\*.js" />
     </ItemGroup>
     <BlazorToBrowserExtensionReplaceContent Files="@(_BrowserExtension_Project_PublishOutput_BrowserExtension_FilesToReplaceContent)"
-                                            Replace="@(_BrowserExtension_Other_FileContentReplacements)" />
+                                            Replace="@(_BrowserExtension_Other_FileContentReplacements)"
+                                            BasePath="$(_BrowserExtension_Project_PublishOutput_BrowserExtension_Directory)" />
 
     <!-- Duplicate entry files to support routing -->
     <Message Importance="normal" Text="  Processing routing files" />

@@ -80,7 +80,7 @@ export function fromReference(key) {
 
 export const importRequested = [];
 
-globalThis.importProxy = (module) => {
+globalThis.importProxy = (requestorRelativePath, module) => {
   return new Promise(resolve => {
     importRequested.push({ module, resolve });
   });
