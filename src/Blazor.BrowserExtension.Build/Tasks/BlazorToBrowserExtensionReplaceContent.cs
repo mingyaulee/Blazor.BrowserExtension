@@ -83,7 +83,7 @@ namespace Blazor.BrowserExtension.Build.Tasks
             }
         }
 
-        string ReplaceToken(string input)
+        private string ReplaceToken(string input)
         {
             const string importRelativePathToken = "{{IMPORT_RELATIVE_PATH}}";
             if (input.Contains(importRelativePathToken))
