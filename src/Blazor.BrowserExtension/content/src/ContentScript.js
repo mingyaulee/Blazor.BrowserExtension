@@ -13,7 +13,7 @@
     // Error: Not allowed to define cross-origin object as property on [Object] or [Array] XrayWrapper
     const fetchFunction = globalThis.fetch;
     globalThis.fetch = async (/** @type string */fetchUrl, init) => {
-      if (typeof fetchUrl !== "string" || !fetchUrl.includes("blazor.boot.json")) {
+      if (typeof fetchUrl !== "string" || !(fetchUrl.includes("blazor.boot.json") || fetchUrl.endsWith(".br"))) {
         return fetchFunction(fetchUrl, init);
       }
       const absoluteFetchUrl = new URL(fetchUrl, url);
@@ -24,6 +24,11 @@
             return async () => {
               const json = await response.json();
               return globalThis.cloneInto(json, globalThis);
+            };
+          } else if (prop === "arrayBuffer") {
+            return async () => {
+              const arrayBuffer = await response.arrayBuffer();
+              return globalThis.cloneInto(arrayBuffer, globalThis);
             };
           }
 
