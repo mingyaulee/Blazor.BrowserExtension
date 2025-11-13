@@ -50,6 +50,11 @@
         - .Net 8 https://github.com/dotnet/runtime/tree/v8.0.13/src/mono/wasm/runtime
       -->
       <_BrowserExtension_DotNetJs_FileContentReplacements Include="@(_Import_FileContentReplacements)" />
+      <_BrowserExtension_DotNetJs_FileContentReplacements Include="content path for WasmInlineBootConfig">
+        <From>_content/</From>
+        <To>content/</To>
+        <IsOptional>true</IsOptional>
+      </_BrowserExtension_DotNetJs_FileContentReplacements>
       <!--
         Define contents to replace in other files
       -->
