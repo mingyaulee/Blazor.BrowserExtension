@@ -1,4 +1,5 @@
 ﻿using Microsoft.Playwright;
+using Xunit;
 
 namespace Blazor.BrowserExtension.Build.Test.Helpers
 {
@@ -6,8 +7,7 @@ namespace Blazor.BrowserExtension.Build.Test.Helpers
     {
         private IPlaywright playwright;
         private IPage page;
-        protected string extensionPath;
-        protected string extensionBaseUrl;
+        private readonly List<string> consoleMessages = [];
         private bool disposedValue;
 
         public string CurrentUrl => page.Url;
@@ -19,21 +19,31 @@ namespace Blazor.BrowserExtension.Build.Test.Helpers
             playwright = await Playwright.CreateAsync();
             var browser = await LaunchBrowser(playwright, currentDirectory, extensionPath);
             page = await browser.RunAndWaitForPageAsync(static () => Task.CompletedTask);
-            var consoleMessages = new List<string>();
             page.Console += (_, message) => consoleMessages.Add(message.Text);
 
             ExtensionBaseUrl = page.Url[..^"/index.html".Length];
         }
 
         public Task NavigateToUrl(string url)
-            => page.GotoAsync(url);
+        {
+            consoleMessages.Clear();
+            return page.GotoAsync(url);
+        }
 
         public string GetExtensionUrl(string path)
             => $"{ExtensionBaseUrl}index.html?path={path}";
 
         public async Task<string> GetContent(string selector)
         {
-            await page.WaitForSelectorAsync(selector);
+            try
+            {
+                await page.WaitForSelectorAsync(selector);
+            }
+            catch (TimeoutException)
+            {
+                Assert.Fail($"Failed to get content for '{selector}'. Console messages: {string.Join(Environment.NewLine, consoleMessages)}");
+            }
+
             return await page.EvalOnSelectorAsync<string>(selector, "el => el.innerText");
         }
 

@@ -13,7 +13,6 @@
     <File Path=".gitignore" />
     <File Path="CONTRIBUTING.md" />
     <File Path="Directory.Build.props" />
-    <File Path="Directory.Build.targets" />
     <File Path="Directory.Packages.props" />
     <File Path="GitVersion.yml" />
     <File Path="LICENSE" />

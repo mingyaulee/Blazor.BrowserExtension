@@ -58,20 +58,36 @@ namespace Blazor.BrowserExtension.Build.Test
 
         public Task<WebDriverExtensionHelper> LoadExtensionBuildOutput(string testProjectName)
         {
+            var copyToBinExtensionPath = Path.Combine(rootTestDirectory, "bin", "Debug", CommonTestHelper.TargetFramework, testProjectName);
             var extensionPath = Path.Combine(GetTestProjectDirectory(testProjectName), "bin", "Debug", CommonTestHelper.TargetFramework, "browserextension");
-            return LoadExtension(extensionPath);
+            return LoadExtension(extensionPath, copyToBinExtensionPath);
         }
 
         public Task<WebDriverExtensionHelper> LoadExtensionPublishOutput(string testProjectName)
         {
+            var copyToBinExtensionPath = Path.Combine(rootTestDirectory, "bin", "Release", CommonTestHelper.TargetFramework, testProjectName);
             var extensionPath = Path.Combine(GetTestProjectDirectory(testProjectName), "bin", "Release", CommonTestHelper.TargetFramework, "publish", "browserextension");
-            return LoadExtension(extensionPath);
+            return LoadExtension(extensionPath, copyToBinExtensionPath);
         }
 
-        private static async Task<WebDriverExtensionHelper> LoadExtension(string extensionPath)
+        private static async Task<WebDriverExtensionHelper> LoadExtension(string extensionPath, string copyToBinExtensionPath)
         {
+            if (Directory.Exists(copyToBinExtensionPath))
+            {
+                Directory.Delete(copyToBinExtensionPath, true);
+            }
+            Directory.CreateDirectory(copyToBinExtensionPath);
+
+            foreach (var file in Directory.GetFiles(extensionPath, "*", SearchOption.AllDirectories))
+            {
+                var relativePath = Path.GetRelativePath(extensionPath, file);
+                var destFileName = Path.Combine(copyToBinExtensionPath, relativePath);
+                Directory.CreateDirectory(Path.GetDirectoryName(destFileName));
+                File.Copy(file, destFileName, true);
+            }
+
             var extension = new WebDriverExtensionHelper();
-            await extension.Load(extensionPath);
+            await extension.Load(copyToBinExtensionPath);
             return extension;
         }
 

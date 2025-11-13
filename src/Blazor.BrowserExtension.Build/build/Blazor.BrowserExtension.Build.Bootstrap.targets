@@ -17,7 +17,8 @@
       <_BrowserExtension_Project_Assets_ManifestJson_FilePath>$(_BrowserExtension_Project_Assets_Directory)\manifest.json</_BrowserExtension_Project_Assets_ManifestJson_FilePath>
       <_BrowserExtension_Package_Contents_BackgroundWorker_FilePath>$(_BrowserExtension_Package_Contents_Directory)\BackgroundWorker.cs</_BrowserExtension_Package_Contents_BackgroundWorker_FilePath>
       <_BrowserExtension_Project_BackgroundWorker_FilePath>$(_BrowserExtension_Project_Directory)BackgroundWorker.cs</_BrowserExtension_Project_BackgroundWorker_FilePath>
-      <_BrowserExtension_Project_RazorPages_IndexRazor_FilePath>$(_BrowserExtension_Project_RazorPages_Directory)\Index.razor</_BrowserExtension_Project_RazorPages_IndexRazor_FilePath>
+      <_BrowserExtension_Project_RazorPages_IndexRazor_FilePath>$(_BrowserExtension_Project_RazorPages_Directory)\Home.razor</_BrowserExtension_Project_RazorPages_IndexRazor_FilePath>
+      <_BrowserExtension_Project_RazorPages_IndexRazor_FilePath Condition="Exists('$(_BrowserExtension_Project_RazorPages_Directory)\Index.razor')">$(_BrowserExtension_Project_RazorPages_Directory)\Index.razor</_BrowserExtension_Project_RazorPages_IndexRazor_FilePath>
       <_BrowserExtension_Project_ImportsRazor_FilePath>$(_BrowserExtension_Project_Directory)_Imports.razor</_BrowserExtension_Project_ImportsRazor_FilePath>
       <_BrowserExtension_Project_ProgramCs_FilePath>$(_BrowserExtension_Project_Directory)Program.cs</_BrowserExtension_Project_ProgramCs_FilePath>
     </PropertyGroup>
@@ -38,10 +39,6 @@
           ContinueOnError="true"
           SkipUnchangedFiles="true" />
 
-    <Message Importance="high" Text="  Bootstrapping project file '$(_BrowserExtension_Project_FilePath)'" />
-    <BlazorToBrowserExtensionBootstrapFile FilePath="$(_BrowserExtension_Project_FilePath)"
-                                           FileType="Project" />
-
     <Message Importance="high" Text="  Bootstrapping Index.razor file '$(_BrowserExtension_Project_RazorPages_IndexRazor_FilePath)'" />
     <BlazorToBrowserExtensionBootstrapFile FilePath="$(_BrowserExtension_Project_RazorPages_IndexRazor_FilePath)"
                                            FileType="IndexRazor" />
@@ -61,6 +58,10 @@
     <Message Importance="high" Text="  Bootstrapping Program.cs file '$(_BrowserExtension_Project_ProgramCs_FilePath)'" />
     <BlazorToBrowserExtensionBootstrapFile FilePath="$(_BrowserExtension_Project_ProgramCs_FilePath)"
                                            FileType="ProgramCs" />
+
+    <Message Importance="high" Text="  Bootstrapping project file '$(_BrowserExtension_Project_FilePath)'" />
+    <BlazorToBrowserExtensionBootstrapFile FilePath="$(_BrowserExtension_Project_FilePath)"
+                                           FileType="Project" />
 
     <!-- Make sure this build includes the newly copied file -->
     <ItemGroup>

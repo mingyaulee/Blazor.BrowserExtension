@@ -26,6 +26,7 @@
       <!-- StaticWebAssets
         The StaticWebAssets manifest is created by the dotnet SDK and read by the DevServer.
         Source:
+        - .Net 10 https://github.com/dotnet/aspnetcore/blob/v10.0.0/src/Components/WebAssembly/DevServer/src/Server/Program.cs
         - .Net 9 https://github.com/dotnet/aspnetcore/blob/v9.0.2/src/Components/WebAssembly/DevServer/src/Server/Program.cs
         - .Net 8 https://github.com/dotnet/aspnetcore/blob/v8.0.13/src/Components/WebAssembly/DevServer/src/Server/Program.cs
       -->

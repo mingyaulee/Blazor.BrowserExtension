@@ -27,6 +27,7 @@
       <!--
         Define contents to replace in blazor.webassembly.js
         Source:
+        - .Net 10 https://github.com/dotnet/aspnetcore/tree/v10.0.0/src/Components/Web.JS/src/Platform
         - .Net 9 https://github.com/dotnet/aspnetcore/tree/v9.0.2/src/Components/Web.JS/src/Platform
         - .Net 8 https://github.com/dotnet/aspnetcore/tree/v8.0.13/src/Components/Web.JS/src/Platform
       -->
@@ -46,7 +47,8 @@
       <!--
         Define contents to replace in dotnet.*.js
         Source:
-        - .Net 9 https://github.com/dotnet/runtime/tree/v9.0.2/src/mono/wasm/runtime
+        - .Net 10 https://github.com/dotnet/runtime/tree/v10.0.0/src/mono/browser/runtime
+        - .Net 9 https://github.com/dotnet/runtime/tree/v9.0.2/src/mono/browser/runtime
         - .Net 8 https://github.com/dotnet/runtime/tree/v8.0.13/src/mono/wasm/runtime
       -->
       <_BrowserExtension_DotNetJs_FileContentReplacements Include="@(_Import_FileContentReplacements)" />

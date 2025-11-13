@@ -66,7 +66,7 @@ namespace Blazor.BrowserExtension.Build.Test
             }
         }
 
-        static void ResetDirectoryChanges(string directory)
+        private static void ResetDirectoryChanges(string directory)
         {
             try
             {
@@ -76,6 +76,18 @@ namespace Blazor.BrowserExtension.Build.Test
             {
                 // No file to restore which is fine
             }
+
+            // Delete the bin and obj folders first to prevent long path issues on Windows
+            if (Directory.Exists(Path.Combine(directory, "bin")))
+            {
+                Directory.Delete(Path.Combine(directory, "bin"), true);
+            }
+
+            if (Directory.Exists(Path.Combine(directory, "obj")))
+            {
+                Directory.Delete(Path.Combine(directory, "obj"), true);
+            }
+
             CommandHelper.ExecuteCommandVoid("git", "clean . -xdf", directory);
         }
     }

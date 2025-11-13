@@ -4,6 +4,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <_BrowserExtensionBuildOutputFolder>bin\$(Configuration)</_BrowserExtensionBuildOutputFolder>
+    <WasmEnableHotReload>false</WasmEnableHotReload>
   </PropertyGroup>
 
   <!-- Link scripts according to the directory structure in the NuGet package -->
@@ -24,7 +25,6 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" PrivateAssets="all" />
-    <PackageReference Include="System.Net.Http.Json" />
   </ItemGroup>
 
   <!-- Import project reference and build props and targets as if we are referencing the built NuGet package -->

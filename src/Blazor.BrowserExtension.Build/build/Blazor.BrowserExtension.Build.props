@@ -2,7 +2,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <PropertyGroup>
-    <!-- Prevent caching by default since all browser extension files are local -->
+    <!-- Prevent caching by default since all browser extension files are local. Deprecated since .Net 10 -->
     <BlazorCacheBootResources>false</BlazorCacheBootResources>
     <!-- Disable fingerprinting by default since all browser extension files are local and not cached -->
     <StaticWebAssetsFingerprintContent>false</StaticWebAssetsFingerprintContent>
@@ -15,8 +15,9 @@
     <BrowserExtensionRoutingEntryFile Condition="'$(BrowserExtensionRoutingEntryFile)' == ''">index.html</BrowserExtensionRoutingEntryFile>
     <BrowserExtensionEnableCompression Condition="'$(BrowserExtensionEnableCompression)' == ''">$(CompressionEnabled)</BrowserExtensionEnableCompression>
     <BrowserExtensionEnableCompression Condition="'$(BrowserExtensionEnableCompression)' == ''">true</BrowserExtensionEnableCompression>
-    <!-- Get the binary file based on the runtime type, net9.0 for dotnet build and net472 for VS build -->
-    <_BrowserExtensionBuildTaskFolder Condition="'$(MSBuildRuntimeType)' == 'Core'">net9.0</_BrowserExtensionBuildTaskFolder>
+    <!-- Get the binary file based on the runtime type, net10.0 for dotnet build and net472 for VS build -->
+    <_BrowserExtensionBuildTaskFolder Condition="'$(MSBuildRuntimeType)' == 'Core'">net10.0</_BrowserExtensionBuildTaskFolder>
+    <_BrowserExtensionBuildTaskFolder Condition="'$(MSBuildRuntimeType)' == 'Core' AND '$(TargetFramework)' == 'net9.0'">ne9.0</_BrowserExtensionBuildTaskFolder>
     <_BrowserExtensionBuildTaskFolder Condition="'$(MSBuildRuntimeType)' == 'Core' AND '$(TargetFramework)' == 'net8.0'">net8.0</_BrowserExtensionBuildTaskFolder>
     <_BrowserExtensionBuildTaskFolder Condition="'$(MSBuildRuntimeType)' != 'Core'">net472</_BrowserExtensionBuildTaskFolder>
     <_BrowserExtensionBuildOutputFolder Condition="'$(_BrowserExtensionBuildOutputFolder)' == ''">tasks</_BrowserExtensionBuildOutputFolder>

@@ -21,6 +21,16 @@
       <BrowserExtensionBackgroundWorkerImportIncludeContent Include="content/JsBind.Net/JsBind.Net.lib.module.js" />
     </ItemGroup>
 
+    <ItemGroup>
+      <!--
+        dotnet.js is removed from WasmStaticWebAsset and StaticWebAsset, we should add it manually so that it can be imported in BackgroundWorker.js
+        Source:
+        - .Net 10 https://github.com/dotnet/runtime/blob/release/10.0/src/mono/nuget/Microsoft.NET.Sdk.WebAssembly.Pack/build/Microsoft.NET.Sdk.WebAssembly.Browser.targets#L284
+      -->
+      <_StaticWebAsset_Build_JsAssets Include="dotnet.js" RelativePath="_framework/dotnet.js" />
+      <_StaticWebAsset_Publish_JsAssets Include="dotnet.js" RelativePath="_framework/dotnet.js" />
+    </ItemGroup>
+
   </Target>
 
   <!--

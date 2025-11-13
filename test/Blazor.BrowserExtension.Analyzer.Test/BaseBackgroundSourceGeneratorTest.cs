@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using Blazor.BrowserExtension.Analyzer.Test.Helpers;
+﻿using Blazor.BrowserExtension.Analyzer.Test.Helpers;
 using Microsoft.CodeAnalysis.CSharp.Testing;
 using Microsoft.CodeAnalysis.Testing;
 
@@ -15,7 +14,7 @@ namespace Blazor.BrowserExtension.Analyzer.Test
             test.TestState.ReferenceAssemblies = GetReferenceAssemblies()
                 .AddPackages([
                     new PackageIdentity("Microsoft.AspNetCore.Components.WebAssembly", $"{CommonTestHelper.TargetFrameworkMajorVersion}.0.0"),
-                    new PackageIdentity("WebExtensions.Net.Extensions.DependencyInjection", "4.1.0")
+                    new PackageIdentity("WebExtensions.Net.Extensions.DependencyInjection", "5.0.0")
                 ]).AddAssemblies([
                     "Microsoft.AspNetCore.Components.WebAssembly",
                     "WebExtensions.Net.Extensions.DependencyInjection",
@@ -75,11 +74,9 @@ namespace Blazor.BrowserExtension.Analyzer.Test
         }
 
         static ReferenceAssemblies GetReferenceAssemblies()
-        {
-            var propertyName = $"Net{CommonTestHelper.TargetFrameworkMajorVersion}0";
-            var property = typeof(ReferenceAssemblies.Net).GetProperty(propertyName, BindingFlags.Public | BindingFlags.Static);
-            return property?.GetValue(null) as ReferenceAssemblies
-                ?? throw new InvalidOperationException($"ReferenceAssemblies for {propertyName} not found");
-        }
+            => new(
+                targetFramework: CommonTestHelper.TargetFramework,
+                referenceAssemblyPackage: new PackageIdentity("Microsoft.NETCore.App.Ref", $"{CommonTestHelper.TargetFrameworkMajorVersion}.0.0"),
+                referenceAssemblyPath: Path.Combine("ref", CommonTestHelper.TargetFramework));
     }
 }

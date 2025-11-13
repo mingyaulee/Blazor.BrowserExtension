@@ -7,45 +7,43 @@ using System.Threading.Tasks;
 using Microsoft.Playwright;
 using Xunit;
 
-[assembly: CollectionBehavior(DisableTestParallelization = true)]
-
 namespace Blazor.BrowserExtension.IntegrationTestRunner
 {
-    [TestCaseOrderer("Blazor.BrowserExtension.IntegrationTestRunner.TestOrderer", "Blazor.BrowserExtension.IntegrationTestRunner")]
     public abstract class BaseIntegrationTest : IAsyncLifetime
     {
         private IPlaywright playwright;
         private IPage page;
+        private readonly List<string> consoleMessages = [];
         protected string extensionPath;
         protected string extensionBaseUrl;
 
-        [Fact, Order(1)]
-        public async Task IndexPageIsLoaded()
+        [Fact]
+        public async Task HomePageIsLoaded()
         {
             Assert.StartsWith("chrome-extension://", page.Url);
-            Assert.Equal("Index", await GetPageContent());
+            Assert.Equal("Home", await GetPageContent());
         }
 
-        [Fact, Order(2)]
+        [Fact]
         public async Task PopupPageIsLoaded()
         {
-            await page.GotoAsync($"{extensionBaseUrl}/index.html?path=popup");
+            await NavigateToUrl($"{extensionBaseUrl}/index.html?path=popup");
             Assert.Equal("Popup", await GetPageContent());
             Assert.Equal($"{extensionBaseUrl}/popup", page.Url);
         }
 
-        [Fact, Order(3)]
+        [Fact]
         public async Task OptionsPageIsLoaded()
         {
-            await page.GotoAsync($"{extensionBaseUrl}/index.html?path=options");
+            await NavigateToUrl($"{extensionBaseUrl}/index.html?path=options");
             Assert.Equal("Options", await GetPageContent());
             Assert.Equal($"{extensionBaseUrl}/options", page.Url);
         }
 
-        [Fact, Order(4)]
+        [Fact]
         public async Task ContentScriptIsLoaded()
         {
-            await page.GotoAsync("https://developer.chrome.com/");
+            await NavigateToUrl("https://developer.chrome.com/");
             Assert.Equal("ContentScript", await GetPageContent(true));
         }
 
@@ -64,7 +62,6 @@ namespace Blazor.BrowserExtension.IntegrationTestRunner
             playwright = await Playwright.CreateAsync();
             var browser = await LaunchBrowser(playwright, currentDirectory, extensionPath);
             page = await browser.RunAndWaitForPageAsync(static () => Task.CompletedTask);
-            var consoleMessages = new List<string>();
             page.Console += (_, message) => consoleMessages.Add(message.Text);
             extensionBaseUrl = page.Url[..^"/index.html".Length];
         }
@@ -96,10 +93,23 @@ namespace Blazor.BrowserExtension.IntegrationTestRunner
             });
         }
 
+        private Task NavigateToUrl(string url)
+        {
+            consoleMessages.Clear();
+            return page.GotoAsync(url);
+        }
+
         private async Task<string> GetPageContent(bool isContentScript = false)
         {
             var appId = isContentScript ? "#Blazor_BrowserExtension_IntegrationTest_app h3" : "#app h3";
-            await page.WaitForSelectorAsync(appId);
+            try
+            {
+                await page.WaitForSelectorAsync(appId);
+            }
+            catch(TimeoutException)
+            {
+                Assert.Fail($"Failed to get content for '{appId}'. Console messages: {string.Join(Environment.NewLine, consoleMessages)}");
+            }
             return await page.EvalOnSelectorAsync<string>(appId, "el => el.innerText");
         }
     }

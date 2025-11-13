@@ -6,6 +6,7 @@
       $(MSBuildThisFileDirectory)/../../../PackageOutput
     </RestoreSources>
     <RestorePackagesPath>$(MSBuildThisFileDirectory)/../../../PackagesCache</RestorePackagesPath>
+    <WasmEnableHotReload>false</WasmEnableHotReload>
   </PropertyGroup>
 
 </Project>
