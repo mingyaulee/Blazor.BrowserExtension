@@ -34,7 +34,7 @@ jobs:
     - name: Build
       run: dotnet build docs --no-restore --configuration Release -p:OutDir=$PWD/docs/bin/BuildOutput
     - name: Publish
-      run: dotnet publish docs --no-restore --no-build --configuration Release -p:PublishDir=$PWD/PublishOutput
+      run: dotnet publish docs --no-restore --no-build --configuration Release -p:OutDir=$PWD/docs/bin/BuildOutput -p:PublishDir=$PWD/PublishOutput
     - name: Create runtimeconfig.json
       run: |
            cat <<EOF > $PWD/docs/bin/BuildOutput/Docs.runtimeconfig.json
