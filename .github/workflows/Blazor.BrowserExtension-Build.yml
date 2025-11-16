@@ -80,7 +80,7 @@ jobs:
     - name: Install Playwright
       run: .\test\Blazor.BrowserExtension.IntegrationTestRunner\bin\Release\net${{ env.DOTNET_VERSION }}\playwright.ps1 install chromium --with-deps
     - name: Test
-      run: dotnet test --no-restore --no-build --configuration Release --results-directory ./test/TestResults --logger "console;verbosity=detailed" --logger "xunit;LogFileName={assembly}-test-result.xml" --collect "XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+      run: dotnet test --no-restore --no-build --configuration Release --report-trx --results-directory ./test/TestResults --coverage
     - name: End analyze
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

@@ -1,5 +1,4 @@
 ﻿using Microsoft.Playwright;
-using Xunit;
 
 namespace Blazor.BrowserExtension.Build.Test.Helpers
 {

@@ -1,4 +1,5 @@
-﻿using Blazor.BrowserExtension.Build.Test.Helpers;
+﻿using System.Reflection;
+using Blazor.BrowserExtension.Build.Test.Helpers;
 
 namespace Blazor.BrowserExtension.Build.Test
 {
@@ -8,12 +9,6 @@ namespace Blazor.BrowserExtension.Build.Test
         private readonly string rootTestDirectory;
         private readonly string rootSolutionDirectory;
         private bool disposedValue;
-
-#if DEBUG
-        const string CurrentConfiguration = "Debug";
-#else
-        const string CurrentConfiguration = "Release";
-#endif
 
         public BuildIntegrationTestFixture()
         {
@@ -27,7 +22,9 @@ namespace Blazor.BrowserExtension.Build.Test
                 Directory.Delete(packagesCacheDirectory, true);
             }
 
-            CommandHelper.ExecuteCommandVoid(DotNetCommand, $"pack --no-build --no-restore --configuration {CurrentConfiguration}", rootSolutionDirectory);
+            var assembly = Assembly.GetExecutingAssembly();
+            var configuration = assembly.GetCustomAttribute<AssemblyConfigurationAttribute>().Configuration;
+            CommandHelper.ExecuteCommandVoid(DotNetCommand, $"pack --no-build --no-restore --configuration {configuration}", rootSolutionDirectory);
             try
             {
                 CommandHelper.ExecuteCommandVoid(DotNetCommand, $"new install PackageOutput/Blazor.BrowserExtension.Template.1.0.0.nupkg", rootSolutionDirectory);

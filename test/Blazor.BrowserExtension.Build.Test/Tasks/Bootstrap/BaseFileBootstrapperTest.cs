@@ -1,5 +1,4 @@
 ﻿using Blazor.BrowserExtension.Build.Tasks.Bootstrap;
-using Xunit;
 
 namespace Blazor.BrowserExtension.Build.Test.Tasks.Bootstrap
 {
@@ -9,7 +8,7 @@ namespace Blazor.BrowserExtension.Build.Test.Tasks.Bootstrap
         protected abstract string OriginalFileContent { get; }
         protected abstract string BootstrappedFileContent { get; }
 
-        [Fact]
+        [TestMethod]
         public void TestBootstrap()
         {
             // Arrange
@@ -25,7 +24,7 @@ namespace Blazor.BrowserExtension.Build.Test.Tasks.Bootstrap
             fileLines.ShouldBeEquivalentTo(expectedFileLines);
         }
 
-        [Fact]
+        [TestMethod]
         public void TestBootstrapWithBootstrappedFile()
         {
             // Arrange

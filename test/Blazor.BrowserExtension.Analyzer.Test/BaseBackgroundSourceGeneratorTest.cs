@@ -6,7 +6,7 @@ namespace Blazor.BrowserExtension.Analyzer.Test
 {
     public abstract class BaseBackgroundSourceGeneratorTest
     {
-        [Fact]
+        [TestMethod]
         public async Task TestGenerateSource()
         {
             var test = new CSharpSourceGeneratorTest<BackgroundSourceGenerator, DefaultVerifier>();
@@ -49,8 +49,8 @@ namespace Blazor.BrowserExtension.Analyzer.Test
             await test.RunAsync();
 
             var jsFile = Path.Combine(jsOutputDirectory, "BackgroundWorkerMain.generated.js");
-            Assert.True(File.Exists(jsFile), $"File exists '{jsFile}'");
-            Assert.Equal(ExpectedBackgroundWorkerJs, (await File.ReadAllTextAsync(jsFile)).TrimEnd());
+            Assert.IsTrue(File.Exists(jsFile), $"File exists '{jsFile}'");
+            Assert.AreEqual(ExpectedBackgroundWorkerJs, (await File.ReadAllTextAsync(jsFile)).TrimEnd());
         }
 
         protected abstract string MainMethodBody { get; }
@@ -58,7 +58,7 @@ namespace Blazor.BrowserExtension.Analyzer.Test
         protected virtual string ExpectedJsInstance => string.Empty;
         protected abstract string ExpectedBackgroundWorkerJs { get; }
 
-        static string ReadFromEmbeddedResource(string name)
+        private static string ReadFromEmbeddedResource(string name)
         {
             var assembly = typeof(BaseBackgroundSourceGeneratorTest).Assembly;
             using var fileStream = assembly.GetManifestResourceStream($"Blazor.BrowserExtension.Analyzer.Test.TestFiles.{name}")
@@ -67,13 +67,13 @@ namespace Blazor.BrowserExtension.Analyzer.Test
             return streamReader.ReadToEnd();
         }
 
-        static string IndentContent(string content, int indent)
+        private static string IndentContent(string content, int indent)
         {
             var indentation = "".PadRight(indent);
             return string.Join($"{Environment.NewLine}{indentation}", content.Split(Environment.NewLine));
         }
 
-        static ReferenceAssemblies GetReferenceAssemblies()
+        private static ReferenceAssemblies GetReferenceAssemblies()
             => new(
                 targetFramework: CommonTestHelper.TargetFramework,
                 referenceAssemblyPackage: new PackageIdentity("Microsoft.NETCore.App.Ref", $"{CommonTestHelper.TargetFrameworkMajorVersion}.0.0"),

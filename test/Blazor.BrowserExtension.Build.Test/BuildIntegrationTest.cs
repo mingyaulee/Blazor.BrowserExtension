@@ -1,11 +1,13 @@
 ﻿using Blazor.BrowserExtension.Build.Test.Helpers;
-using Xunit;
 
 namespace Blazor.BrowserExtension.Build.Test
 {
-    public class BuildIntegrationTest(BuildIntegrationTestFixture testFixture) : IClassFixture<BuildIntegrationTestFixture>
+    [TestClass]
+    public class BuildIntegrationTest
     {
-        [Fact]
+        private static BuildIntegrationTestFixture testFixture;
+
+        [TestMethod]
         public async Task TestNewProjectFromTemplate()
         {
             var projectName = "NewBrowserExtensionProject";
@@ -32,7 +34,7 @@ namespace Blazor.BrowserExtension.Build.Test
             }
         }
 
-        [Fact]
+        [TestMethod]
         public async Task TestBootstrapExistingProject()
         {
             var projectName = "EmptyBlazorProject";
@@ -89,6 +91,16 @@ namespace Blazor.BrowserExtension.Build.Test
             }
 
             CommandHelper.ExecuteCommandVoid("git", "clean . -xdf", directory);
+        }
+
+        [ClassInitialize]
+        public static void ClassInitialize(TestContext testContext) => testFixture = new BuildIntegrationTestFixture();
+
+        [ClassCleanup]
+        public static void ClassCleanup()
+        {
+            testFixture?.Dispose();
+            testFixture = null;
         }
     }
 }

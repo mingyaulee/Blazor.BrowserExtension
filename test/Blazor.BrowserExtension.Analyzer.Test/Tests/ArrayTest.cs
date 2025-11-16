@@ -1,5 +1,6 @@
 ﻿namespace Blazor.BrowserExtension.Analyzer.Test.Tests
 {
+    [TestClass]
     public class ArrayTest : BaseBackgroundSourceGeneratorTest
     {
         protected override string MainMethodBody =>

@@ -1,55 +1,49 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Runtime.Versioning;
-using System.Threading.Tasks;
 using Microsoft.Playwright;
-using Xunit;
 
 namespace Blazor.BrowserExtension.IntegrationTestRunner
 {
-    public abstract class BaseIntegrationTest : IAsyncLifetime
+    public abstract class BaseIntegrationTest
     {
-        private IPlaywright playwright;
-        private IPage page;
-        private readonly List<string> consoleMessages = [];
-        protected string extensionPath;
-        protected string extensionBaseUrl;
+        private static IPlaywright playwright;
+        private static IPage page;
+        private static readonly List<string> consoleMessages = [];
+        protected static string extensionPath;
+        protected static string extensionBaseUrl;
 
-        [Fact]
+        [TestMethod]
         public async Task HomePageIsLoaded()
         {
             Assert.StartsWith("chrome-extension://", page.Url);
-            Assert.Equal("Home", await GetPageContent());
+            Assert.AreEqual("Home", await GetPageContent());
         }
 
-        [Fact]
+        [TestMethod]
         public async Task PopupPageIsLoaded()
         {
             await NavigateToUrl($"{extensionBaseUrl}/index.html?path=popup");
-            Assert.Equal("Popup", await GetPageContent());
-            Assert.Equal($"{extensionBaseUrl}/popup", page.Url);
+            Assert.AreEqual("Popup", await GetPageContent());
+            Assert.AreEqual($"{extensionBaseUrl}/popup", page.Url);
         }
 
-        [Fact]
+        [TestMethod]
         public async Task OptionsPageIsLoaded()
         {
             await NavigateToUrl($"{extensionBaseUrl}/index.html?path=options");
-            Assert.Equal("Options", await GetPageContent());
-            Assert.Equal($"{extensionBaseUrl}/options", page.Url);
+            Assert.AreEqual("Options", await GetPageContent());
+            Assert.AreEqual($"{extensionBaseUrl}/options", page.Url);
         }
 
-        [Fact]
+        [TestMethod]
         public async Task ContentScriptIsLoaded()
         {
             await NavigateToUrl("https://developer.chrome.com/");
-            Assert.Equal("ContentScript", await GetPageContent(true));
+            Assert.AreEqual("ContentScript", await GetPageContent(true));
         }
 
-        protected abstract void SetupBeforeInitialize();
-
-        public virtual async Task InitializeAsync()
+        [ClassInitialize(InheritanceBehavior.BeforeEachDerivedClass)]
+        public static async Task InitializeAsync(TestContext testContext)
         {
             var currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
             var solutionDirectory = currentDirectory[..currentDirectory.LastIndexOf("\\test")];
@@ -58,7 +52,11 @@ namespace Blazor.BrowserExtension.IntegrationTestRunner
             var configuration = assembly.GetCustomAttribute<AssemblyConfigurationAttribute>().Configuration;
             extensionPath = @$"{solutionDirectory}\test\Blazor.BrowserExtension.IntegrationTest\bin\{configuration}\{targetFramework}\browserextension";
 
-            SetupBeforeInitialize();
+            if (testContext.FullyQualifiedTestClassName == typeof(IntegrationTestManifestV3).FullName)
+            {
+                File.Copy(Path.Combine(extensionPath, "manifestv3.json"), Path.Combine(extensionPath, "manifest.json"), true);
+            }
+
             playwright = await Playwright.CreateAsync();
             var browser = await LaunchBrowser(playwright, currentDirectory, extensionPath);
             page = await browser.RunAndWaitForPageAsync(static () => Task.CompletedTask);
@@ -66,10 +64,12 @@ namespace Blazor.BrowserExtension.IntegrationTestRunner
             extensionBaseUrl = page.Url[..^"/index.html".Length];
         }
 
-        public Task DisposeAsync()
+        [ClassCleanup(InheritanceBehavior.BeforeEachDerivedClass)]
+        public static void Cleanup()
         {
-            playwright.Dispose();
-            return Task.CompletedTask;
+            playwright?.Dispose();
+            playwright = null;
+            page = null;
         }
 
         private static Task<IBrowserContext> LaunchBrowser(IPlaywright playwright, string currentDirectory, string extensionPath)
@@ -93,10 +93,10 @@ namespace Blazor.BrowserExtension.IntegrationTestRunner
             });
         }
 
-        private Task NavigateToUrl(string url)
+        private static async Task NavigateToUrl(string url)
         {
             consoleMessages.Clear();
-            return page.GotoAsync(url);
+            await page.GotoAsync(url);
         }
 
         private async Task<string> GetPageContent(bool isContentScript = false)

@@ -2,6 +2,7 @@
 
 namespace Blazor.BrowserExtension.Build.Test.Tasks.Bootstrap
 {
+    [TestClass]
     public class ProgramCsFileBootstrapperTest : BaseFileBootstrapperTest<ProgramCsFileBootstrapper>
     {
         protected override string OriginalFileContent => """
