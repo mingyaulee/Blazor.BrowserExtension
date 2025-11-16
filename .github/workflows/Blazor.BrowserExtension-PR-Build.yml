@@ -11,6 +11,9 @@ concurrency:
 env:
   DOTNET_VERSION: '10.0'
 
+permissions:
+  contents: read
+
 jobs:
   buildAndTestPR:
     runs-on: windows-latest

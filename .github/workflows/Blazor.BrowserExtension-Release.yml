@@ -7,6 +7,9 @@ on:
 env:
   DOTNET_VERSION: '10.0'
 
+permissions:
+  contents: read
+
 jobs:
   release:
     runs-on: ubuntu-latest
