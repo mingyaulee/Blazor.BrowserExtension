@@ -1,7 +1,7 @@
 (async () => {
   const url = (globalThis.browser || globalThis.chrome).runtime.getURL("");
   const initializeInternal = (await import(`${url}content/Blazor.BrowserExtension/CoreInternal.js`)).initializeInternal;
-  const documentBaseUriWithoutPath = new URL("/", document.baseURI).toString();
+  const documentBaseUri = new URL(".", document.baseURI).toString();
 
   const configRequest = await fetch(`${url}content/browserextension.config.json`);
   const config = await configRequest.json();
@@ -42,10 +42,8 @@
   const blazorBrowserExtension = initializeInternal(config, url, "ContentScript");
 
   globalThis.importProxy = (requestorRelativePath, module) => {
-    if (module.startsWith(document.baseURI)) {
-      module = new URL(module.substring(document.baseURI.length), url);
-    } else if (module.startsWith(documentBaseUriWithoutPath)) {
-      module = new URL(module.substring(documentBaseUriWithoutPath.length), url);
+    if (module.startsWith(documentBaseUri)) {
+      module = new URL(module.substring(documentBaseUri.length), url);
     } else if (module.startsWith(".")) {
       module = new URL(`${requestorRelativePath}/${module}`, url);
     }

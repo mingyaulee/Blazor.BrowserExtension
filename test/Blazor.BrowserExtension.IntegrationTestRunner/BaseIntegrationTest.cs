@@ -42,6 +42,13 @@ namespace Blazor.BrowserExtension.IntegrationTestRunner
             Assert.AreEqual("ContentScript", await GetPageContent(true));
         }
 
+        [TestMethod]
+        public async Task ContentScriptIsLoadedOnPageWithPath()
+        {
+            await NavigateToUrl("https://developer.chrome.com/docs/extensions/reference/api");
+            Assert.AreEqual("ContentScript", await GetPageContent(true));
+        }
+
         [ClassInitialize(InheritanceBehavior.BeforeEachDerivedClass)]
         public static async Task InitializeAsync(TestContext testContext)
         {
