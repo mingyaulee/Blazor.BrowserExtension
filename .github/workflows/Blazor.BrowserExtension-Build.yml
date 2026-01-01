@@ -95,7 +95,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v5
     - name: Check if tag exists
-      uses: mukunku/tag-exists-action@v1.6.0
+      uses: mukunku/tag-exists-action@v1.7.0
       id: tagExistsCheck
       with: 
         tag: 'v${{ needs.version.outputs.MajorMinorPatch }}'
