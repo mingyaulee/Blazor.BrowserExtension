@@ -57,6 +57,11 @@
         <To>content/</To>
         <IsOptional>true</IsOptional>
       </_BrowserExtension_DotNetJs_FileContentReplacements>
+      <_BrowserExtension_DotNetJs_FileContentReplacements Include="framework path for WasmInlineBootConfig">
+        <From>_framework</From>
+        <To>framework</To>
+        <IsOptional>true</IsOptional>
+      </_BrowserExtension_DotNetJs_FileContentReplacements>
       <!--
         Define contents to replace in other files
       -->
