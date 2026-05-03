@@ -22,16 +22,16 @@ jobs:
       MajorMinorPatch: ${{ steps.gitversion.outputs.MajorMinorPatch }}
     steps:
     - name: Checkout
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
       with:
         fetch-depth: 0
     - name: Install GitVersion
-      uses: gittools/actions/gitversion/setup@v4.1.0
+      uses: gittools/actions/gitversion/setup@v4.5.0
       with:
         versionSpec: 6.x
     - name: Determine Version
       id: gitversion
-      uses: gittools/actions/gitversion/execute@v4.1.0
+      uses: gittools/actions/gitversion/execute@v4.5.0
 
   buildAndTest:
     needs: version
@@ -47,18 +47,18 @@ jobs:
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}.x
     - name: Checkout
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
       with:
         fetch-depth: 0
     - name: Cache SonarCloud packages
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: ~\sonar\cache
         key: ${{ runner.os }}-sonar
         restore-keys: ${{ runner.os }}-sonar
     - name: Cache SonarCloud scanner
       id: cache-sonar-scanner
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: ${{ runner.temp }}\scanner
         key: ${{ runner.os }}-sonar-scanner
@@ -93,9 +93,9 @@ jobs:
       contents: write
     steps:
     - name: Checkout
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
     - name: Check if tag exists
-      uses: mukunku/tag-exists-action@v1.6.0
+      uses: mukunku/tag-exists-action@v1.7.0
       id: tagExistsCheck
       with: 
         tag: 'v${{ needs.version.outputs.MajorMinorPatch }}'
