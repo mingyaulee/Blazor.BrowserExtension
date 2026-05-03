@@ -23,7 +23,7 @@
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.9.2" />
     <PackageVersion Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4" />
     <PackageVersion Include="System.Text.Json" Version="10.0.0" />
-    <PackageVersion Include="WebExtensions.Net.Extensions.DependencyInjection" Version="5.0.0" />
+    <PackageVersion Include="WebExtensions.Net.Extensions.DependencyInjection" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(ProjectIsInTest)' == 'true'">
