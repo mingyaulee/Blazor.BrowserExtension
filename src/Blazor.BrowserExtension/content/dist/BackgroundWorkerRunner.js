@@ -60,7 +60,7 @@ const symbolHandler = ( propertyNameOrSymbol,  context) => {
 };
 
 const cachedValueHandler = ( context) => {
-  if (context.target.hasOwnProperty(context.propertyName)) {
+  if (Object.prototype.hasOwnProperty.call(context.target, context.propertyName)) {
     // return cached value
     context.result = context.target[context.propertyName];
     return true;
@@ -71,7 +71,12 @@ const cachedValueHandler = ( context) => {
 
 const specialPropertiesHandler = ( context) => {
   if (context.target instanceof ProxyTarget) {
-    if (context.target.getProxyName() === "window" && globalThis.hasOwnProperty(context.propertyName)) {
+    if (context.propertyName === "hasOwnProperty") {
+      context.result = Object.prototype.hasOwnProperty.bind(context.target);
+      return true;
+    }
+
+    if (context.target.getProxyName() === "window" && Object.prototype.hasOwnProperty.call(globalThis, context.propertyName)) {
       // mirror window to globalThis
       context.result = globalThis[context.propertyName];
       return true;
@@ -92,7 +97,7 @@ const definedProxiesHandler = ( context) => {
     ? context.target.getProxyName() + "." + context.propertyName
     : context.propertyName;
 
-  if (proxies.hasOwnProperty(context.proxyKey)) {
+  if (Object.prototype.hasOwnProperty.call(proxies, context.proxyKey)) {
     context.result = proxies[context.proxyKey];
     return true;
   }
