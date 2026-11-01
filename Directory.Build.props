@@ -16,11 +16,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(ProjectIsInSrc)' == 'true'">
-    <ProjectIsAnalyzer Condition="'$(MSBuildProjectName)' == 'Blazor.BrowserExtension.Analyzer'">true</ProjectIsAnalyzer>
-    <ProjectIsBuild Condition="'$(MSBuildProjectName)' == 'Blazor.BrowserExtension.Build'">true</ProjectIsBuild>
     <TargetFrameworks>net10.0;net9.0;net8.0</TargetFrameworks>
-    <TargetFrameworks Condition="'$(ProjectIsAnalyzer)' == 'true'">netstandard2.0</TargetFrameworks>
-    <TargetFrameworks Condition="'$(ProjectIsBuild)' == 'true'">$(TargetFrameworks);net472</TargetFrameworks>
     <IsPackable>true</IsPackable>
     <GenerateDependencyFile>false</GenerateDependencyFile>
     <IsShippingPackage>true</IsShippingPackage>

@@ -10,7 +10,6 @@ updates:
   - package-ecosystem: "nuget"
     directories:
     - "/docs/"
-    - "/test/Blazor.BrowserExtension.Analyzer.Test/"
     - "/test/Blazor.BrowserExtension.Build.Test/"
     - "/test/Blazor.BrowserExtension.IntegrationTest/"
     - "/test/Blazor.BrowserExtension.IntegrationTestRunner/"

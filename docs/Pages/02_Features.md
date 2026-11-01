@@ -3,7 +3,7 @@
 - This package imports three other packages, which are:
   1. [WebExtensions.Net](https://github.com/mingyaulee/WebExtensions.Net) - Provides interop for WebExtensions standard API.
   2. [JsBind.Net](https://github.com/mingyaulee/JsBind.Net) - Provides advanced JavaScript interop features used by WebExtensions.Net.
-  3. Blazor.BrowserExtension.Build (in this repository) - Adds build targets and tasks to the project.
+  3. [Blazor.BrowserExtension.Build](https://github.com/mingyaulee/Blazor.BrowserExtension.Build) - Adds build targets and tasks to the project.
 
 - Hook into Blazor lifecycle events with [`app.js`](03_01_app.js.md).
 - Publishing with Brotli compression enabled by default to minimize published extension app size.

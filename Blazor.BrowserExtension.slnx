@@ -30,8 +30,6 @@
     <File Path=".github/workflows/Blazor.BrowserExtension-Release.yml" />
   </Folder>
   <Folder Name="/src/">
-    <Project Path="src/Blazor.BrowserExtension.Analyzer/Blazor.BrowserExtension.Analyzer.csproj" />
-    <Project Path="src/Blazor.BrowserExtension.Build/Blazor.BrowserExtension.Build.csproj" />
     <Project Path="src/Blazor.BrowserExtension/Blazor.BrowserExtension.csproj" />
   </Folder>
   <Folder Name="/template/">
@@ -41,7 +39,6 @@
     </Project>
   </Folder>
   <Folder Name="/test/">
-    <Project Path="test/Blazor.BrowserExtension.Analyzer.Test/Blazor.BrowserExtension.Analyzer.Test.csproj" />
     <Project Path="test/Blazor.BrowserExtension.Build.Test/Blazor.BrowserExtension.Build.Test.csproj" />
     <Project Path="test/Blazor.BrowserExtension.IntegrationTest/Blazor.BrowserExtension.IntegrationTest.csproj" />
     <Project Path="test/Blazor.BrowserExtension.IntegrationTestRunner/Blazor.BrowserExtension.IntegrationTestRunner.csproj" />

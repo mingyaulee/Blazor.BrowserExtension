@@ -31,10 +31,7 @@
     <PackageReference Include="Microsoft.JSInterop" />
     <PackageReference Include="JsBind.Net.Extensions.DependencyInjection" PrivateAssets="contentfiles" />
     <PackageReference Include="WebExtensions.Net.Extensions.DependencyInjection" PrivateAssets="contentfiles" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Blazor.BrowserExtension.Build\Blazor.BrowserExtension.Build.csproj" PrivateAssets="contentfiles" />
+    <PackageReference Include="Blazor.BrowserExtension.Build" PrivateAssets="contentfiles" />
   </ItemGroup>
 
   <Target Name="BundleJsContent" BeforeTargets="Build" Condition="'$(Configuration)' == 'Debug'">

@@ -3,7 +3,6 @@
   <PropertyGroup>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <_BrowserExtensionBuildOutputFolder>bin\$(Configuration)</_BrowserExtensionBuildOutputFolder>
     <WasmEnableHotReload>false</WasmEnableHotReload>
   </PropertyGroup>
 
@@ -29,12 +28,9 @@
 
   <!-- Import project reference and build props and targets as if we are referencing the built NuGet package -->
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Blazor.BrowserExtension.Analyzer\Blazor.BrowserExtension.Analyzer.csproj" PrivateAssets="all" OutputItemType="Analyzer" />
-    <ProjectReference Include="..\..\src\Blazor.BrowserExtension\Blazor.BrowserExtension.csproj"></ProjectReference>
+    <ProjectReference Include="..\..\src\Blazor.BrowserExtension\Blazor.BrowserExtension.csproj" />
   </ItemGroup>
   <Import Project="..\..\src\Blazor.BrowserExtension\build\Blazor.BrowserExtension.props" />
   <Import Project="..\..\src\Blazor.BrowserExtension\build\Blazor.BrowserExtension.targets" />
-  <Import Project="..\..\src\Blazor.BrowserExtension.Build\build\Blazor.BrowserExtension.Build.props" />
-  <Import Project="..\..\src\Blazor.BrowserExtension.Build\build\Blazor.BrowserExtension.Build.targets" />
 
 </Project>

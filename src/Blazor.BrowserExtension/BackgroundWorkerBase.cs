@@ -9,7 +9,7 @@ using WebExtensions.Net;
 namespace Blazor.BrowserExtension
 {
     /// <summary>
-    /// Inherit from the this class and add the [BackgroundWorker] to allow the source generator to fully support generated background worker.
+    /// Inherit from the this class and add the [BackgroundWorkerMain] to the Main method to allow the source generator to fully support generated background worker.
     /// </summary>
     public abstract class BackgroundWorkerBase : IComponent
     {

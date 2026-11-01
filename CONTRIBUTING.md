@@ -29,8 +29,9 @@ Pull requests are the best way to propose changes to the codebase. We actively w
 ### Packages shipped by this repository
 These are the packages that are shipped from this repository:
 1. Blazor.BrowserExtension
-0. Blazor.BrowserExtension.Build
 0. Blazor.BrowserExtension.Template
+
+The build tasks and source generator are shipped separately as the `Blazor.BrowserExtension.Build` package from the [Blazor.BrowserExtension.Build repository](https://github.com/mingyaulee/Blazor.BrowserExtension.Build).
 
 ### Blazor.BrowserExtension
 This package provides the runtime functionalities, including:

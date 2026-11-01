@@ -17,10 +17,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Blazor.BrowserExtension.Build\Blazor.BrowserExtension.Build.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Include="TestProjects\**\*" CopyToOutputDirectory="Never" />
     <None Remove="TestProjects\**\*" />
     <Compile Remove="TestProjects\**\*" />
