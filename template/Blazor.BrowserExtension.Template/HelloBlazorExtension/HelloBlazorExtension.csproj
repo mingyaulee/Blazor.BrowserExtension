@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFramework>net11.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
 <!--#if (HiddenProperties) -->
@@ -13,15 +13,12 @@
 
   <ItemGroup>
     <PackageReference Include="Blazor.BrowserExtension" Version="5.*" />
-<!--#if (IsNet8) -->
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.*" PrivateAssets="all" />
-<!--#elseif (IsNet9) -->
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="9.*" PrivateAssets="all" />
-<!--#else -->
+<!--#if (IsNet10) -->
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.*" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="10.*" PrivateAssets="all" />
+<!--#else -->
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="11.*" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Gateway" Version="11.*" PrivateAssets="all" />
 <!--#endif -->
   </ItemGroup>
 

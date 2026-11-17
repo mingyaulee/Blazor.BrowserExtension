@@ -53,17 +53,17 @@ namespace Blazor.BrowserExtension.Build.Test
         public string GetTestProjectDirectory(string testProjectName)
             => Path.Combine(rootTestDirectory, "TestProjects", testProjectName);
 
-        public Task<WebDriverExtensionHelper> LoadExtensionBuildOutput(string testProjectName)
+        public Task<WebDriverExtensionHelper> LoadExtensionBuildOutput(string testProjectName, string targetFramework)
         {
-            var copyToBinExtensionPath = Path.Combine(rootTestDirectory, "bin", "Debug", CommonTestHelper.TargetFramework, testProjectName);
-            var extensionPath = Path.Combine(GetTestProjectDirectory(testProjectName), "bin", "Debug", CommonTestHelper.TargetFramework, "browserextension");
+            var copyToBinExtensionPath = Path.Combine(rootTestDirectory, "bin", "Debug", targetFramework, testProjectName);
+            var extensionPath = Path.Combine(GetTestProjectDirectory(testProjectName), "bin", "Debug", targetFramework, "browserextension");
             return LoadExtension(extensionPath, copyToBinExtensionPath);
         }
 
-        public Task<WebDriverExtensionHelper> LoadExtensionPublishOutput(string testProjectName)
+        public Task<WebDriverExtensionHelper> LoadExtensionPublishOutput(string testProjectName, string targetFramework)
         {
-            var copyToBinExtensionPath = Path.Combine(rootTestDirectory, "bin", "Release", CommonTestHelper.TargetFramework, testProjectName);
-            var extensionPath = Path.Combine(GetTestProjectDirectory(testProjectName), "bin", "Release", CommonTestHelper.TargetFramework, "publish", "browserextension");
+            var copyToBinExtensionPath = Path.Combine(rootTestDirectory, "bin", "Release", targetFramework, testProjectName);
+            var extensionPath = Path.Combine(GetTestProjectDirectory(testProjectName), "bin", "Release", targetFramework, "publish", "browserextension");
             return LoadExtension(extensionPath, copyToBinExtensionPath);
         }
 

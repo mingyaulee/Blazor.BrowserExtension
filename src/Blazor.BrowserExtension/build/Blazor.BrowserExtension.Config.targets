@@ -71,8 +71,7 @@
     </DefineStaticWebAssets>
 
     <DefineStaticWebAssetEndpoints CandidateAssets="@(_BrowserExtension_StaticWebAssets_ConfigFile_Processed)"
-                                   ExistingEndpoints="@(StaticWebAssetEndpoint)" ContentTypeMappings="@(StaticWebAssetContentTypeMapping)"
-                                   Condition="'$(TargetFramework)' != 'net8.0'">
+                                   ExistingEndpoints="@(StaticWebAssetEndpoint)" ContentTypeMappings="@(StaticWebAssetContentTypeMapping)">
       <Output TaskParameter="Endpoints" ItemName="_BrowserExtension_StaticWebAssets_ConfigFile_Endpoint" />
     </DefineStaticWebAssetEndpoints>
 

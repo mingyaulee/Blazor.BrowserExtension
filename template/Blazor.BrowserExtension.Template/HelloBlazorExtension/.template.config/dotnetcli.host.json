@@ -1,6 +1,9 @@
 {
   "$schema": "http://json.schemastore.org/dotnetcli.host",
   "symbolInfo": {
+    "Framework": {
+      "longName": "framework"
+    },
     "ManifestVersion": {
       "longName": "manifest-version",
       "shortName": "mv"

@@ -33,14 +33,10 @@
       PrepareForBlazorToBrowserExtension;
       PrepareForBlazorToBrowserExtensionBackgroundWorkerFile
     </_ConvertBlazorToBrowserExtensionBackgroundWorkerDependsOn>
-
-    <StaticWebAssetsPrepareForRunDependsOn>
-      $(StaticWebAssetsPrepareForRunDependsOn)
-      CallWriteBlazorToBrowserExtensionBuildBackgroundWorkerFile;
-    </StaticWebAssetsPrepareForRunDependsOn>
   </PropertyGroup>
 
   <Target Name="CallWriteBlazorToBrowserExtensionBuildBackgroundWorkerFile"
+          AfterTargets="ResolveStaticWebAssetsInputs"
           Condition="'$(GenerateBrowserExtensionBackgroundWorker)' == 'true' and '$(BuildBlazorToBrowserExtension)' == 'true'"
           DependsOnTargets="$(_ConvertBlazorToBrowserExtensionBackgroundWorkerDependsOn)">
     <CallTarget Targets="WriteBlazorToBrowserExtensionBuildBackgroundWorkerFile"/>

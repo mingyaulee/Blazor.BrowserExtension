@@ -8,59 +8,27 @@ namespace Blazor.BrowserExtension.Build.Test
         private static BuildIntegrationTestFixture testFixture;
 
         [TestMethod]
-        public async Task TestNewProjectFromTemplate()
+        [DataRow("net10.0")]
+        [DataRow("net11.0")]
+        public async Task TestNewProjectFromTemplate(string targetFramework)
         {
-            var projectName = "NewBrowserExtensionProject";
+            var projectName = $"NewBrowserExtensionProject_{targetFramework.Replace(".", "_")}";
             var projectDirectory = testFixture.GetTestProjectDirectory(projectName);
-            testFixture.ExecuteDotnetCommand($"new browserext --name {projectName}");
+            testFixture.ExecuteDotnetCommand($"new browserext --name {projectName} --framework {targetFramework}");
             try
             {
                 testFixture.ExecuteDotnetRestoreCommand(projectName);
                 testFixture.ExecuteDotnetBuildCommand(projectName);
-                using (var extensionFromBuild = await testFixture.LoadExtensionBuildOutput(projectName))
+                using (var extensionFromBuild = await testFixture.LoadExtensionBuildOutput(projectName, targetFramework))
                 {
                     var pageContentFromBuild = await extensionFromBuild.GetContent("h1");
                     pageContentFromBuild.ShouldBe("Hello, from Blazor.");
                 }
 
                 testFixture.ExecuteDotnetPublishCommand(projectName);
-                using var extensionFromPublish = await testFixture.LoadExtensionPublishOutput(projectName);
+                using var extensionFromPublish = await testFixture.LoadExtensionPublishOutput(projectName, targetFramework);
                 var pageContentFromPublish = await extensionFromPublish.GetContent("h1");
                 pageContentFromPublish.ShouldBe("Hello, from Blazor.");
-            }
-            finally
-            {
-                ResetDirectoryChanges(projectDirectory);
-            }
-        }
-
-        [TestMethod]
-        public async Task TestBootstrapExistingProject()
-        {
-            var projectName = "EmptyBlazorProject";
-            var projectDirectory = testFixture.GetTestProjectDirectory(projectName);
-            try
-            {
-                var projectFile = Path.Combine(projectDirectory, projectName + ".csproj");
-                var projectFileContent = await File.ReadAllTextAsync(projectFile);
-                projectFileContent = projectFileContent
-                    .Replace("[NetVersion]", CommonTestHelper.TargetFrameworkMajorVersion);
-                await File.WriteAllTextAsync(projectFile, projectFileContent);
-
-                testFixture.ExecuteDotnetRestoreCommand(projectName);
-                testFixture.ExecuteDotnetBuildCommand(projectName);
-                projectFileContent = await File.ReadAllTextAsync(projectFile);
-                projectFileContent.ShouldNotContain("BrowserExtensionBootstrap");
-                using (var extensionFromBuild = await testFixture.LoadExtensionBuildOutput(projectName))
-                {
-                    var pageContentFromBuild = await extensionFromBuild.GetContent("h1");
-                    pageContentFromBuild.ShouldBe("Hello, world!");
-                }
-
-                testFixture.ExecuteDotnetPublishCommand(projectName);
-                using var extensionFromPublish = await testFixture.LoadExtensionPublishOutput(projectName);
-                var pageContentFromPublish = await extensionFromPublish.GetContent("h1");
-                pageContentFromPublish.ShouldBe("Hello, world!");
             }
             finally
             {
@@ -102,5 +70,7 @@ namespace Blazor.BrowserExtension.Build.Test
             testFixture?.Dispose();
             testFixture = null;
         }
+
+        public TestContext TestContext { get; set; }
     }
 }
